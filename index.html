@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel File Manager</title>
+    <title>数据管理</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
@@ -49,18 +49,18 @@
     </style>
 </head>
 <body>
-    <h1>Excel File Manager</h1>
+    <h1>数据管理</h1>
     <p>
-        You can <strong>download</strong> the Excel file or <strong>view and search</strong> its content online.
+        您可以<strong>下载</strong>数据分析结果或在线<strong>查询和搜索</strong>其内容。
     </p>
 
     <!-- Download Section -->
-    <a href="data.xlsx" download>Download data.xlsx</a>
+    <a href="data.xlsx" download>下载</a>
 
     <!-- Viewer Section -->
-    <h2>View and Search Excel File</h2>
-    <input type="text" id="searchBox" placeholder="Search in the table..." oninput="searchTable()">
-    <button onclick="loadExcel()">Load Excel File</button>
+    <h2>在线查询和搜索数据分析结果</h2>
+    <input type="text" id="searchBox" placeholder="搜索6位股票代码或名称..." oninput="searchTable()">
+    <button onclick="loadExcel()">加载数据</button>
     <table id="excelTable"></table>
 
     <script>
