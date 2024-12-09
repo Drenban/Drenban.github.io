@@ -15,31 +15,82 @@
             margin: 20px;
             line-height: 1.6;
         }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 20px;
+            margin-top: 20px;
+        }
         table {
             width: 100%;
             margin-top: 20px;
+            border-collapse: collapse;
         }
-        input {
-            margin-bottom: 20px;
+        th, td {
             padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        input, button {
+            padding: 10px;
+            margin-bottom: 20px;
             width: 100%;
+            box-sizing: border-box;
         }
         button {
-            margin-top: 10px;
-            padding: 10px 15px;
             font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
         a {
             display: inline-block;
-            margin-top: 20px;
             padding: 10px 15px;
             background-color: #007BFF;
             color: white;
             text-decoration: none;
             border-radius: 5px;
+            margin-top: 20px;
         }
         a:hover {
             background-color: #0056b3;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 20px;
+            }
+            h2 {
+                font-size: 18px;
+            }
+            button, input {
+                font-size: 14px;
+            }
+            table {
+                overflow-x: auto;
+                display: block;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 18px;
+            }
+            h2 {
+                font-size: 16px;
+            }
+            button, input {
+                font-size: 12px;
+            }
+            a {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -95,7 +146,7 @@
                 $('#excelTable').DataTable();
             } catch (error) {
                 console.error('Error loading Excel file:', error);
-                alert('Failed to load Excel file. Please ensure the file exists in the same directory.');
+                alert('无法加载 Excel 文件，请确保文件存在于同一目录中。');
             }
         }
     </script>
