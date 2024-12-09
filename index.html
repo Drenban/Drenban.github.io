@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel File Viewer with Filters</title>
+    <title>分析结果预览与过滤</title>
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -44,15 +44,15 @@
     </style>
 </head>
 <body>
-    <h1>Excel File Manager</h1>
-    <p>You can download the Excel file or view and interact with its content below:</p>
+    <h1>数据管理</h1>
+    <p>您可以下载 Excel 文件或查看并与其内容进行交互：</p>
 
     <!-- Download Section -->
-    <a href="data.xlsx" download>Download data.xlsx</a>
+    <a href="data.xlsx" download>下载数据</a>
 
     <!-- Viewer Section -->
-    <h2>View and Search Excel File</h2>
-    <button onclick="loadExcel()">Load Excel File</button>
+    <h2>在线预览和搜索数据</h2>
+    <button onclick="loadExcel()">在线加载数据</button>
     <table id="excelTable" class="display"></table>
 
     <script>
