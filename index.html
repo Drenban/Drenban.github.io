@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据管理</title>
+    <title>Excel File Viewer with Filters</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,17 +16,8 @@
             line-height: 1.6;
         }
         table {
-            border-collapse: collapse;
             width: 100%;
             margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
         }
         input {
             margin-bottom: 20px;
@@ -49,19 +44,16 @@
     </style>
 </head>
 <body>
-    <h1>数据管理</h1>
-    <p>
-        您可以<strong>下载</strong>数据分析结果或在线<strong>查询和搜索</strong>其内容。
-    </p>
+    <h1>Excel File Manager</h1>
+    <p>You can download the Excel file or view and interact with its content below:</p>
 
     <!-- Download Section -->
-    <a href="data.xlsx" download>下载</a>
+    <a href="data.xlsx" download>Download data.xlsx</a>
 
     <!-- Viewer Section -->
-    <h2>在线查询和搜索数据分析结果</h2>
-    <input type="text" id="searchBox" placeholder="搜索6位股票代码或名称..." oninput="searchTable()">
-    <button onclick="loadExcel()">加载数据</button>
-    <table id="excelTable"></table>
+    <h2>View and Search Excel File</h2>
+    <button onclick="loadExcel()">Load Excel File</button>
+    <table id="excelTable" class="display"></table>
 
     <script>
         async function loadExcel() {
@@ -74,34 +66,37 @@
                 const sheet = workbook.Sheets[sheetName];
                 const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-                // Populate table with Excel data
-                const table = document.getElementById('excelTable');
-                table.innerHTML = ''; // Clear existing content
+                // Clear and populate the table
+                const table = $('#excelTable');
+                table.empty(); // Clear existing content
 
-                data.forEach((row, index) => {
-                    const tr = document.createElement('tr');
-                    row.forEach(cell => {
-                        const td = document.createElement(index === 0 ? 'th' : 'td');
-                        td.textContent = cell || '';
-                        tr.appendChild(td);
-                    });
-                    table.appendChild(tr);
+                // Add table headers
+                const headers = data[0];
+                const thead = $('<thead></thead>');
+                const headerRow = $('<tr></tr>');
+                headers.forEach(header => {
+                    headerRow.append(`<th>${header}</th>`);
                 });
+                thead.append(headerRow);
+                table.append(thead);
+
+                // Add table body
+                const tbody = $('<tbody></tbody>');
+                data.slice(1).forEach(row => {
+                    const rowElement = $('<tr></tr>');
+                    row.forEach(cell => {
+                        rowElement.append(`<td>${cell || ''}</td>`);
+                    });
+                    tbody.append(rowElement);
+                });
+                table.append(tbody);
+
+                // Initialize DataTables for sorting and filtering
+                $('#excelTable').DataTable();
             } catch (error) {
                 console.error('Error loading Excel file:', error);
                 alert('Failed to load Excel file. Please ensure the file exists in the same directory.');
             }
-        }
-
-        function searchTable() {
-            const input = document.getElementById('searchBox').value.toLowerCase();
-            const rows = document.querySelectorAll('#excelTable tr');
-            rows.forEach((row, index) => {
-                if (index === 0) return; // Skip header row
-                const cells = Array.from(row.querySelectorAll('td'));
-                const match = cells.some(cell => cell.textContent.toLowerCase().includes(input));
-                row.style.display = match ? '' : 'none';
-            });
         }
     </script>
 </body>
