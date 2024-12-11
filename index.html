@@ -14,20 +14,30 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f5f5f5;
+            background-color: #f9f9f9;
         }
         .search-container {
             text-align: center;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .logo {
+            margin-bottom: 20px;
         }
         .search-box {
             width: 100%;
             max-width: 600px;
             padding: 10px;
-            margin: 20px auto;
             font-size: 18px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         button {
             padding: 10px 20px;
@@ -36,23 +46,40 @@
             color: white;
             border: none;
             cursor: pointer;
-            margin-top: 10px;
-            border-radius: 5px;
+            margin-top: 15px;
+            border-radius: 25px;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #0056b3;
         }
         table {
             margin-top: 20px;
-            width: 100%;
-            max-width: 80%;
-            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
             display: none; /* Hidden initially */
+            background-color: #ffffff;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
         }
     </style>
 </head>
 <body>
     <div class="search-container">
+        <div class="logo">
+            <img src="logo.png" alt="Logo" width="150">
+        </div>
         <input id="searchBox" class="search-box" type="text" placeholder="搜索 Excel 数据..." oninput="filterTable()">
         <button onclick="loadExcel()">加载数据</button>
     </div>
@@ -100,9 +127,7 @@
 
         function filterTable() {
             const value = $('#searchBox').val().toLowerCase();
-            $('#excelTable tbody tr').filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-            });
+            $('#excelTable').DataTable().search(value).draw();
         }
     </script>
 </body>
