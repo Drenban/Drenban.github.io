@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分析结果预览与过滤</title>
-    <!-- DataTables CSS -->
+    <title>搜索数据</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -12,104 +11,56 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
         }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
+        .search-container {
+            text-align: center;
         }
-        h2 {
-            font-size: 20px;
-            margin-top: 20px;
-        }
-        table {
+        .search-box {
             width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        input, button {
+            max-width: 600px;
             padding: 10px;
-            margin-bottom: 20px;
-            width: 100%;
-            box-sizing: border-box;
+            margin: 20px auto;
+            font-size: 18px;
         }
         button {
-            font-size: 16px;
+            padding: 10px 20px;
+            font-size: 18px;
             background-color: #007BFF;
             color: white;
             border: none;
             cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
         }
         button:hover {
             background-color: #0056b3;
         }
-        a {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
+        table {
             margin-top: 20px;
-        }
-        a:hover {
-            background-color: #0056b3;
-        }
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 20px;
-            }
-            h2 {
-                font-size: 18px;
-            }
-            button, input {
-                font-size: 14px;
-            }
-            table {
-                overflow-x: auto;
-                display: block;
-                -webkit-overflow-scrolling: touch;
-            }
-        }
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 18px;
-            }
-            h2 {
-                font-size: 16px;
-            }
-            button, input {
-                font-size: 12px;
-            }
-            a {
-                font-size: 14px;
-            }
+            width: 100%;
+            max-width: 80%;
+            margin: 20px auto;
+            display: none; /* Hidden initially */
         }
     </style>
 </head>
 <body>
-    <h1>数据管理</h1>
-    <p>您可以下载 Excel 文件或查看并与其内容进行交互：</p>
-
-    <!-- Download Section -->
-    <a href="data.xlsx" download>下载数据</a>
-
-    <!-- Viewer Section -->
-    <h2>在线预览和搜索数据</h2>
-    <button onclick="loadExcel()">在线加载数据</button>
+    <div class="search-container">
+        <input id="searchBox" class="search-box" type="text" placeholder="搜索 Excel 数据..." oninput="filterTable()">
+        <button onclick="loadExcel()">加载数据</button>
+    </div>
     <table id="excelTable" class="display"></table>
 
     <script>
         async function loadExcel() {
             try {
-                // Fetch and parse the Excel file
                 const response = await fetch('data.xlsx');
                 const arrayBuffer = await response.arrayBuffer();
                 const workbook = XLSX.read(arrayBuffer, { type: 'array' });
@@ -117,11 +68,10 @@
                 const sheet = workbook.Sheets[sheetName];
                 const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-                // Clear and populate the table
                 const table = $('#excelTable');
                 table.empty(); // Clear existing content
+                table.show(); // Show table
 
-                // Add table headers
                 const headers = data[0];
                 const thead = $('<thead></thead>');
                 const headerRow = $('<tr></tr>');
@@ -131,7 +81,6 @@
                 thead.append(headerRow);
                 table.append(thead);
 
-                // Add table body
                 const tbody = $('<tbody></tbody>');
                 data.slice(1).forEach(row => {
                     const rowElement = $('<tr></tr>');
@@ -142,12 +91,18 @@
                 });
                 table.append(tbody);
 
-                // Initialize DataTables for sorting and filtering
                 $('#excelTable').DataTable();
             } catch (error) {
                 console.error('Error loading Excel file:', error);
                 alert('无法加载 Excel 文件，请确保文件存在于同一目录中。');
             }
+        }
+
+        function filterTable() {
+            const value = $('#searchBox').val().toLowerCase();
+            $('#excelTable tbody tr').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
         }
     </script>
 </body>
