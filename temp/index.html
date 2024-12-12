@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -18,4 +18,128 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script src="script.js"></script>  <!-- 引入外部 JavaScript 文件 -->
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel 文件搜索</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #searchResults {
+            margin-top: 20px;
+        }
+        .result-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 300px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Excel 文件内容搜索</h1>
+
+    <input type="file" id="fileInput" accept=".xlsx">
+    <br>
+    <input type="text" id="searchQuery" placeholder="请输入搜索内容" />
+    <button onclick="searchFiles()">搜索</button>
+
+    <div id="searchResults"></div>
+
+    <script>
+        async function searchFiles() {
+            const query = document.getElementById('searchQuery').value.trim();
+            if (!query) {
+                alert('请输入搜索内容');
+                return;
+            }
+
+            const searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = '';  // 清空以前的搜索结果
+
+            // 获取上传的文件
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('请先上传一个 XLSX 文件');
+                return;
+            }
+
+            try {
+                // 使用 FileReader 读取上传的文件
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const arrayBuffer = e.target.result;
+                    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+                    console.log('Workbook:', workbook);  // 打印工作簿对象，确认文件已正确读取
+
+                    const results = [];
+                    workbook.SheetNames.forEach(sheetName => {
+                        const sheet = workbook.Sheets[sheetName];
+                        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });  // 以二维数组形式获取数据
+
+                        console.log(`Sheet: ${sheetName}`, data);  // 打印每个工作表的数据，确认是否读取正确
+
+                        data.forEach(row => {
+                            row.forEach(cell => {
+                                console.log(cell);  // 打印每个单元格的内容，检查数据
+                                if (cell && cell.toString().includes(query)) {
+                                    results.push({ sheet: sheetName, value: cell });
+                                }
+                            });
+                        });
+                    });
+
+                    // 显示搜索结果
+                    if (results.length > 0) {
+                        results.forEach(result => {
+                            const resultElement = document.createElement('div');
+                            resultElement.classList.add('result-item');
+                            resultElement.innerHTML = `<b>表格:</b> ${result.sheet} <b>值:</b> ${result.value}`;
+                            searchResults.appendChild(resultElement);
+                        });
+                    } else {
+                        searchResults.innerHTML = '<p>未找到相关结果。</p>';
+                    }
+                };
+
+                reader.onerror = function(error) {
+                    console.error('文件读取错误:', error);
+                    searchResults.innerHTML = '<p>加载文件失败，请稍后再试。</p>';
+                };
+
+                // 读取文件
+                reader.readAsArrayBuffer(file);
+
+            } catch (error) {
+                console.error('搜索时出错:', error);
+                searchResults.innerHTML = '<p>加载文件失败，请稍后再试。</p>';
+            }
+        }
+    </script>
+
+</body>
 </html>
+
