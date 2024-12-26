@@ -18,79 +18,33 @@
             align-items: center;
             height: 100vh;
             background-color: #f4f4f9;
-            box-sizing: border-box;
         }
-
         .data-container {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 1000px;
-            overflow-x: auto;  /* Ensure horizontal scroll for small devices */
+            width: 80%;
         }
-
-        h2 {
-            font-size: 1.5em;
-            text-align: center;
-        }
-
-        button {
-            padding: 12px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 1em;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-
         th, td {
             padding: 10px;
             text-align: left;
             border: 1px solid #ddd;
-            word-wrap: break-word;
         }
-
-        th {
-            background-color: #f4f4f4;
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
-
-        /* Media query for smaller screens */
-        @media (max-width: 768px) {
-            button {
-                font-size: 1.2em; /* Adjust button text size */
-            }
-
-            th, td {
-                padding: 8px; /* Adjust padding for smaller screens */
-            }
-
-            .data-container {
-                width: 95%;  /* Take up more space on smaller screens */
-            }
-        }
-
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 1.2em; /* Smaller heading size on very small screens */
-            }
-
-            button {
-                font-size: 1em; /* Adjust button size */
-            }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -148,7 +102,7 @@
 
             // Initialize DataTables for sorting and filtering
             $('#excelTable').DataTable({
-                pageLength: 5,  // 默认每页显示 10 条
+                pageLength: 10,  // 默认每页显示 10 条
                 lengthMenu: [5, 10, 25, 50],  // 可选择每页显示 5、10、25 或 50 条数据
                 language: {
                     search: "搜索数据:",  // 修改搜索框的提示文本
