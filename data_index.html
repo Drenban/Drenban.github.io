@@ -1,46 +1,42 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分析结果预览与过滤</title>
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <title>数据页面</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
         }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        h2 {
-            font-size: 20px;
-            margin-top: 20px;
+        .data-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
         }
         table {
             width: 100%;
-            margin-top: 20px;
             border-collapse: collapse;
+            margin-top: 20px;
         }
         th, td {
-            padding: 8px;
+            padding: 10px;
             text-align: left;
             border: 1px solid #ddd;
         }
-        input, button {
-            padding: 10px;
-            margin-bottom: 20px;
-            width: 100%;
-            box-sizing: border-box;
-        }
         button {
-            font-size: 16px;
+            padding: 10px;
             background-color: #007BFF;
             color: white;
             border: none;
@@ -49,171 +45,68 @@
         button:hover {
             background-color: #0056b3;
         }
-        a {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        a:hover {
-            background-color: #0056b3;
-        }
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 20px;
-            }
-            h2 {
-                font-size: 18px;
-            }
-            button, input {
-                font-size: 14px;
-            }
-            table {
-                overflow-x: auto;
-                display: block;
-                -webkit-overflow-scrolling: touch;
-            }
-        }
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 18px;
-            }
-            h2 {
-                font-size: 16px;
-            }
-            button, input {
-                font-size: 12px;
-            }
-            a {
-                font-size: 14px;
-            }
-        }
     </style>
 </head>
 <body>
-    <h1>数据管理</h1>
-    <p>您可以下载 Excel 文件或查看并与其内容进行交互：</p>
 
-    <!-- Download Section -->
-    <a href="data.xlsx" download>下载数据</a>
+<div class="data-container">
+    <h2>数据管理</h2>
+    <button onclick="loadExcel()">加载数据</button>
+    <table id="excelTable" class="display">
+        <!-- 数据表格将动态插入 -->
+    </table>
+</div>
 
-    <!-- 登录区域 -->
-    <div class="login-container" id="loginContainer">
-        <h2>用户登录</h2>
-        <input type="text" id="username" placeholder="用户名" required>
-        <input type="password" id="password" placeholder="密码" required>
-        <button onclick="login()">登录</button>
-        <div class="error-message" id="errorMessage"></div>
-    </div>
+<script>
+    // 页面加载时检查用户是否登录
+    if (localStorage.getItem('userLoggedIn') !== 'true') {
+        window.location.href = 'login.html'; // 跳转到登录页
+    }
 
-    <!-- Viewer Section -->
-    <div id="content" style="display:none;">
-        <h2>在线预览和搜索数据</h2>
-        <button onclick="loadExcel()">在线加载数据</button>
-        <table id="excelTable" class="display"></table>
-    </div>
+    // 加载并显示 Excel 数据
+    async function loadExcel() {
+        try {
+            // Fetch and parse the Excel file
+            const response = await fetch('data.xlsx');  // 替换为您的 Excel 文件路径
+            const arrayBuffer = await response.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-    <script>
-        let userData = []; // 用于存储从 .xlsx 文件读取的用户数据
+            // Clear and populate the table
+            const table = $('#excelTable');
+            table.empty(); // Clear existing content
 
-        // 用户登录验证
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
+            // Add table headers
+            const headers = data[0];
+            const thead = $('<thead></thead>');
+            const headerRow = $('<tr></tr>');
+            headers.forEach(header => {
+                headerRow.append(`<th>${header}</th>`);
+            });
+            thead.append(headerRow);
+            table.append(thead);
 
-            // 清除之前的错误信息
-            errorMessage.textContent = '';
-
-            // 检查用户名和密码是否正确
-            const user = userData.find(u => u.username === username && u.password === password);
-
-            if (user) {
-                // 登录成功，隐藏登录表单并显示内容区域
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('content').style.display = 'block'; // 显示数据区域
-                alert('登录成功！');
-            } else {
-                // 登录失败，显示错误信息
-                errorMessage.textContent = '用户名或密码错误！';
-            }
-        }
-
-        // 通过地址获取 .xlsx 文件
-        async function loadUserData() {
-            try {
-                const response = await fetch('data.xlsx'); // 替换为实际的 .xlsx 文件路径
-                const arrayBuffer = await response.arrayBuffer();
-                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-                const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-                // 存储用户名和密码的数据
-                userData = data.slice(1).map(row => ({
-                    username: row[0], // 假设 Excel 表格的第一列为 "用户名"
-                    password: row[1]  // 第二列为 "密码"
-                }));
-
-                console.log('用户数据加载完成：', userData); // 用于调试
-            } catch (error) {
-                console.error('加载 Excel 文件失败：', error);
-                alert('无法加载用户数据，请确保文件存在于同一目录中。');
-            }
-        }
-
-        // 加载并显示 Excel 数据
-        async function loadExcel() {
-            try {
-                // Fetch and parse the Excel file
-                const response = await fetch('data.xlsx');
-                const arrayBuffer = await response.arrayBuffer();
-                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-                const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-                // Clear and populate the table
-                const table = $('#excelTable');
-                table.empty(); // Clear existing content
-
-                // Add table headers
-                const headers = data[0];
-                const thead = $('<thead></thead>');
-                const headerRow = $('<tr></tr>');
-                headers.forEach(header => {
-                    headerRow.append(`<th>${header}</th>`);
+            // Add table body
+            const tbody = $('<tbody></tbody>');
+            data.slice(1).forEach(row => {
+                const rowElement = $('<tr></tr>');
+                row.forEach(cell => {
+                    rowElement.append(`<td>${cell || ''}</td>`);
                 });
-                thead.append(headerRow);
-                table.append(thead);
+                tbody.append(rowElement);
+            });
+            table.append(tbody);
 
-                // Add table body
-                const tbody = $('<tbody></tbody>');
-                data.slice(1).forEach(row => {
-                    const rowElement = $('<tr></tr>');
-                    row.forEach(cell => {
-                        rowElement.append(`<td>${cell || ''}</td>`);
-                    });
-                    tbody.append(rowElement);
-                });
-                table.append(tbody);
-
-                // Initialize DataTables for sorting and filtering
-                $('#excelTable').DataTable();
-            } catch (error) {
-                console.error('Error loading Excel file:', error);
-                alert('无法加载 Excel 文件，请确保文件存在于同一目录中。');
-            }
+            // Initialize DataTables for sorting and filtering
+            $('#excelTable').DataTable();
+        } catch (error) {
+            console.error('Error loading Excel file:', error);
+            alert('无法加载 Excel 文件，请确保文件存在于同一目录中。');
         }
+    }
+</script>
 
-        // 页面加载时获取用户数据
-        window.onload = function() {
-            loadUserData();  // 加载用户数据
-        };
-    </script>
 </body>
 </html>
