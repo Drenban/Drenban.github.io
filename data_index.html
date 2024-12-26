@@ -53,6 +53,7 @@
 
 <div class="data-container">
     <h2>数据管理</h2>
+    <button onclick="loadExcel()">加载数据</button>
     <table id="excelTable" class="display">
         <!-- 数据表格将动态插入 -->
     </table>
@@ -102,7 +103,7 @@
 
             // Initialize DataTables for sorting and filtering
             $('#excelTable').DataTable({
-                pageLength: 10,  // 默认每页显示 10 条
+                pageLength: 5,  // 默认每页显示 10 条
                 lengthMenu: [5, 10, 25, 50],  // 可选择每页显示 5、10、25 或 50 条数据
                 language: {
                     search: "搜索数据:",  // 修改搜索框的提示文本
@@ -123,11 +124,6 @@
             alert('无法加载 Excel 文件，请确保文件存在于同一目录中。');
         }
     }
-
-    // 监听搜索框输入，输入时才加载数据
-    $('input[type="search"]').on('input', function() {
-        loadExcel();  // 用户输入时加载数据
-    });
 </script>
 
 </body>
