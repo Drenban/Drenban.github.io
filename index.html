@@ -128,7 +128,7 @@
     // 动态加载内容
     function loadDynamicContent() {
         const contentDiv = document.getElementById('dynamicContent');
-        fetch('restricted-content.html')
+        fetch('data_index.html')
             .then(response => response.text())
             .then(data => {
                 contentDiv.innerHTML = data;
