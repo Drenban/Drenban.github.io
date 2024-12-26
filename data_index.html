@@ -101,7 +101,23 @@
             table.append(tbody);
 
             // Initialize DataTables for sorting and filtering
-            $('#excelTable').DataTable();
+            $('#excelTable').DataTable(
+                pageLength: 10,  // 默认每页显示 10 条
+                lengthMenu: [5, 10, 25, 50],  // 可选择每页显示 5、10、25 或 50 条数据
+                language: {
+                    search: "搜索数据:",  // 修改搜索框的提示文本
+                    lengthMenu: "显示 _MENU_ 条记录",  // 修改 "Show 10 entries" 的文本
+                    info: "显示第 _START_ 至 _END_ 条记录，共 _TOTAL_ 条",  // 修改页脚的记录信息文本
+                    infoEmpty: "没有记录",  // 如果没有记录时的提示文本
+                    zeroRecords: "没有匹配的记录",  // 如果没有匹配项时的提示文本
+                    paginate: {
+                        first: "首页",  // "First" 页按钮的文本
+                        previous: "上一页",  // "Previous" 页按钮的文本
+                        next: "下一页",  // "Next" 页按钮的文本
+                        last: "末页"  // "Last" 页按钮的文本
+                    }
+                }
+            });
         } catch (error) {
             console.error('Error loading Excel file:', error);
             alert('无法加载 Excel 文件，请确保文件存在于同一目录中。');
