@@ -62,14 +62,14 @@
 <script>
     // 页面加载时检查用户是否登录
     if (localStorage.getItem('userLoggedIn') !== 'true') {
-        window.location.href = 'login.html'; // 跳转到登录页
+        window.location.href = 'index.html'; // 跳转到登录页
     }
 
     // 加载并显示 Excel 数据
     async function loadExcel() {
         try {
             // Fetch and parse the Excel file
-            const response = await fetch('data.xlsx');  // 替换为您的 Excel 文件路径
+            const response = await fetch('google/data.xlsx');  // 替换为您的 Excel 文件路径
             const arrayBuffer = await response.arrayBuffer();
             const workbook = XLSX.read(arrayBuffer, { type: 'array' });
             const sheetName = workbook.SheetNames[0];
