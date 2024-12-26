@@ -101,12 +101,72 @@
     <!-- Download Section -->
     <a href="data.xlsx" download>下载数据</a>
 
+    <!-- 登录区域 -->
+    <div class="login-container" id="loginContainer">
+        <h2>用户登录</h2>
+        <input type="text" id="username" placeholder="用户名" required>
+        <input type="password" id="password" placeholder="密码" required>
+        <button onclick="login()">登录</button>
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
     <!-- Viewer Section -->
-    <h2>在线预览和搜索数据</h2>
-    <button onclick="loadExcel()">在线加载数据</button>
-    <table id="excelTable" class="display"></table>
+    <div id="content" style="display:none;">
+        <h2>在线预览和搜索数据</h2>
+        <button onclick="loadExcel()">在线加载数据</button>
+        <table id="excelTable" class="display"></table>
+    </div>
 
     <script>
+        let userData = []; // 用于存储从 .xlsx 文件读取的用户数据
+
+        // 用户登录验证
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // 清除之前的错误信息
+            errorMessage.textContent = '';
+
+            // 检查用户名和密码是否正确
+            const user = userData.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                // 登录成功，隐藏登录表单并显示内容区域
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('content').style.display = 'block'; // 显示数据区域
+                alert('登录成功！');
+            } else {
+                // 登录失败，显示错误信息
+                errorMessage.textContent = '用户名或密码错误！';
+            }
+        }
+
+        // 通过地址获取 .xlsx 文件
+        async function loadUserData() {
+            try {
+                const response = await fetch('data.xlsx'); // 替换为实际的 .xlsx 文件路径
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                // 存储用户名和密码的数据
+                userData = data.slice(1).map(row => ({
+                    username: row[0], // 假设 Excel 表格的第一列为 "用户名"
+                    password: row[1]  // 第二列为 "密码"
+                }));
+
+                console.log('用户数据加载完成：', userData); // 用于调试
+            } catch (error) {
+                console.error('加载 Excel 文件失败：', error);
+                alert('无法加载用户数据，请确保文件存在于同一目录中。');
+            }
+        }
+
+        // 加载并显示 Excel 数据
         async function loadExcel() {
             try {
                 // Fetch and parse the Excel file
@@ -149,6 +209,11 @@
                 alert('无法加载 Excel 文件，请确保文件存在于同一目录中。');
             }
         }
+
+        // 页面加载时获取用户数据
+        window.onload = function() {
+            loadUserData();  // 加载用户数据
+        };
     </script>
 </body>
 </html>
