@@ -105,7 +105,7 @@
         console.log("Expiry Date (YYYY-MM-DD): ", expiryDateString);
     
         // 返回过期检查结果
-        return expiryDateString < currentDateString;  // 如果过期日期小于当前日期，则过期
+        return expiryDateString.getTime() < currentDateString.getTime();  // 如果过期日期小于当前日期，则过期
     }
     
     // 用户登录验证
