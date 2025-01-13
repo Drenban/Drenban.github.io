@@ -134,21 +134,27 @@
 
     // 用户登录验证
     function login() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
         const errorMessage = document.getElementById('errorMessage');
 
         // 清除之前的错误信息
         errorMessage.textContent = '';
+
+         // 输入验证
+        if (!username || !password) {
+            errorMessage.textContent = '请输入用户名和密码！';
+            return;
+        }
 
         // 检查用户输入的用户名和密码是否匹配
         const user = userData.find(u => u.username === username && u.password === password);
 
         if (user) {
             // 检查会员有效期是否过期
-            const isExpired = isMembershipValid(user.expiryDate);
+            const isValid = isMembershipValid(user.expiryDate);
             
-            if (isExpired) {
+            if (!isValid) {
                 errorMessage.textContent = '您的会员已过期！'; // 会员过期
             } else {
                 // 登录成功，保存登录状态，并跳转到数据页面
