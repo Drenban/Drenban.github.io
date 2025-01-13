@@ -83,7 +83,7 @@
                 userData = json.map(row => ({
                     username: row["Username"], // 假设 Excel 表格的列名为 "Username" 和 "Password"
                     password: row["Password"],
-                    expiryDate: row["ExpiryDate"]  // 假设日期是字符串格式，如 "2025-01-15"
+                    expiryDate: new Date(row["ExpiryDate"])  // 假设日期是字符串格式，如 "2025-01-15"
                 }));
 
                 console.log("User data loaded:", userData); // 用于调试
@@ -101,7 +101,14 @@
         currentDate.setHours(0, 0, 0, 0);  // 设置为午夜（00:00:00）
         
         const expiry = new Date(expiryDate);
+        if (isNaN(expiry.getTime())) {
+            console.error("Invalid expiry date:", expiryDate);
+            return false; // 无效日期视为过期
+        }
         expiry.setHours(0, 0, 0, 0);  // 清除时分秒部分
+
+        console.log("Original expiryDate: ", expiryDate);
+        console.log("Parsed expiryDate: ", new Date(expiryDate));
     
         const diffTime = expiry.getTime() - currentDate.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));  // 转换为天数
