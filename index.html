@@ -93,26 +93,53 @@
             });
     }
 
+    // // 检查会员是否过期
+    // function isMembershipValid(expiryDate) {
+    //     /**
+    //      * 将日期字符串解析为标准 Date 对象
+    //      * @param {string} dateString - 日期字符串，格式为 "YYYY-MM-DD"
+    //      * @returns {Date} - 解析后的 Date 对象
+    //      */
+    //     function parseDate(dateString) {
+    //         const parts = dateString.split('-'); // 假设是 "YYYY-MM-DD"
+    //         return new Date(parts[0], parts[1] - 1, parts[2]); // 注意月份从 0 开始
+    //     }
+
+    //     // 获取当前日期并清除时分秒部分
+    //     const currentDate = new Date();
+
+    //     // 清除时分秒，确保比较的日期为"纯日期"
+    //     currentDate.setHours(0, 0, 0, 0);  // 设置为午夜（00:00:00）
+
+    //     // 解析并清除过期日期的时分秒部分
+    //     const expiry = parseDate(expiryDate);
+    //     if (isNaN(expiry.getTime())) {
+    //         console.error("Invalid expiry date:", expiryDate);
+    //         return false; // 无效日期视为过期
+    //     }
+    //     expiry.setHours(0, 0, 0, 0);  // 清除时分秒部分
+
+    //     console.log("Original expiryDate: ", expiryDate);
+    //     console.log("Parsed expiryDate: ", expiry);
+
+    //     // 计算剩余天数
+    //     const diffTime = expiry.getTime() - currentDate.getTime();
+    //     const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));  // 转换为天数
+    
+    //     console.log("Remaining days: ", diffDays);
+
+    //     // 如果剩余天数大于 0，则会员有效
+    //     return diffDays > 0;
+    // }
+
     // 检查会员是否过期
     function isMembershipValid(expiryDate) {
-        /**
-         * 将日期字符串解析为标准 Date 对象
-         * @param {string} dateString - 日期字符串，格式为 "YYYY-MM-DD"
-         * @returns {Date} - 解析后的 Date 对象
-         */
-        function parseDate(dateString) {
-            const parts = dateString.split('-'); // 假设是 "YYYY-MM-DD"
-            return new Date(parts[0], parts[1] - 1, parts[2]); // 注意月份从 0 开始
-        }
-
-        // 获取当前日期并清除时分秒部分
         const currentDate = new Date();
 
         // 清除时分秒，确保比较的日期为"纯日期"
         currentDate.setHours(0, 0, 0, 0);  // 设置为午夜（00:00:00）
-
-        // 解析并清除过期日期的时分秒部分
-        const expiry = parseDate(expiryDate);
+        
+        const expiry = new Date(expiryDate);
         if (isNaN(expiry.getTime())) {
             console.error("Invalid expiry date:", expiryDate);
             return false; // 无效日期视为过期
@@ -120,16 +147,14 @@
         expiry.setHours(0, 0, 0, 0);  // 清除时分秒部分
 
         console.log("Original expiryDate: ", expiryDate);
-        console.log("Parsed expiryDate: ", expiry);
-
-        // 计算剩余天数
+        console.log("Parsed expiryDate: ", new Date(expiryDate));
+    
         const diffTime = expiry.getTime() - currentDate.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));  // 转换为天数
     
         console.log("Remaining days: ", diffDays);
-
-        // 如果剩余天数大于 0，则会员有效
-        return diffDays > 0;
+    
+        return diffDays > 0;  // 只要剩余天数大于0，会员有效
     }
 
     // 用户登录验证
