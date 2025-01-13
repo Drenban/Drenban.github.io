@@ -94,13 +94,18 @@
     }
 
     // 检查会员是否过期
-    function checkExpiryDate(expiryDate) {
+    function checkExpiryByDays(expiryDate) {
         const currentDate = new Date();
-        
-        // 返回过期检查结果
-        return expiryDate.getTime() < currentDate.getTime();  // 如果过期日期小于当前日期，则过期
-    }
+        const expiry = new Date(expiryDate);
     
+        const diffTime = expiry.getTime() - currentDate.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));  // 转换为天数
+    
+        console.log("Remaining days: ", diffDays);
+    
+        return diffDays > 0;  // 只要剩余天数大于0，会员有效
+    }
+
     // 用户登录验证
     function login() {
         const username = document.getElementById('username').value;
@@ -115,7 +120,7 @@
 
         if (user) {
             // 检查会员有效期是否过期
-            const isExpired = checkExpiryDate(user.expiryDate);
+            const isExpired = checkExpiryByDays(user.expiryDate);
             
             if (isExpired) {
                 errorMessage.textContent = '您的会员已过期！'; // 会员过期
