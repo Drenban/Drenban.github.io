@@ -96,7 +96,12 @@
     // 检查会员是否过期
     function checkExpiryByDays(expiryDate) {
         const currentDate = new Date();
+
+        // 清除时分秒，确保比较的日期为"纯日期"
+        currentDate.setHours(0, 0, 0, 0);  // 设置为午夜（00:00:00）
+        
         const expiry = new Date(expiryDate);
+        expiry.setHours(0, 0, 0, 0);  // 清除时分秒部分
     
         const diffTime = expiry.getTime() - currentDate.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));  // 转换为天数
