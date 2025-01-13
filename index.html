@@ -73,27 +73,23 @@
             .then(response => response.arrayBuffer())
             .then(data => {
                 const workbook = XLSX.read(data, { type: 'array' });
+
+                // 假设 Excel 文件的第一个工作表包含用户名和密码
                 const sheetName = workbook.SheetNames[0];
                 const sheet = workbook.Sheets[sheetName];
                 const json = XLSX.utils.sheet_to_json(sheet);
-    
-                userData = json.map(row => {
-                    if (!row["Username"] || !row["Password"] || !row["ExpiryDate"]) {
-                        console.error("数据格式错误，缺少必要字段！", row);
-                        return null;
-                    }
-                    return {
-                        username: row["Username"],
-                        password: row["Password"],
-                        expiryDate: new Date(row["ExpiryDate"]),
-                    };
-                }).filter(Boolean);
-    
-                console.log("User data loaded:", userData);
+
+                // 存储用户名和密码的数据
+                userData = json.map(row => ({
+                    username: row["Username"], // 假设 Excel 表格的列名为 "Username" 和 "Password"
+                    password: row["Password"],
+                    expiryDate: new Date(row["ExpiryDate"])  // 假设日期是字符串格式，如 "2025-01-15"
+                }));
+
+                console.log("User data loaded:", userData); // 用于调试
             })
             .catch(error => {
                 console.error("加载文件失败:", error);
-                alert("无法加载用户数据，请检查网络或联系管理员！");
             });
     }
 
@@ -145,11 +141,6 @@
         // 清除之前的错误信息
         errorMessage.textContent = '';
 
-        if (!userData || userData.length === 0) {
-            errorMessage.textContent = '用户数据加载失败，请稍后重试！';
-            return;
-        }
-
          // 输入验证
         if (!username || !password) {
             errorMessage.textContent = '请输入用户名和密码！';
@@ -157,13 +148,13 @@
         }
 
         // 检查用户输入的用户名和密码是否匹配
-        const user = userData.find(
-            u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
-        );
+        const user = userData.find(u => u.username === username && u.password === password);
 
         if (user) {
             // 检查会员有效期是否过期
-            if (!isMembershipValid(user.expiryDate)) {
+            const isValid = isMembershipValid(user.expiryDate);
+            
+            if (!isValid) {
                 errorMessage.textContent = '您的会员已过期！'; // 会员过期
             } else {
                 // 登录成功，保存登录状态，并跳转到数据页面
