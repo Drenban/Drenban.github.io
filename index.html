@@ -83,7 +83,7 @@
                 userData = json.map(row => ({
                     username: row["Username"], // 假设 Excel 表格的列名为 "Username" 和 "Password"
                     password: row["Password"],
-                    expiryDate: row["ExpiryDate"]  // 假设日期是字符串格式，如 "2025-01-15"
+                    expiryDate: new Date(row["ExpiryDate"])  // 假设日期是字符串格式，如 "2025-01-15"
                 }));
 
                 console.log("User data loaded:", userData); // 用于调试
@@ -96,16 +96,9 @@
     // 检查会员是否过期
     function checkExpiryDate(expiryDate) {
         const currentDate = new Date();
-    
-        // 通过 toISOString 转换为标准的日期字符串，去掉时分秒
-        const currentDateString = currentDate.toISOString().split('T')[0]; // 获取 "YYYY-MM-DD" 格式的日期
-        const expiryDateString = new Date(expiryDate).toISOString().split('T')[0]; // 同理处理过期日期
-    
-        console.log("Current Date (YYYY-MM-DD): ", currentDateString);
-        console.log("Expiry Date (YYYY-MM-DD): ", expiryDateString);
-    
+        
         // 返回过期检查结果
-        return expiryDateString.getTime() < currentDateString.getTime();  // 如果过期日期小于当前日期，则过期
+        return expiryDate.getTime() < currentDate.getTime();  // 如果过期日期小于当前日期，则过期
     }
     
     // 用户登录验证
