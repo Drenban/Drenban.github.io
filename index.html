@@ -107,11 +107,11 @@
 
         if (user) {
             // 检查会员有效期是否过期
-            const currentDate = new Date();
-            console.log("Current Date: ", currentDate); // 输出当前日期进行调试
+            const currentDate = new Date().toISOString(); // 获取当前时间的 ISO 字符串
+            console.log("Current Date (ISO): ", currentDate); // 输出当前日期进行调试
             
-            const expiryDate = new Date(Date.parse(user.expiryDate));  // 将字符串日期转为 Date 对象
-            console.log("Expiry Date: ", expiryDate); // 输出过期日期进行调试
+            const expiryDate = new Date(user.expiryDate).toISOString(); // 将过期日期转换为 ISO 字符串
+            console.log("Expiry Date (ISO): ", expiryDate); // 输出过期日期进行调试
 
             if (expiryDate.getTime() < currentDate.getTime()) {
                 errorMessage.textContent = '您的会员已过期！'; // 会员过期
