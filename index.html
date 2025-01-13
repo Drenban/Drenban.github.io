@@ -113,7 +113,7 @@
             const expiryDate = new Date(user.expiryDate).toISOString(); // 将过期日期转换为 ISO 字符串
             console.log("Expiry Date (ISO): ", expiryDate); // 输出过期日期进行调试
 
-            if (expiryDate.getTime() < currentDate.getTime()) {
+            if (expiryDate < currentDate) {
                 errorMessage.textContent = '您的会员已过期！'; // 会员过期
             } else {
                 // 登录成功，保存登录状态，并跳转到数据页面
