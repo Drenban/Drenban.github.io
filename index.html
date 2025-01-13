@@ -96,15 +96,16 @@
     // 检查会员是否过期
     function checkExpiryDate(expiryDate) {
         const currentDate = new Date();
-        currentDate.setHours(0, 0, 0, 0);  // 清除时分秒部分
-
-        const expiry = new Date(expiryDate);
-        expiry.setHours(0, 0, 0, 0);  // 清除时分秒部分
-
-        console.log("Current Date (without time): ", currentDate);
-        console.log("Expiry Date (without time): ", expiry);
-
-        return expiry < currentDate;  // 如果过期日期小于当前日期，则过期
+    
+        // 通过 toISOString 转换为标准的日期字符串，去掉时分秒
+        const currentDateString = currentDate.toISOString().split('T')[0]; // 获取 "YYYY-MM-DD" 格式的日期
+        const expiryDateString = new Date(expiryDate).toISOString().split('T')[0]; // 同理处理过期日期
+    
+        console.log("Current Date (YYYY-MM-DD): ", currentDateString);
+        console.log("Expiry Date (YYYY-MM-DD): ", expiryDateString);
+    
+        // 返回过期检查结果
+        return expiryDateString < currentDateString;  // 如果过期日期小于当前日期，则过期
     }
     
     // 用户登录验证
@@ -120,7 +121,10 @@
         const user = userData.find(u => u.username === username && u.password === password);
 
         if (user) {
-            if (checkExpiryDate(user.expiryDate)) {
+            // 检查会员有效期是否过期
+            const isExpired = checkExpiryDate(user.expiryDate);
+            
+            if (isExpired) {
                 errorMessage.textContent = '您的会员已过期！'; // 会员过期
             } else {
                 // 登录成功，保存登录状态，并跳转到数据页面
