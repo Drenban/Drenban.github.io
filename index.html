@@ -83,7 +83,7 @@
                 userData = json.map(row => ({
                     username: row["Username"], // 假设 Excel 表格的列名为 "Username" 和 "Password"
                     password: row["Password"],
-                    expiryDate: new Date(row["ExpiryDate"])  // 假设日期是字符串格式，如 "2025-01-15"
+                    expiryDate: row["ExpiryDate"]  // 假设日期是字符串格式，如 "2025-01-15"
                 }));
 
                 console.log("User data loaded:", userData); // 用于调试
