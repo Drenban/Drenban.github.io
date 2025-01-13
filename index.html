@@ -146,7 +146,7 @@
 
         if (user) {
             // 检查会员有效期是否过期
-            const isExpired = checkExpiryByDays(user.expiryDate);
+            const isExpired = isMembershipValid(user.expiryDate);
             
             if (isExpired) {
                 errorMessage.textContent = '您的会员已过期！'; // 会员过期
