@@ -108,9 +108,12 @@
         if (user) {
             // 检查会员有效期是否过期
             const currentDate = new Date();
-            const expiryDate = new Date(user.expiryDate);  // 将字符串日期转为 Date 对象
+            console.log("Current Date: ", currentDate); // 输出当前日期进行调试
+            
+            const expiryDate = new Date(Date.parse(user.expiryDate));  // 将字符串日期转为 Date 对象
+            console.log("Expiry Date: ", expiryDate); // 输出过期日期进行调试
 
-            if (expiryDate < currentDate) {
+            if (expiryDate.getTime() < currentDate.getTime()) {
                 errorMessage.textContent = '您的会员已过期！'; // 会员过期
             } else {
                 // 登录成功，保存登录状态，并跳转到数据页面
