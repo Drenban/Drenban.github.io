@@ -93,6 +93,20 @@
             });
     }
 
+    // 检查会员是否过期
+    function checkExpiryDate(expiryDate) {
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);  // 清除时分秒部分
+
+        const expiry = new Date(expiryDate);
+        expiry.setHours(0, 0, 0, 0);  // 清除时分秒部分
+
+        console.log("Current Date (without time): ", currentDate);
+        console.log("Expiry Date (without time): ", expiry);
+
+        return expiry < currentDate;  // 如果过期日期小于当前日期，则过期
+    }
+    
     // 用户登录验证
     function login() {
         const username = document.getElementById('username').value;
@@ -106,17 +120,7 @@
         const user = userData.find(u => u.username === username && u.password === password);
 
         if (user) {
-            // 检查会员有效期是否过期
-            const currentDate = new Date(); // 获取当前时间的 ISO 字符串
-            currentDate.setHours(0, 0, 0, 0); // 清除时分秒部分
-            
-            const expiryDate = new Date(user.expiryDate); // 将过期日期转换为 ISO 字符串
-            expiryDate.setHours(0, 0, 0, 0); // 清除时分秒部分
-
-            console.log("Current Date (without time): ", currentDate);
-            console.log("Expiry Date (without time): ", expiryDate);
-
-            if (expiryDate < currentDate) {
+            if (checkExpiryDate(user.expiryDate)) {
                 errorMessage.textContent = '您的会员已过期！'; // 会员过期
             } else {
                 // 登录成功，保存登录状态，并跳转到数据页面
