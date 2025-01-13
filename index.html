@@ -82,7 +82,8 @@
                 // 存储用户名和密码的数据
                 userData = json.map(row => ({
                     username: row["Username"], // 假设 Excel 表格的列名为 "Username" 和 "Password"
-                    password: row["Password"]
+                    password: row["Password"],
+                    expiryDate: row["ExpiryDate"]  // 假设日期是字符串格式，如 "2025-01-15"
                 }));
 
                 console.log("User data loaded:", userData); // 用于调试
@@ -105,10 +106,18 @@
         const user = userData.find(u => u.username === username && u.password === password);
 
         if (user) {
-            // 登录成功，保存登录状态，并跳转到数据页面
-            localStorage.setItem('userLoggedIn', 'true');  // 设置登录状态
-            alert('登录成功！');
-            window.location.href = "data_index.html";  // 跳转到数据页面
+            // 检查会员有效期是否过期
+            const currentDate = new Date();
+            const expiryDate = new Date(user.expiryDate);  // 将字符串日期转为 Date 对象
+
+            if (expiryDate < currentDate) {
+                errorMessage.textContent = '您的会员已过期！'; // 会员过期
+            } else {
+                // 登录成功，保存登录状态，并跳转到数据页面
+                localStorage.setItem('userLoggedIn', 'true');  // 设置登录状态
+                alert('登录成功！');
+                window.location.href = "data_index.html";  // 跳转到数据页面
+            }
         } else {
             // 登录失败，显示错误信息
             errorMessage.textContent = '用户名或密码错误！';
