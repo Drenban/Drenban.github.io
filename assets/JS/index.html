@@ -163,6 +163,13 @@
                     }
                 },
                 initComplete: function() {
+                    // 设置搜索框的圆角样式
+                    $('.dataTables_filter input').css({
+                        'border-radius': '20px',
+                        'padding': '5px 20px',  // 根据需要调整内边距
+                        'border': '1px solid #ccc'  // 设置边框颜色
+                    });
+                    
                     // 设置搜索框的 placeholder 属性
                     $('.dataTables_filter input').attr('placeholder', '请输入股票代码或策略进行搜索...');
                 }
