@@ -123,8 +123,8 @@ window.onload = function() {
         container.classList.remove('right-panel-active')
     );
 
-    // 如果用户已经登录，直接跳转
-    if (localStorage.getItem('userLoggedIn') === 'true') {
-        window.location.href = "data_index.html";
-    }
+    // // 如果用户已经登录，直接跳转
+    // if (localStorage.getItem('userLoggedIn') === 'true') {
+    //     window.location.href = "data_index.html";
+    // }
 };
