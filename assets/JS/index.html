@@ -59,7 +59,7 @@
             padding: 0 15px;  /* 水平内边距 */
             outline: none;  /* 去除焦点时的边框 */
             transition: border 0.3s ease;  /* 添加过渡效果 */
-            margin: 20px auto;    /* 水平居中，顶部和底部外边距为 20px */
+            margin: 0 auto;    /* 水平居中，顶部和底部外边距为 20px */
             display: block;       /* 必须将其设置为块级元素 */
         }
         
@@ -82,6 +82,12 @@
             transform: translateY(-50%);
             color: #aaa;
         }
+
+        /* 提示文字样式 */
+        .dataTables_filter input::placeholder {
+            color: #aaa;          /* 提示文字的颜色 */
+            font-style: italic;   /* 提示文字的样式 */
+        }
         
         /* 增加提示文字的样式 */
         .dataTables_filter label {
@@ -100,7 +106,11 @@
         <!-- 数据表格将动态插入 -->
     </table>
 </div>
-
+<div class="dataTables_filter">
+    <label>搜索数据：
+        <input type="search" placeholder="请输入查询内容..." />
+    </label>
+</div>
 <script>
     // 页面加载时检查用户是否登录
     if (localStorage.getItem('userLoggedIn') !== 'true') {
