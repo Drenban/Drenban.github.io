@@ -3,7 +3,7 @@ let userData = []; // 用于存储从 .xlsx 文件读取的用户数据
 
 // 通过地址获取 .xlsx 文件
 function loadUserData() {
-    const url = "xlsx/logo.xlsx"; // 替换为实际的 .xlsx 文件地址
+    const url = "/assets/JS/xlsx/logo.xlsx"; // 替换为实际的 .xlsx 文件地址
     const errorMessage = document.getElementById('errorMessage');
     const loginButton = document.getElementById('loginButton');
 
