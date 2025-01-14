@@ -67,7 +67,7 @@ a {
 }
 
 .social-container a {
-    border: 1px solid #008ecf;
+    border: 1px solid #6139f6;
     border-radius: 50%;
     display: inline-flex;
     justify-content: center;
@@ -87,8 +87,8 @@ a {
 
 button {
     border-radius: 20px;
-    border: 1px solid #008ecf;
-    background: #008ecf;
+    border: 1px solid #6139f6;
+    background: #6139f6;
     color: #fff;
     font-size: 12px;
     font-weight: bold;
