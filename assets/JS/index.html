@@ -69,7 +69,7 @@
     async function loadExcel() {
         try {
             // Fetch and parse the Excel file
-            const response = await fetch('google/data.xlsx');  // 替换为您的 Excel 文件路径
+            const response = await fetch('xlsx/data.xlsx');  // 替换为您的 Excel 文件路径
             const arrayBuffer = await response.arrayBuffer();
             const workbook = XLSX.read(arrayBuffer, { type: 'array' });
             const sheetName = workbook.SheetNames[0];
