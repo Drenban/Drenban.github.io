@@ -55,8 +55,11 @@ function isMembershipValid(expiryDate) {
 
     // 清除时分秒，确保比较的日期为"纯日期"
     currentDate.setHours(0, 0, 0, 0);  // 设置为午夜（00:00:00）
-    
-    const expiry = new Date(expiryDate);
+
+     // 将 Excel 日期序列值转换为 JavaScript 日期
+    const excelStartDate = new Date(1900, 0, 1); // 1900年1月1日作为起始日期
+    const expiry = new Date(excelStartDate.getTime() + (expiryDate - 2) * 86400000);  // -2是因为Excel的日期从1900年开始，但Excel错误地认为1900是闰年
+
     if (isNaN(expiry.getTime())) {
         console.error("Invalid expiry date:", expiryDate);
         return false; // 无效日期视为过期
