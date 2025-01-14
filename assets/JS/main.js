@@ -66,8 +66,9 @@ function isMembershipValid(expiryDate) {
     }
     expiry.setHours(0, 0, 0, 0);  // 清除时分秒部分
 
-    console.log("Original expiryDate: ", expiryDate);
-    console.log("Parsed expiryDate: ", new Date(expiryDate));
+    console.log("Original Excel expiryDate: ", expiryDate);
+    console.log("Converted expiryDate: ", expiry);
+    console.log("Expiry date in user data:", userData);
 
     const diffTime = expiry.getTime() - currentDate.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));  // 转换为天数
