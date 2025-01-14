@@ -14,12 +14,14 @@ function loadUserData() {
     fetch(url)
         .then(response => {
             if (!response.ok) {
+                console.error('请求失败:', response.status, response.statusText);
                 throw new Error('无法加载文件');
             }
             return response.arrayBuffer();
         })
         .then(data => {
             const workbook = XLSX.read(data, { type: 'array' });
+            console.log("Workbook loaded:", workbook); // 打印加载的工作簿内容
 
             // 假设 Excel 文件的第一个工作表包含用户名和密码
             const sheetName = workbook.SheetNames[0];
@@ -42,6 +44,7 @@ function loadUserData() {
         .catch(error => {
             console.error("加载文件失败:", error);
             errorMessage.textContent = '加载数据失败，请稍后重试。';
+            alert('错误信息: ' + error.message); // 弹出详细错误信息
         });
 }
 
