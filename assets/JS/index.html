@@ -60,7 +60,7 @@
             outline: none;  /* 去除焦点时的边框 */
             transition: border 0.3s ease;  /* 添加过渡效果 */
             margin: 0 auto;    /* 水平居中，顶部和底部外边距为 20px */
-            display: block;       /* 必须将其设置为块级元素 */
+            display: inline-block;       /* 必须将其设置为块级元素 */
         }
         
         .dataTables_filter input:focus {
@@ -69,6 +69,7 @@
         
         /* 添加放大镜图标 */
         .dataTables_filter {
+            text-align: center;  /* Center the filter box */
             position: relative;
         }
         
