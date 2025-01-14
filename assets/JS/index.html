@@ -69,7 +69,7 @@
     async function loadExcel() {
         try {
             // Fetch and parse the Excel file
-            const response = await fetch('xlsx/data.xlsx');  // 替换为您的 Excel 文件路径
+            const response = await fetch('/xlsx/data.xlsx');  // 替换为您的 Excel 文件路径
             const arrayBuffer = await response.arrayBuffer();
             const workbook = XLSX.read(arrayBuffer, { type: 'array' });
             const sheetName = workbook.SheetNames[0];
@@ -103,8 +103,8 @@
 
             // Initialize DataTables for sorting and filtering
             $('#excelTable').DataTable({
-                pageLength: 5,  // 默认每页显示 10 条
-                lengthMenu: [5, 10, 25, 50],  // 可选择每页显示 5、10、25 或 50 条数据
+                pageLength: 1,  // 默认每页显示 10 条
+                lengthMenu: [5, 10],  // 可选择每页显示 5、10、25 或 50 条数据
                 language: {
                     search: "搜索数据:",  // 修改搜索框的提示文本
                     lengthMenu: "显示 _MENU_ 条记录",  // 修改 "Show 10 entries" 的文本
