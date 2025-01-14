@@ -161,6 +161,10 @@
                         next: "",  // "Next" 页按钮的文本
                         last: ""  // "Last" 页按钮的文本
                     }
+                },
+                initComplete: function() {
+                    // 设置搜索框的 placeholder 属性
+                    $('.dataTables_filter input').attr('placeholder', '请输入搜索内容...');
                 }
             });
 
