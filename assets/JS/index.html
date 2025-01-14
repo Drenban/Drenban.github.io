@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数据页面</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -46,6 +47,45 @@
         }
         button:hover {
             background-color: #0056b3;
+        }
+
+        /* 修改 DataTables 搜索框样式 */
+        .dataTables_filter input {
+            width: 300px;  /* 宽度设为适中的值，模拟 Google 搜索框 */
+            height: 40px;  /* 高度 */
+            font-size: 16px;  /* 字体大小 */
+            border: 1px solid #ccc;  /* 边框 */
+            border-radius: 30px;  /* 圆角效果，类似 Google 搜索框 */
+            padding: 0 15px;  /* 水平内边距 */
+            outline: none;  /* 去除焦点时的边框 */
+            transition: border 0.3s ease;  /* 添加过渡效果 */
+        }
+        
+        .dataTables_filter input:focus {
+            border: 1px solid #4CAF50;  /* 聚焦时改变边框颜色 */
+        }
+        
+        /* 添加放大镜图标 */
+        .dataTables_filter {
+            position: relative;
+        }
+        
+        .dataTables_filter input::before {
+            content: "\f002";  /* Unicode 放大镜图标 */
+            font-family: "FontAwesome";  /* 使用 FontAwesome 图标库 */
+            font-size: 18px;
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        
+        /* 增加提示文字的样式 */
+        .dataTables_filter label {
+            font-size: 16px;  /* 修改提示文本的字体大小 */
+            color: #666;      /* 修改提示文本颜色 */
+            margin-right: 10px;
         }
     </style>
 </head>
