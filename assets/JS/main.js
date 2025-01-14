@@ -140,6 +140,6 @@ window.onload = function() {
 
     // 如果用户已经登录，直接跳转
     if (localStorage.getItem('userLoggedIn') === 'true') {
-        window.location.href = "data_index.html";
+        window.location.href = "/assets/JS/index.html";
     }
 };
