@@ -82,12 +82,14 @@ function isMembershipValid(expiryDate) {
 async function login() {
     await loadUserData();  // 等待数据加载完成
     
-    const username = document.getElementById('email').value.trim().toLowerCase();
+    const email = document.getElementById('email').value.trim().toLowerCase();
     const password = document.getElementById('password').value.trim();
     const errorMessage = document.getElementById('errorMessage');
 
     // 清除之前的错误信息
     errorMessage.textContent = '';
+
+    console.log("User input:", email, password);  // 打印用户输入
 
     // 输入验证
     if (!email || !password) {
@@ -97,6 +99,7 @@ async function login() {
 
     // 检查用户输入的电子邮件和密码是否匹配
     const user = userData.find(u => u.email.toLowerCase() === email && u.password === password);
+    console.log("Matching user found:", user);  // 打印找到的用户数据
 
     if (user) {
         // 检查会员有效期是否过期
