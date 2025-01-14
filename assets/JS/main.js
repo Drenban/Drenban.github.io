@@ -3,50 +3,50 @@ let userData = []; // 用于存储从 .xlsx 文件读取的用户数据
 
 // 通过地址获取 .xlsx 文件
 function loadUserData() {
-    const url = "/assets/JS/xlsx/logo.xlsx"; // 替换为实际的 .xlsx 文件地址
-    const errorMessage = document.getElementById('errorMessage');
-    const loginButton = document.getElementById('loginButton');
+    return new Promise((resolve, reject) => {
+        const url = "/assets/JS/xlsx/logo.xlsx"; // 替换为实际的 .xlsx 文件地址
 
-    // 禁用登录按钮，等待数据加载
-    loginButton.disabled = true;
-    errorMessage.textContent = '正在加载数据，请稍等...';
+        // 禁用登录按钮，等待数据加载
+        loginButton.disabled = true;
+        errorMessage.textContent = '正在加载数据，请稍等...';
     
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                console.error('请求失败:', response.status, response.statusText);
-                throw new Error('无法加载文件');
-            }
-            return response.arrayBuffer();
-        })
-        .then(data => {
-            const workbook = XLSX.read(data, { type: 'array' });
-            console.log("Workbook loaded:", workbook); // 打印加载的工作簿内容
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    console.error('请求失败:', response.status, response.statusText);
+                    throw new Error('无法加载文件');
+                }
+                return response.arrayBuffer();
+            })
+            .then(data => {
+                const workbook = XLSX.read(data, { type: 'array' });
+                console.log("Workbook loaded:", workbook); // 打印加载的工作簿内容
+    
+                // 假设 Excel 文件的第一个工作表包含用户名和密码
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(sheet);
+    
+                // 存储用户名和密码的数据
+                userData = json.map(row => ({
+                    email: row["Email"], // 假设 Excel 表格的列名为 "Email" 和 "Password"
+                    password: row["Password"],
+                    expiryDate: row["ExpiryDate"]  // 假设日期是字符串格式，如 "2025-01-15"
+                }));
 
-            // 假设 Excel 文件的第一个工作表包含用户名和密码
-            const sheetName = workbook.SheetNames[0];
-            const sheet = workbook.Sheets[sheetName];
-            const json = XLSX.utils.sheet_to_json(sheet);
-
-            // 存储用户名和密码的数据
-            userData = json.map(row => ({
-                email: row["Email"], // 假设 Excel 表格的列名为 "Email" 和 "Password"
-                password: row["Password"],
-                expiryDate: row["ExpiryDate"]  // 假设日期是字符串格式，如 "2025-01-15"
-            }));
-
-            console.log("User data loaded:", userData); // 用于调试
-            callback(); // 调用回调，执行登录逻辑
-
-            // 开启登录按钮
-            loginButton.disabled = false;
-            errorMessage.textContent = ''; // 清空错误信息
-        })
-        .catch(error => {
-            console.error("加载文件失败:", error);
-            errorMessage.textContent = '加载数据失败，请稍后重试。';
-            alert('错误信息: ' + error.message); // 弹出详细错误信息
-        });
+                console.log("User data loaded:", userData); // 用于调试
+                resolve(); // 完成数据加载
+    
+                // 开启登录按钮
+                loginButton.disabled = false;
+                errorMessage.textContent = ''; // 清空错误信息
+            })
+            .catch(error => {
+                console.error("加载文件失败:", error);
+                errorMessage.textContent = '加载数据失败，请稍后重试。';
+                alert('错误信息: ' + error.message); // 弹出详细错误信息
+            });
+    });
 }
 
 // 检查会员是否过期
@@ -75,7 +75,9 @@ function isMembershipValid(expiryDate) {
 }
 
 // 用户登录验证
-function login() {
+async function login() {
+    await loadUserData();  // 等待数据加载完成
+    
     const username = document.getElementById('email').value.trim().toLowerCase();
     const password = document.getElementById('password').value.trim();
     const errorMessage = document.getElementById('errorMessage');
@@ -90,7 +92,7 @@ function login() {
     }
 
     // 检查用户输入的电子邮件和密码是否匹配
-    const user = userData.find(u => u.email === email && u.password === password);
+    const user = userData.find(u => u.email.toLowerCase() === email && u.password === password);
 
     if (user) {
         // 检查会员有效期是否过期
@@ -112,7 +114,9 @@ function login() {
 
 // 页面加载时获取用户数据，并注册事件监听器
 window.onload = function() {
-    loadUserData();  // 加载用户数据
+    const errorMessage = document.getElementById('errorMessage');
+    const loginButton = document.getElementById('loginButton');
+    loginButton.addEventListener('click', login);
 
     // 注册按钮事件，切换面板
     const signUpButton = document.getElementById('signUp');
