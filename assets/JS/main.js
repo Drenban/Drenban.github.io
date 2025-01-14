@@ -36,6 +36,7 @@ function loadUserData() {
             }));
 
             console.log("User data loaded:", userData); // 用于调试
+            callback(); // 调用回调，执行登录逻辑
 
             // 开启登录按钮
             loginButton.disabled = false;
@@ -75,7 +76,7 @@ function isMembershipValid(expiryDate) {
 
 // 用户登录验证
 function login() {
-    const username = document.getElementById('email').value.trim();
+    const username = document.getElementById('email').value.trim().toLowerCase();
     const password = document.getElementById('password').value.trim();
     const errorMessage = document.getElementById('errorMessage');
 
