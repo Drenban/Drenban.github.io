@@ -37,10 +37,11 @@
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>或使用您的帐户</span>
-                <input type="email" placeholder="电子邮件" />
-                <input type="password" placeholder="密码" />
+                <input type="email" id="email" placeholder="电子邮件" />
+                <input type="password" id="password" placeholder="密码" />
                 <a href="#">忘记密码了吗？</a>
-                <button>登录</button>
+                <button type="button" id="loginButton" onclick="login()">登录</button>
+                <div class="error-message" id="errorMessage"></div>
             </form>
         </div>
         <div class="overlay-container">
