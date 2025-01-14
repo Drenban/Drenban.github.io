@@ -98,7 +98,7 @@ function login() {
             // 登录成功，保存登录状态，并跳转到数据页面
             localStorage.setItem('userLoggedIn', 'true');  // 设置登录状态
             alert('登录成功！');
-            window.location.href = "index.html";  // 跳转到数据页面
+            window.location.href = "data_index.html";  // 跳转到数据页面
         }
     } else {
         // 登录失败，显示错误信息
@@ -125,6 +125,6 @@ window.onload = function() {
 
     // 如果用户已经登录，直接跳转
     if (localStorage.getItem('userLoggedIn') === 'true') {
-        window.location.href = "index.html";
+        window.location.href = "data_index.html";
     }
 };
