@@ -99,13 +99,13 @@
 </head>
 <body>
 
-<!-- <div class="data-container"> -->
-<h2>数据管理</h2>
-<button onclick="loadExcel()">加载数据</button>
-<table id="excelTable" class="display">
-    <!-- 数据表格将动态插入 -->
-</table>
-<!-- </div> -->
+<div class="data-container">
+    <h2>数据管理</h2>
+    <button onclick="loadExcel()">加载数据</button>
+    <table id="excelTable" class="display">
+        <!-- 数据表格将动态插入 -->
+    </table>
+</div>
 <script>
     // 页面加载时检查用户是否登录
     if (localStorage.getItem('userLoggedIn') !== 'true') {
