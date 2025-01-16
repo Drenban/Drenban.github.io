@@ -41,14 +41,21 @@
             text-align: left;
             border: 1px solid #ddd;
         }
+        .button-container {
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center;    /* 垂直居中（如果需要） */
+            margin-bottom: 20px;    /* 添加下方间距 */
+        }
         button {
-            padding: 10px;
+            padding: 10px 20px;
             background-color: #007BFF;
             color: white;
             border: none;
             cursor: pointer;
             margin-bottom: 20px;
             border-radius: 10px; 
+            font-size: 16px;
         }
         button:hover {
             background-color: #0056b3;
@@ -108,7 +115,9 @@
 
 <div class="data-container">
     <h2>长虹数据</h2>
-    <button id="startButton" onclick="loadExcel()">开始</button>
+    <div class="button-container">
+        <button id="startButton" onclick="loadExcel()">开始</button>
+    </div>
     <table id="excelTable" class="display">
         <!-- 数据表格将动态插入 -->
     </table>
