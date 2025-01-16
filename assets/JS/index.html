@@ -192,6 +192,19 @@
                         // 如果有多页数据，则显示分页控件
                         $(api.table().container()).find('.dataTables_paginate').show();
                     }
+
+                    // 3. 搜索框有内容时才显示数据
+                    if ($('.dataTables_filter input').val() === "") {
+                        // 如果搜索框为空，隐藏表格数据
+                        $(api.table().container()).find('table').hide();
+                    } else {
+                        // 如果搜索框有内容，显示表格数据
+                        $(api.table().container()).find('table').show();
+                    }
+                },
+                initComplete: function(settings, json) {
+                    // 初始化时隐藏表格
+                    $(this.api().table().container()).find('table').hide();
                 }
             });
 
