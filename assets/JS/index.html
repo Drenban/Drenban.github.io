@@ -33,8 +33,8 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px; /* 表格顶部的空白 */
-            margin-bottom: 20px; /* 表格底部的空白 */
+            margin-top: 20px; 
+            margin-bottom: 20px; 
         }
         th, td {
             padding: 10px;
@@ -179,14 +179,17 @@
                 },
                 dom: "<'top'l>rt<'bottom'if><'clear'>",
                 drawCallback: function(settings) {
-                    $('.dataTables_filter').css('margin-top', '20px');
-                    // 根据数据条数自动调整显示条数
+                    // 1. 调整搜索框和表格之间的间距
+                    $('.dataTables_filter').css('margin-top', '200px');  // 设置搜索框和表格之间的间距
+            
+                    // 2. 根据数据条数自动调整显示条数
                     var api = this.api();
                     var pageInfo = api.page.info();
                     if (pageInfo.pages <= 1) {
                         // 如果只有一页数据，则隐藏分页控件
                         $(api.table().container()).find('.dataTables_paginate').hide();
                     } else {
+                        // 如果有多页数据，则显示分页控件
                         $(api.table().container()).find('.dataTables_paginate').show();
                     }
                 }
