@@ -179,6 +179,7 @@
                 },
                 dom: "<'top'l>rt<'bottom'if><'clear'>",
                 drawCallback: function(settings) {
+                    $('.dataTables_filter').css('margin-top', '20px');
                     // 根据数据条数自动调整显示条数
                     var api = this.api();
                     var pageInfo = api.page.info();
