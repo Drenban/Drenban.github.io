@@ -176,7 +176,18 @@
                     // 设置搜索框的 placeholder 属性
                     $('.dataTables_filter input').attr('placeholder', '请输入股票代码或策略进行搜索...');
                 },
-                dom: "<'top'l>rt<'bottom'ifp><'clear'>"
+                dom: "<'top'l>rt<'bottom'ifp><'clear'>",
+                drawCallback: function(settings) {
+                    // 根据数据条数自动调整显示条数
+                    var api = this.api();
+                    var pageInfo = api.page.info();
+                    if (pageInfo.pages <= 1) {
+                        // 如果只有一页数据，则隐藏分页控件
+                        $(api.table().container()).find('.dataTables_paginate').hide();
+                    } else {
+                        $(api.table().container()).find('.dataTables_paginate').show();
+                    }
+                }
             });
 
         } catch (error) {
