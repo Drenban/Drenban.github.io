@@ -60,13 +60,14 @@
             height: 60px;  /* 高度 */
             font-size: 16px;  /* 字体大小 */
             border: 1px solid #ccc;  /* 边框 */
-            border-radius: 50px;  /* 圆角效果，类似 Google 搜索框 */
+            border-radius: 30px;  /* 圆角效果，类似 Google 搜索框 */
             padding: 0 15px;  /* 水平内边距 */
             outline: none;  /* 去除焦点时的边框 */
             transition: border 0.3s ease;  /* 添加过渡效果 */
             margin: 0 auto;    /* 水平居中，顶部和底部外边距为 20px */
             display: block;       /* 必须将其设置为块级元素 */
-            padding-left: 60px; /* 为输入框留出空间给图标 */
+            padding-left: 50px; /* 为输入框留出空间给图标 */
+            position: relative; /* 相对定位用于容纳绝对定位的图标 */
         }
         
         .dataTables_filter input:focus {
@@ -83,7 +84,7 @@
         /* 放大镜图标样式 */
         .dataTables_filter i {
             position: absolute;
-            left: 15px;  /* 放大镜图标的位置 */
+            left: 10px;  /* 放大镜图标的位置 */
             top: 50%;
             transform: translateY(-50%);
             font-size: 18px;
@@ -209,7 +210,7 @@
                     $('.dataTables_filter input').css({
                         'border-radius': '30px',
                         'padding': '5px 20px',  // 根据需要调整内边距
-                        'padding-left': '60px', // 为放大镜图标留出空间
+                        'padding-left': '50px', // 为放大镜图标留出空间
                     });
                     
                     // 设置搜索框的 placeholder 属性
@@ -221,7 +222,7 @@
                     // 设置放大镜图标的样式
                     $('.dataTables_filter i').css({
                         'position': 'absolute',
-                        'left': '15px',  // 调整图标位置
+                        'left': '10px',  // 调整图标位置
                         'top': '50%',
                         'transform': 'translateY(-50%)',
                         'font-size': '18px',
