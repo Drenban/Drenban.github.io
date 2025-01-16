@@ -170,16 +170,6 @@
                         last: ""  // "Last" 页按钮的文本
                     }
                 },
-                initComplete: function() {
-                    // 设置搜索框的圆角样式
-                    $('.dataTables_filter input').css({
-                        'border-radius': '30px',
-                        'padding': '5px 20px',  // 根据需要调整内边距
-                    });
-                    
-                    // 设置搜索框的 placeholder 属性
-                    $('.dataTables_filter input').attr('placeholder', '请输入股票代码或策略进行搜索...');
-                },
                 dom: "<'top'l>rt<'bottom'ifp><'clear'>",
                 drawCallback: function(settings) {
                     // 1. 调整搜索框和表格之间的间距
@@ -208,6 +198,16 @@
                 initComplete: function(settings, json) {
                     // 初始化时隐藏表格
                     $(this.api().table().container()).find('table').hide();
+                },
+                initComplete: function() {
+                    // 设置搜索框的圆角样式
+                    $('.dataTables_filter input').css({
+                        'border-radius': '30px',
+                        'padding': '5px 20px',  // 根据需要调整内边距
+                    });
+                    
+                    // 设置搜索框的 placeholder 属性
+                    $('.dataTables_filter input').attr('placeholder', '请输入股票代码或策略进行搜索...');
                 }
             });
 
