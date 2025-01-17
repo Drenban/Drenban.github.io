@@ -94,7 +94,7 @@
         /* 放大镜图标样式 */
         .dataTables_filter i {
             position: absolute;
-            left: 20%;  /* 放大镜图标的位置 */
+            left: 20px;  /* 放大镜图标的位置 */
             top: 50%;
             transform: translateY(-50%);
             font-size: 18px;
@@ -229,12 +229,12 @@
                     $('.dataTables_filter input').attr('placeholder', '请输入股票代码或策略进行搜索...');
 
                     // 动态添加放大镜图标 *
-                    $('.dataTables_filter input').prepend('<i class="fa fa-search"></i>');  // 使用 FontAwesome 放大镜图标
+                    $('.dataTables_filter').prepend('<i class="fa fa-search"></i>');  // 使用 FontAwesome 放大镜图标
                 
                     // 设置放大镜图标的样式
                     $('.dataTables_filter i').css({
                         'position': 'absolute',
-                        'left': '20%',  // 调整图标位置
+                        'left': '20px',  // 调整图标位置
                         'top': '50%',
                         'transform': 'translateY(-50%)',
                         'font-size': '18px',
