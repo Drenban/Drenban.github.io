@@ -109,7 +109,7 @@ async function login() {
             errorMessage.textContent = '您的会员已过期！'; // 会员过期
         } else {
             // 登录成功，保存登录状态，并跳转到数据页面
-            // localStorage.setItem('userLoggedIn', 'true');  // 设置登录状态
+            localStorage.setItem('userLoggedIn', 'true');  // 设置登录状态
             // alert('登录成功！');
             window.location.href = "/assets/JS/index.html";  // 跳转到数据页面
         }
