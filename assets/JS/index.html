@@ -75,6 +75,17 @@
             display: block;       /* 必须将其设置为块级元素 */
             padding-left: 50px; /* 为输入框留出空间给图标 */
             position: relative; /* 相对定位用于容纳绝对定位的图标 */
+
+            background-image: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/svgs/solid/search.svg'); /* 使用 FontAwesome 图标的 SVG 作为背景图 */
+            background-repeat: no-repeat;
+            background-position: 10px center;  /* 放大镜图标位置 */
+            background-size: 20px 20px;  /* 图标大小 */
+        }
+
+        /* 设置输入框的 placeholder 属性 */
+        .dataTables_filter input::placeholder {
+            color: #999;  /* 设置 placeholder 文本的颜色 */
+            font-size: 16px;  /* 修改字体大小 */
         }
 
         .dataTables_filter input:focus {
