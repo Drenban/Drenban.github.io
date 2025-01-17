@@ -84,8 +84,15 @@
         /* 添加放大镜图标 */
         .dataTables_filter {
             text-align: center;  /* Center the filter box */
-            margin-right: 400px; 
-            position: relative;
+/*             margin-right: 400px;  */
+/*             position: relative; */
+
+            display: flex;
+            justify-content: center;  /* 水平居中 */
+            align-items: center;      /* 垂直居中（如果需要） */
+            text-align: center;       /* 中心对齐文字 */
+            position: relative;       /* 保证绝对定位的图标位置 */
+            width: 100%;              /* 让容器宽度占满父元素 */
         }
         
         /* 放大镜图标样式 */
