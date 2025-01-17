@@ -77,26 +77,6 @@
             position: relative; /* 相对定位用于容纳绝对定位的图标 */
         }
 
-        /* 设置输入框的 placeholder 属性 */
-        .dataTables_filter input::placeholder {
-            color: #999;  /* 设置 placeholder 文本的颜色 */
-            font-size: 16px;  /* 修改字体大小 */
-        }
-
-        /* 使用 ::before 添加放大镜图标 */
-        .dataTables_filter input::before {
-            content: '\f002';  /* FontAwesome 放大镜图标的 Unicode */
-            font-family: 'Font Awesome 5 Free';  /* 使用 FontAwesome 字体 */
-            font-weight: 900;  /* 必须设置为加粗样式 */
-            position: absolute;
-            left: 10px;  /* 图标位置 */
-            top: 50%;
-            transform: translateY(-50%);  /* 垂直居中 */
-            font-size: 18px;  /* 图标大小 */
-            color: #B0BEC5;  /* 图标颜色 */
-            pointer-events: none;  /* 防止图标干扰输入框操作 */
-        }
-        
         .dataTables_filter input:focus {
             border: 1px solid #D32F2F;  /* 聚焦时改变边框颜色 */
         }
@@ -114,7 +94,7 @@
         /* 放大镜图标样式 */
         .dataTables_filter i {
             position: absolute;
-            left: 20px;  /* 放大镜图标的位置 */
+            left: 20%;  /* 放大镜图标的位置 */
             top: 50%;
             transform: translateY(-50%);
             font-size: 18px;
@@ -254,7 +234,7 @@
                     // 设置放大镜图标的样式
                     $('.dataTables_filter i').css({
                         'position': 'absolute',
-                        'left': '20px',  // 调整图标位置
+                        'left': '20%',  // 调整图标位置
                         'top': '50%',
                         'transform': 'translateY(-50%)',
                         'font-size': '18px',
