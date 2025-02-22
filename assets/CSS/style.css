@@ -41,7 +41,7 @@ a {
 }
 
 .container {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.5); /* 设置背景为白色，透明度为80% */
     border-radius: 10px;
     box-shadow: 0 14px 28px rgba(0, 0, 0, .2), 0 10px 10px rgba(0, 0, 0, .2);
     position: relative;
@@ -49,7 +49,7 @@ a {
     width: 768px;
     max-width: 100%;
     min-height: 480px;
-    opacity: 0.8; /* 设置透明度为80% */
+    opacity: 1; /* 设置透明度为80% */
 }
 
 .form-container form {
