@@ -49,6 +49,7 @@ a {
     width: 768px;
     max-width: 100%;
     min-height: 480px;
+    opacity: 0.8; /* 设置透明度为80% */
 }
 
 .form-container form {
