@@ -212,11 +212,11 @@ button.ghost {
 
 /* 视频背景容器 */
 .video-container {
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;;
     overflow: hidden;
     z-index: -1; /* 让视频置于最底层 */
 }
