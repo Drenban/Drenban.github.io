@@ -212,7 +212,7 @@ button.ghost {
 
 /* 视频背景容器 */
 .video-container {
-    position: relative;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
