@@ -1,6 +1,19 @@
 {
-  "users": [
-    { "username": "user1", "password": "123456" },
-    { "username": "user2", "password": "abcdef" }
-  ]
+    "users": [
+        {
+            "username": "admin@example.com",
+            "password": "123456",
+            "expiry_date": "2025-12-31"
+        },
+        {
+            "username": "user@example.com",
+            "password": "password",
+            "expiry_date": "2025-03-04"
+        },
+        {
+            "username": "expired@example.com",
+            "password": "expired",
+            "expiry_date": "2024-01-01"
+        }
+    ]
 }
