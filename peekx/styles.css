@@ -391,7 +391,7 @@ footer {
     .output {
         width: 100%; /* 占满屏幕 */
         max-width: 100%;
-        min-height: 200px; /* 减小高度 */
+        height: 80vh; /* 高度设置为视口高度的 80% */
         font-size: 14px;
     }
 
