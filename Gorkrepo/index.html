@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XLSX 查询</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"> <!-- 引入 Inter 字体 -->
 </head>
 <body>
     <div class="layout">
@@ -26,8 +27,12 @@
             <div class="content">
                 <div class="output" id="result"></div>
                 <div class="input-area">
-                    <input type="text" id="query" placeholder="输入查询条件（如 Alice）" onkeydown="if(event.key === 'Enter') search()">
-                    <button onclick="search()">查询</button>
+                    <input type="text" id="query" placeholder="输入查询（如 Alice）" onkeydown="if(event.key === 'Enter') search()">
+                    <button onclick="search()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </main>
