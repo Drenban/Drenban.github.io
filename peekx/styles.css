@@ -18,11 +18,51 @@ body {
 /* 布局容器 */
 .layout {
     display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100vh;
 }
 
-/* 左侧边栏 */
+/* 修改位置 4：顶部区域样式 */
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #0a192f;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    height: 80px; /* 固定高度，确保与 sidebar 分离 */
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.auth {
+    display: flex;
+    align-items: center;
+}
+
+.auth-btn {
+    padding: 8px 18px;
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+/* 修改位置 5：左侧边栏样式调整 */
 .sidebar {
     width: 260px;
     background: rgba(15, 23, 42, 0.95);
@@ -30,6 +70,10 @@ body {
     overflow-y: auto;
     border-right: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 80px; /* Logo 下方 */
+    bottom: 0;
+    left: 0;
 }
 
 .sidebar h2 {
@@ -61,54 +105,15 @@ body {
     color: #fff;
 }
 
-/* 主内容区域 */
+/* 修改位置 6：右侧主内容样式 */
 .main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    position: relative;
+    margin-left: 260px; /* 与 sidebar 对齐 */
+    padding: 20px;
 }
 
-/* 修改位置 2：添加 .header 样式 */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background: #0a192f;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-}
-
-/* 右上角退出按钮 */
-.auth {
-    display: flex;
-    align-items: center;
-}
-
-.auth-btn {
-    padding: 8px 18px;
-    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.auth-btn:hover {
-    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-}
-
-/* 居中内容 */
 .content {
     width: 100%;
     max-width: 720px;
@@ -120,7 +125,6 @@ body {
     flex: 1;
 }
 
-/* 输出区域 */
 .output {
     width: 100%;
     min-height: 280px;
@@ -170,7 +174,6 @@ body {
     to { opacity: 1; transform: translateX(0); }
 }
 
-/* 输入区域 */
 .input-area {
     width: 100%;
     display: flex;
