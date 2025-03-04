@@ -142,6 +142,8 @@ function typeLines(lines, element) {
                 element.appendChild(currentLine);
             }
 
+            // 处理空行或未定义情况
+            const lineContent = lines[lineIndex] || '';
             if (charIndex < lines[lineIndex].length) {
                 currentLine.innerHTML = lines[lineIndex].slice(0, charIndex + 1);
                 charIndex++;
