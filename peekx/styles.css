@@ -380,26 +380,42 @@ footer {
     .main {
         margin-left: 0; /* 移除侧栏偏移 */
         padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* 确保顶部和底部分配空间 */
+        min-height: calc(100vh - 60px); /* 减去顶部高度 */
     }
 
     .content {
         max-width: 100%; /* 占满宽度 */
-        padding: 15px;
+        padding: 0px;
         gap: 15px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1; /* 占据可用空间 */
+        justify-content: space-between; /* 输出在上，输入在下 */
     }
 
     .output {
         width: 100%;
         max-width: 100%;
         height: calc(100vh - 110px); /* 60px 顶部 + 50px 输入 */
-        min-height: 50px;
+        min-height: 200px;
         font-size: 14px;
+        margin-bottom: 50px; /* 为输入框预留空间 */
     }
 
     .input-area {
         width: 100%; /* 占满屏幕 */
         max-width: 100%;
         padding: 6px 10px;
+        position: fixed; /* 固定在底部 */
+        bottom: 0;
+        left: 0;
+        z-index: 10; /* 确保在上层 */
+/*         background: rgba(15, 23, 42, 0.95); /* 加深背景，避免遮挡 */
+        border-radius: 0; /* 移除圆角，贴合底部 */
+        border-top: 1px solid rgba(255, 255, 255, 0.1); /* 添加顶部边框 */ */
     }
 
     #query-input {
@@ -421,6 +437,7 @@ footer {
 @media (max-width: 480px) {
     .top-section {
         padding: 8px 10px;
+        height: 50px; /* 明确高度 */
     }
 
     .logo {
@@ -447,7 +464,14 @@ footer {
     }
 
     .input-area {
+        width: 100%;
+        max-width: 100%;
         padding: 6px 10px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+        height: 45px; /* 明确高度 */
     }
     
     .output {
@@ -457,6 +481,7 @@ footer {
         min-height: 50px;
         padding: 20px;
         font-size: 13px;
+        margin-bottom: 45px; /* 为输入框预留空间 */
     }
 
     #query-input {
