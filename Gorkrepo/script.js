@@ -43,9 +43,9 @@ function search() {
 
     // 格式化输出第一个匹配结果
     const result = matches[0];
-    const lines = Object.entries(result).map(([key, value]) => 
-        `<div class="line"><span class="field">${key}:</span> <span class="value">${value}</span></div>`
-    );
+    const lines = Object.entries(result).map(([key, value]) => ({
+        html: `<div class="line"><span class="field">${key}:</span> <span class="value">${value}</span></div>`
+    }));
 
     typeLines(lines, resultDiv);
 }
@@ -56,7 +56,9 @@ function typeLines(lines, element) {
 
     function typeNext() {
         if (index < lines.length) {
-            element.innerHTML += lines[index];
+            const lineDiv = document.createElement('div');
+            lineDiv.innerHTML = lines[index].html; // 直接解析 HTML
+            element.appendChild(lineDiv);
             index++;
             setTimeout(typeNext, 300); // 每 300ms 显示一行
         }
