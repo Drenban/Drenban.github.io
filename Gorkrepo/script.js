@@ -80,3 +80,10 @@ function updateHistory() {
         historyList.appendChild(li);
     });
 }
+
+// 页面加载时检查用户是否登录
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('userLoggedIn') !== 'true') {
+        window.location.href = '/login.html'; // 未登录跳转到登录页面
+    }
+});
