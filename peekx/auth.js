@@ -14,6 +14,20 @@ fetch('users.json')
         }
     });
 
+// 前端模拟哈希函数（使用 SHA-256）
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// 生成简单的前端令牌（模拟 JWT）
+function generateToken(username) {
+    const payload = { username, exp: Date.now() + 3600000 }; // 1小时有效期
+    return btoa(JSON.stringify(payload)); // Base64 编码，非加密，仅混淆
+}
+
 // 检查会员是否过期（处理 ISO 日期字符串或时间戳）
 function isMembershipValid(expiryDate) {
     const currentDate = new Date();
@@ -36,6 +50,11 @@ function isMembershipValid(expiryDate) {
     console.log("Remaining days:", diffDays);
 
     return diffDays > 0;
+}
+
+// 输入清理
+function sanitizeInput(input) {
+    return input.replace(/[<>&;"]/g, '');
 }
 
 // 登录验证
@@ -63,6 +82,16 @@ function login(event) {
 
     localStorage.setItem('loggedIn', 'true');
     window.location.href = 'index.html';
+}
+
+// 验证令牌（前端模拟）
+function verifyToken(token) {
+    try {
+        const payload = JSON.parse(atob(token));
+        return payload.exp > Date.now();
+    } catch {
+        return false;
+    }
 }
 
 // 退出
