@@ -104,7 +104,7 @@ function search() {
         // 简单查询模式：输出 City 汇总和总数
         const cities = matches.map(row => row['股票代码']).filter(city => city !== undefined);
         lines = [
-            `<span class="field">全部代码:</span> <span class="value">${cities.join(', ')}</span>`,
+            `<span class="field">全部代码:</span><br><span class="value">${cities.join(', ')}</span>`,
             `<span class="field">合计:</span> <span class="value">${cities.length}</span>`
         ];
     } else {
