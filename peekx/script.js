@@ -9,7 +9,7 @@ fetch('xlsx-data/data.xlsx')
         workbookData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
     })
     .catch(error => {
-        document.getElementById('result-container').textContent = '数据未加载，请稍后再试';
+        document.getElementById('result-container').textContent = '服务器繁忙，请稍后再试';
     });
 
 // 查询
@@ -19,7 +19,7 @@ function search() {
     resultContainer.innerHTML = '';
 
     if (!workbookData) {
-        resultContainer.textContent = '数据未加载，请稍后再试';
+        resultContainer.textContent = '服务器繁忙，请稍后再试';
         return;
     }
 
@@ -98,7 +98,7 @@ function search() {
     });
 
     if (matches.length === 0) {
-        resultContainer.textContent = '未找到匹配结果';
+        resultContainer.textContent = '输入有误，请重新输入';
         return;
     }
 
