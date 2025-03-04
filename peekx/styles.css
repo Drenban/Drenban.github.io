@@ -131,10 +131,14 @@ main {
     background: #666666;
 }
 
+/* 修改位置 2：调整 main 布局为垂直排列 */
 main {
     margin-left: 250px;
     padding: 20px;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .output-area {
@@ -142,8 +146,9 @@ main {
     border: 1px solid #666666;
     border-radius: 5px;
     padding: 15px;
-    min-height: 60vh;
-    margin-bottom: 20px;
+    flex: 1; /* 占据剩余空间 */
+    min-height: 0; /* 防止溢出 */
+    overflow-y: auto;
 }
 
 #result-container {
@@ -161,6 +166,7 @@ main {
     font-weight: 400;
 }
 
+/* 修改位置 3：调整 query-section 为底部固定宽度 */
 .query-section {
     display: flex;
     justify-content: center;
@@ -168,7 +174,7 @@ main {
 
 .input-container {
     display: flex;
-    width: 80%;
+    width: 100%;
     max-width: 600px;
 }
 
