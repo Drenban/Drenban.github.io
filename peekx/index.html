@@ -9,24 +9,24 @@
 </head>
 <body>
     <div class="layout">
-        <!-- 左侧边栏 -->
+        <!-- 修改位置 1：顶部区域（Logo 和 Logout） -->
+        <header class="top-section">
+            <div class="logo">
+                <object type="image/svg+xml" data="logo.svg" width="180" height="60">PeekX Logo</object>
+            </div>
+            <div class="auth">
+                <button id="logout-btn" class="auth-btn">Logout</button>
+            </div>
+        </header>
+        <!-- 修改位置 2：左侧边栏（历史数据） -->
         <div class="sidebar">
             <div class="history-header">
                 <h2>History</h2>
             </div>
             <ul id="history-list"></ul>
         </div>
-        <!-- 主内容区域 -->
+        <!-- 修改位置 3：右侧主内容（输出和输入） -->
         <main class="main">
-            <!-- 修改位置 1：添加 Logo -->
-            <div class="header">
-                <div class="logo">
-                    <object type="image/svg+xml" data="logo.svg" width="180" height="60">PeekX Logo</object>
-                </div>
-                <div class="auth">
-                    <button id="logout-btn" class="auth-btn">Logout</button>
-                </div>
-            </div>
             <div class="content">
                 <div class="output" id="result-container"></div>
                 <div class="input-area">
