@@ -14,7 +14,7 @@ fetch('xlsx-data/data.xlsx')
 
 // 查询
 function search() {
-    const query = document.getElementById('query-input').value.trim().toLowerCase();
+    const query = document.getElementById('query-input').value.trim();
     const resultContainer = document.getElementById('result-container');
     resultContainer.innerHTML = '';
 
@@ -23,50 +23,54 @@ function search() {
         return;
     }
 
-    // 修改位置 1：解析输入，支持中文隐式分隔
+    // 修改位置 1：解析输入，支持直接值查询和隐式分隔
     const conditions = {};
     let isSimpleQuery = false;
     let name, age;
 
     if (query.includes(':')) {
+        // 键值对查询（如 "Name:Alice,Age:10"）
         query.split(',').forEach(part => {
             const [key, value] = part.split(':').map(s => s.trim());
             if (key && value !== undefined) {
-                conditions[key] = value;
+                conditions[key.toLowerCase()] = value.toLowerCase();
             }
         });
-        name = conditions['celv'] || conditions['策略'];
-        age = conditions['shoupanjia'] || conditions['收盘价'];
+        name = conditions['策略'];
+        age = conditions['收盘价'];
         if (name && age && Object.keys(conditions).length === 2) {
             isSimpleQuery = true;
         }
     } else if (query.includes(',')) {
+        // 显式简单查询（如 "Alice,10"）
         isSimpleQuery = true;
-        [name, age] = query.split(',').map(s => s.trim());
+        [name, age] = query.split(',').map(s => s.trim().toLowerCase());
         conditions['策略'] = name;
         conditions['收盘价'] = age;
     } else {
-        // 隐式简单查询（如 "张三10" 或 "Alice10"）
-        const nameMatch = query.match(/^[\u4e00-\u9fff\w]+/); // 支持中文和英文字符
+        // 隐式简单查询（如 "张三10" 或 "Alice10"）或直接值查询（如 "Alice"）
+        const nameMatch = query.match(/^[\u4e00-\u9fff\w]+/); // 支持中文和英文
         const ageMatch = query.match(/\d+$/); // 提取结尾数字
         if (nameMatch && ageMatch) {
             isSimpleQuery = true;
-            name = nameMatch[0];
+            name = nameMatch[0].toLowerCase();
             age = ageMatch[0];
             conditions['策略'] = name;
             conditions['收盘价'] = age;
         } else {
-            conditions[''] = query; // 无条件模糊查询
+            conditions[''] = query.toLowerCase(); // 直接值模糊查询
         }
     }
 
-    // 筛选数据
+    // 修改位置 2：筛选数据
     const matches = workbookData.filter(row => {
         if (conditions['']) {
+            // 模糊查询所有字段
             return Object.values(row).some(val => 
                 String(val).toLowerCase().includes(conditions[''])
             );
         }
+        // 简单查询或多条件查询
         return Object.entries(conditions).every(([key, value]) => {
             const rowValue = String(row[key] || '').toLowerCase();
             if (!value) return true;
@@ -79,7 +83,7 @@ function search() {
             } else if (value.startsWith('<')) {
                 return Math.floor(Number(rowValue)) < Number(value.slice(1));
             }
-            if (key.toLowerCase() === '收盘价') {
+            if (key === '收盘价') {
                 return Math.floor(Number(rowValue)) === Math.floor(Number(value));
             }
             return rowValue.includes(value);
@@ -96,7 +100,7 @@ function search() {
         updateHistory();
     }
 
-    // 输出所有结果
+    // 修改位置 3：输出结果
     let lines;
     if (isSimpleQuery) {
         const cities = matches.map(row => row['股票代码']).filter(city => city !== undefined);
