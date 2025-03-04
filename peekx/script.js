@@ -23,35 +23,32 @@ function search() {
         return;
     }
 
-    // 修改位置 1：解析输入
+    // 修改位置 1：解析输入，支持中文隐式分隔
     const conditions = {};
     let isSimpleQuery = false;
     let name, age;
 
     if (query.includes(':')) {
-        // 多条件查询（键值对模式）
         query.split(',').forEach(part => {
             const [key, value] = part.split(':').map(s => s.trim());
             if (key && value !== undefined) {
                 conditions[key] = value;
             }
         });
-        // 检查是否为简单查询的键值对形式
-        name = conditions['策略'] || conditions['策略'];
-        age = conditions['收盘价'] || conditions['收盘价'];
+        name = conditions['celv'] || conditions['策略'];
+        age = conditions['shoupanjia'] || conditions['收盘价'];
         if (name && age && Object.keys(conditions).length === 2) {
             isSimpleQuery = true;
         }
     } else if (query.includes(',')) {
-        // 简单查询（值模式，如 "Alice,10"）
         isSimpleQuery = true;
         [name, age] = query.split(',').map(s => s.trim());
         conditions['策略'] = name;
         conditions['收盘价'] = age;
     } else {
-        // 隐式简单查询（Alice10）
-        const nameMatch = query.match(/^[\u4e00-\u9fff\w]+/); // 提取开头字母部分
-        const ageMatch = query.match(/\d{1,4}$/); // 提取结尾数字部分
+        // 隐式简单查询（如 "张三10" 或 "Alice10"）
+        const nameMatch = query.match(/^[\u4e00-\u9fff\w]+/); // 支持中文和英文字符
+        const ageMatch = query.match(/\d+$/); // 提取结尾数字
         if (nameMatch && ageMatch) {
             isSimpleQuery = true;
             name = nameMatch[0];
@@ -59,26 +56,20 @@ function search() {
             conditions['策略'] = name;
             conditions['收盘价'] = age;
         } else {
-            // 无条件模糊查询
-            conditions[''] = query;
+            conditions[''] = query; // 无条件模糊查询
         }
     }
-    
-    // 修改位置 2：筛选数据
+
+    // 筛选数据
     const matches = workbookData.filter(row => {
         if (conditions['']) {
-            // 无条件模糊匹配所有字段
             return Object.values(row).some(val => 
                 String(val).toLowerCase().includes(conditions[''])
             );
         }
-
-        // 多条件或简单查询匹配
         return Object.entries(conditions).every(([key, value]) => {
             const rowValue = String(row[key] || '').toLowerCase();
-            if (!value) return true; // 空值条件跳过
-
-            // 范围查询
+            if (!value) return true;
             if (value.includes('-')) {
                 const [min, max] = value.split('-').map(Number);
                 const numValue = Math.floor(Number(rowValue));
@@ -88,13 +79,9 @@ function search() {
             } else if (value.startsWith('<')) {
                 return Math.floor(Number(rowValue)) < Number(value.slice(1));
             }
-
-            // 数值字段忽略小数
             if (key.toLowerCase() === '收盘价') {
                 return Math.floor(Number(rowValue)) === Math.floor(Number(value));
             }
-
-            // 默认模糊匹配
             return rowValue.includes(value);
         });
     });
@@ -109,17 +96,15 @@ function search() {
         updateHistory();
     }
 
-    // 修改位置 3：根据查询类型输出结果
+    // 输出所有结果
     let lines;
     if (isSimpleQuery) {
-        // 简单查询模式：输出 City 汇总和总数
         const cities = matches.map(row => row['股票代码']).filter(city => city !== undefined);
         lines = [
             `<span class="field">全部代码:</span> <span class="value">${cities.join(', ')}</span>`,
-            `<span class="field">合计:</span> <span class="value">${cities.length}</span>`
+            `<span class="field">合计:</span> <span class="value">${matches.length}</span>`
         ];
     } else {
-        // 多条件模式：输出所有键值对
         lines = matches.flatMap((result, index) => {
             const resultLines = Object.entries(result).map(([key, value]) => 
                 `<span class="field">${key}:</span> <span class="value">${value}</span>`
