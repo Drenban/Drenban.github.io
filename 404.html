@@ -1,53 +1,75 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XLSX 查询</title>
-    <link rel="stylesheet" href="/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="layout">
-        <aside class="sidebar">
-            <h2>历史搜索</h2>
-            <ul id="history"></ul>
-            <a href="/about" onclick="navigate(event, 'about.html')">关于</a>
-        </aside>
-        <main class="main" id="main-content">
-            <div class="auth">
-                <button class="auth-btn" onclick="showRegister()">注册</button>
-                <button class="auth-btn" onclick="showLogin()">登录</button>
-                <button class="auth-btn" id="logout" style="display:none;" onclick="logout()">退出</button>
-            </div>
-            <div class="content">
-                <div class="output" id="result"></div>
-                <div class="input-area">
-                    <input type="text" id="query" placeholder="输入查询（如 Alice）" onkeydown="if(event.key === 'Enter') search()">
-                    <button onclick="search()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            <div id="auth-modal" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeModal()">×</span>
-                    <h2 id="modal-title"></h2>
-                    <input type="email" id="email" placeholder="邮箱">
-                    <input type="password" id="password" placeholder="密码">
-                    <button id="auth-action" onclick="handleAuth()"></button>
-                </div>
-            </div>
-        </main>
-    </div>
+    <title>登录您的账号</title>
 
-    <!-- 引入 Firebase、SheetJS 和脚本 -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="/script.js"></script>
+    <link rel="icon" href="assets/images/Logo_ch.svg" type="image/svg+xml">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/CSS/style.css">
+</head>
+
+<body>
+    <div class="video-container">
+        <video autoplay loop muted playsinline>
+            <source src="assets/images/Wind_and_Wave.mp4" type="video/mp4">
+            您的浏览器不支持 HTML5 视频标签。
+        </video>
+    </div>
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form action="#">
+                <h1>注册您的账号</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>或使用您的电子邮件注册</span>
+                <input type="text" placeholder="姓名" />
+                <input type="email" placeholder="电子邮件" />
+                <input type="password" placeholder="密码" />
+                <button>注册</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form action="#">
+                <h1>登录您的账号</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>或使用您的帐户</span>
+                <input type="email" id="email" placeholder="电子邮件" required />
+                <input type="password" id="password" placeholder="密码" required />
+                <a href="#">忘记密码了吗？</a>
+                <button type="button" id="loginButton" onclick="login()">登录</button>
+                <div class="error-message" id="errorMessage"></div>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>欢迎您，回来！</h1>
+                    <p>为了与我们保持联系，请使用您的<br>个人信息登录</p>
+                    <button class="ghost" id="signIn">登录</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>您好，朋友！</h1>
+                    <p>请输入您的个人信息开始与我们一起启程</p>
+                    <button class="ghost" id="signUp">注册</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+    <script src="assets/JS/main.js"></script>
     <script>
         const path =  window.location.pathname.split('/').pop() || 'index'; // 获取路径末尾部分
         if (path && path !== 'index') {
