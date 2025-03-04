@@ -129,8 +129,8 @@ body {
 
 /* 输出区域 */
 .output {
-    width: 90%;
-    max-width: 800px;
+    width: 95%;
+    max-width: 1000px;
     min-height: 280px;
     padding: 25px;
     background: rgba(17, 24, 39, 0.9);
@@ -180,8 +180,8 @@ body {
 
 /* 输入区域 */
 .input-area {
-    width: 90%;
-    max-width: 800px;
+    width: 95%;
+    max-width: 1000px;
     display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.05);
