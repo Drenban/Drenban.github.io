@@ -49,10 +49,21 @@ function search() {
         conditions['策略'] = name;
         conditions['收盘价'] = age;
     } else {
-        // 无条件模糊查询
-        conditions[''] = query;
+        // 隐式简单查询（Alice10）
+        const nameMatch = query.match(/^[\u4e00-\u9fff\w]+/); // 提取开头字母部分
+        const ageMatch = query.match(/\d{1,4}$/); // 提取结尾数字部分
+        if (nameMatch && ageMatch) {
+            isSimpleQuery = true;
+            name = nameMatch[0];
+            age = ageMatch[0];
+            conditions['策略'] = name;
+            conditions['收盘价'] = age;
+        } else {
+            // 无条件模糊查询
+            conditions[''] = query;
+        }
     }
-
+    
     // 修改位置 2：筛选数据
     const matches = workbookData.filter(row => {
         if (conditions['']) {
