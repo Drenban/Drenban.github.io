@@ -47,26 +47,28 @@ function search() {
     typeLines(lines, resultContainer);
 }
 
-// 修改位置 2：逐行逐字符输出
+// 修改位置 2：逐行逐字符输出，每行完整后换行
 function typeLines(lines, element) {
     let lineIndex = 0;
     let charIndex = 0;
 
     function typeNext() {
         if (lineIndex < lines.length) {
-            if (charIndex === 0) {
-                // 每行创建一个新容器
-                const lineDiv = document.createElement('div');
-                lineDiv.className = 'line';
-                element.appendChild(lineDiv);
+            // 为每行创建一个新容器
+            const lineDivs = element.querySelectorAll('.line');
+            let currentLine = lineDivs[lineIndex];
+            if (!currentLine) {
+                currentLine = document.createElement('div');
+                currentLine.className = 'line';
+                element.appendChild(currentLine);
             }
 
-            const currentLine = element.querySelectorAll('.line')[lineIndex];
             if (charIndex < lines[lineIndex].length) {
                 currentLine.innerHTML = lines[lineIndex].slice(0, charIndex + 1);
                 charIndex++;
                 setTimeout(typeNext, 20); // 每个字符间隔 20ms
             } else {
+                // 当前行完成后，重置 charIndex 并进入下一行
                 charIndex = 0;
                 lineIndex++;
                 setTimeout(typeNext, 300); // 每行完成后间隔 300ms
