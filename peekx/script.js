@@ -40,45 +40,37 @@ function search() {
     }
 
     const result = matches[0];
-    // 修改位置 1：按键值对分组，逐个 token 输出
-    const tokenPairs = Object.entries(result).map(([key, value]) => [
-        `<span class="field">${key}:</span>`,
-        `<span class="value">${value}</span>`
-    ]);
-    typeTokenPairs(tokenPairs, resultContainer);
+    // 修改位置 1：按键值对生成字符串数组，逐行逐字符输出
+    const lines = Object.entries(result).map(([key, value]) => 
+        `<span class="field">${key}:</span> <span class="value">${value}</span>`
+    );
+    typeLines(lines, resultContainer);
 }
 
-// 修改位置 2：逐个 token 输出，每对键值一行
-function typeTokenPairs(tokenPairs, element) {
-    let pairIndex = 0;
-    let tokenIndex = 0;
+// 修改位置 2：逐行逐字符输出
+function typeLines(lines, element) {
+    let lineIndex = 0;
+    let charIndex = 0;
 
     function typeNext() {
-        if (pairIndex < tokenPairs.length) {
-            if (tokenIndex === 0) {
-                // 每对键值创建一个新行
+        if (lineIndex < lines.length) {
+            if (charIndex === 0) {
+                // 每行创建一个新容器
                 const lineDiv = document.createElement('div');
                 lineDiv.className = 'line';
                 element.appendChild(lineDiv);
             }
 
-            const currentLine = element.querySelectorAll('.line')[pairIndex];
-            const tokenSpan = document.createElement('span');
-            tokenSpan.innerHTML = tokenPairs[pairIndex][tokenIndex];
-            tokenSpan.style.opacity = '0';
-            currentLine.appendChild(tokenSpan);
-
-            setTimeout(() => {
-                tokenSpan.style.opacity = '1';
-                tokenSpan.style.animation = 'slideFadeIn 0.5s ease forwards';
-            }, 50);
-
-            tokenIndex++;
-            if (tokenIndex >= tokenPairs[pairIndex].length) {
-                tokenIndex = 0;
-                pairIndex++;
+            const currentLine = element.querySelectorAll('.line')[lineIndex];
+            if (charIndex < lines[lineIndex].length) {
+                currentLine.innerHTML = lines[lineIndex].slice(0, charIndex + 1);
+                charIndex++;
+                setTimeout(typeNext, 20); // 每个字符间隔 20ms
+            } else {
+                charIndex = 0;
+                lineIndex++;
+                setTimeout(typeNext, 300); // 每行完成后间隔 300ms
             }
-            setTimeout(typeNext, 300); // 每个 token 间隔 300ms
         }
     }
     typeNext();
