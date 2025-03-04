@@ -57,10 +57,10 @@ function typeLines(lines, element) {
     function typeNext() {
         if (index < lines.length) {
             const lineDiv = document.createElement('div');
-            lineDiv.innerHTML = lines[index].html; // 直接解析 HTML
+            lineDiv.innerHTML = lines[index].html;
             element.appendChild(lineDiv);
             index++;
-            setTimeout(typeNext, 400); // 与动画时间匹配（0.4s）
+            setTimeout(typeNext, 500); // 与动画时间匹配（0.5s）
         }
     }
     typeNext();
