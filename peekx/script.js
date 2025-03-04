@@ -23,43 +23,26 @@ function search() {
         return;
     }
 
-    // 修改位置 1：解析查询条件
-    const conditions = {};
+    // 修改位置 1：解析输入
+    let name, age;
     if (query.includes(':')) {
-        const parts = query.split(',').map(part => part.trim());
-        parts.forEach(part => {
+        const conditions = {};
+        query.split(',').forEach(part => {
             const [key, value] = part.split(':').map(s => s.trim());
-            if (key && value !== undefined) {
-                conditions[key] = value;
-            }
+            conditions[key] = value;
         });
+        name = conditions['策略'] || conditions['策略'];
+        age = conditions['收盘价'] || conditions['收盘价'];
+    } else {
+        [name, age] = query.split(',').map(s => s.trim());
     }
 
     // 修改位置 2：筛选数据
     const matches = workbookData.filter(row => {
-        // 无条件时模糊匹配所有字段
-        if (Object.keys(conditions).length === 0) {
-            return Object.values(row).some(val => 
-                String(val).toLowerCase().includes(query)
-            );
-        }
-
-        // 多条件匹配
-        return Object.entries(conditions).every(([key, value]) => {
-            const rowValue = String(row[key] || '').toLowerCase();
-            // 范围查询
-            if (value.includes('-')) {
-                const [min, max] = value.split('-').map(Number);
-                const numValue = Math.floor(Number(rowValue));
-                return numValue >= min && numValue <= max;
-            } else if (value.startsWith('>')) {
-                return Math.floor(Number(rowValue)) > Number(value.slice(1));
-            } else if (value.startsWith('<')) {
-                return Math.floor(Number(rowValue)) < Number(value.slice(1));
-            }
-            // 默认模糊匹配
-            return rowValue.includes(value);
-        });
+        const rowName = String(row['策略'] || '').toLowerCase();
+        const rowAge = Math.floor(Number(row['收盘价'] || 0));
+        const queryAge = age ? Math.floor(Number(age)) : null;
+        return (!name || rowName === name) && (!queryAge || rowAge === queryAge);
     });
 
     if (matches.length === 0) {
@@ -72,14 +55,12 @@ function search() {
         updateHistory();
     }
 
-    // 修改位置 3：输出所有匹配结果
-    const lines = matches.flatMap((result, index) => {
-        const resultLines = Object.entries(result).map(([key, value]) => 
-            `<span class="field">${key}:</span> <span class="value">${value}</span>`
-        );
-        // 添加分隔符（可选）
-        return index < matches.length - 1 ? [...resultLines, '<hr>'] : resultLines;
-    });
+    // 修改位置 3：提取 City 并输出
+    const cities = matches.map(row => row['股票代码']).filter(city => city !== undefined);
+    const lines = [
+        `<span class="field">全部代码:</span> <span class="value">${cities.join(', ')}</span>`,
+        `<span class="field">合计:</span> <span class="value">${cities.length}</span>`
+    ];
     typeLines(lines, resultContainer);
 }
 
