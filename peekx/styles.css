@@ -236,11 +236,37 @@ footer {
     color: #e2e8f0;
     font-size: 15px;
     line-height: 1.7;
-    overflow-y: auto;
-    max-height: calc(100vh - 200px); /* 限制最大高度，留出顶部和底部空间 */
+    overflow-y: scroll; /* 修改位置 1：改为 scroll 以支持滚动 */
+    max-height: calc(100vh - 200px);
     position: relative;
     flex: 1;
+    /* 隐藏滚动条 */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
     z-index: 1; /* 低于侧栏 */
+}
+
+.output::-webkit-scrollbar {
+    width: 0; /* Webkit 浏览器隐藏滚动条 */
+}
+
+/* 修改位置 2：鼠标悬停时显示滚动条（电脑端） */
+.output:hover::-webkit-scrollbar {
+    width: 8px; /* 悬停时显示 */
+}
+
+.output:hover::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.output:hover::-webkit-scrollbar-thumb {
+    background: #93c5fd;
+    border-radius: 4px;
+}
+
+.output:hover::-webkit-scrollbar-thumb:hover {
+    background: #60a5fa;
 }
 
 .output::before {
@@ -404,9 +430,16 @@ footer {
         min-height: 200px;
         font-size: 14px;
         margin-bottom: 50px; /* 为输入框预留空间 */
-        overflow-y: auto;
+        overflow-y: scroll; /* 修改位置 3：支持滚动 */
         -webkit-overflow-scrolling: touch;
+        /* 隐藏滚动条 */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
     }
+
+    .output::-webkit-scrollbar {
+            width: 0; /* 手机端默认隐藏 */
+        }
 
     .input-area {
         width: 100%; /* 占满屏幕 */
@@ -485,8 +518,15 @@ footer {
         padding: 20px;
         font-size: 13px;
         margin-bottom: 45px; /* 为输入框预留空间 */
-        overflow-y: auto;
+        overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
+        /* 隐藏滚动条 */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .output::-webkit-scrollbar {
+        width: 0;
     }
 
     #query-input {
