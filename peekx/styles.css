@@ -34,6 +34,10 @@ header {
 
 .logo {
     display: inline-block; /* 修改位置 2：确保 Logo 不占满宽度 */
+/*     display: flex;
+    align-items: center;
+    flex-grow: 1; /* Logo 占据中间空间 */
+    justify-content: center; /* Logo 居中 */ */
 }
 
 /* 修改位置 3：调整 main 为页面居中 */
@@ -329,12 +333,13 @@ footer {
 
     .top-section {
         padding: 10px 15px;
-        justify-content: center; /* Logo 居中 */
+        justify-content: space-between; /* Logo 居中 */
     }
 
     .logo {
         width: 120px;
         height: 40px;
+        margin: 0 10px; /* 增加间隔 */
     }
 
     .logo object {
@@ -351,7 +356,7 @@ footer {
     .sidebar {
         display: none; /* 默认隐藏 */
         width: 200px;
-        top: 140px; /* 调整位置到按钮下方 */
+        top: 80px; /* 保持顶部对齐 */ 140
         z-index: 10;
         transition: all 0.3s ease;
     }
@@ -362,6 +367,8 @@ footer {
 
     .history-btn {
         display: block; /* 手机端显示按钮 */
+        padding: 6px 12px;
+        font-size: 12px;
     }
 
     /* 修改位置 3：调整主内容占满屏幕 */
