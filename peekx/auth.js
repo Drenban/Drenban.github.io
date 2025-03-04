@@ -28,12 +28,11 @@ function generateToken(username) {
     return btoa(JSON.stringify(payload)); // Base64 编码，非加密，仅混淆
 }
 
-// 检查会员是否过期（处理 ISO 日期字符串或时间戳）
+// 检查会员是否过期
 function isMembershipValid(expiryDate) {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
 
-    // 假设 expiryDate 是 ISO 日期字符串（如 "2025-12-31"）或时间戳
     const expiry = new Date(expiryDate);
     if (isNaN(expiry.getTime())) {
         console.error("无效的到期日期:", expiryDate);
@@ -58,10 +57,10 @@ function sanitizeInput(input) {
 }
 
 // 登录验证
-function login(event) {
-    if (event) event.preventDefault(); // 防止表单提交刷新页面
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+async function login(event) {
+    if (event) event.preventDefault();
+    const username = sanitizeInput(document.getElementById('username').value.trim());
+    const password = sanitizeInput(document.getElementById('password').value.trim());
     const errorMessage = document.getElementById('error-message') || document.getElementById('error');
 
     if (!userData) {
@@ -69,7 +68,8 @@ function login(event) {
         return;
     }
 
-    const user = userData.find(u => u.username === username && u.password === password);
+    const hashedPassword = await hashPassword(password);
+    const user = userData.find(u => u.username === username && u.password === hashedPassword);
     if (!user) {
         errorMessage.textContent = '邮箱或密码错误';
         return;
@@ -80,7 +80,8 @@ function login(event) {
         return;
     }
 
-    localStorage.setItem('loggedIn', 'true');
+    const token = generateToken(username);
+    localStorage.setItem('token', token);
     window.location.href = 'index.html';
 }
 
@@ -96,11 +97,11 @@ function verifyToken(token) {
 
 // 退出
 function logout() {
-    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('token');
     window.location.href = 'login.html';
 }
 
-// 显示查询内容（适用于单页应用，若不需要可移除）
+// 显示查询内容（适用于单页应用）
 function showQuerySection() {
     const loginSection = document.getElementById('login-section');
     const querySection = document.getElementById('query-section');
@@ -113,11 +114,14 @@ function showQuerySection() {
 // 检查登录状态并绑定事件
 document.addEventListener('DOMContentLoaded', () => {
     const pathname = window.location.pathname;
+    const token = localStorage.getItem('token');
 
-    if (pathname.includes('index.html') && localStorage.getItem('loggedIn') !== 'true') {
-        window.location.href = 'login.html';
-    } else if (pathname.includes('index.html') && localStorage.getItem('loggedIn') === 'true') {
-        showQuerySection();
+    if (pathname.includes('index.html')) {
+        if (!token || !verifyToken(token)) {
+            window.location.href = 'login.html';
+        } else {
+            showQuerySection();
+        }
     }
 
     const loginForm = document.getElementById('login-form');
