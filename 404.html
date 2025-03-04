@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XLSX 查询</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <h2>历史搜索</h2>
+            <ul id="history"></ul>
+            <a href="/about" onclick="navigate(event, 'about.html')">关于</a>
+        </aside>
+        <main class="main" id="main-content">
+            <div class="auth">
+                <button class="auth-btn" onclick="showRegister()">注册</button>
+                <button class="auth-btn" onclick="showLogin()">登录</button>
+                <button class="auth-btn" id="logout" style="display:none;" onclick="logout()">退出</button>
+            </div>
+            <div class="content">
+                <div class="output" id="result"></div>
+                <div class="input-area">
+                    <input type="text" id="query" placeholder="输入查询（如 Alice）" onkeydown="if(event.key === 'Enter') search()">
+                    <button onclick="search()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="auth-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">×</span>
+                    <h2 id="modal-title"></h2>
+                    <input type="email" id="email" placeholder="邮箱">
+                    <input type="password" id="password" placeholder="密码">
+                    <button id="auth-action" onclick="handleAuth()"></button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 引入 Firebase、SheetJS 和脚本 -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="/script.js"></script>
+    <script>
+        const path =  window.location.pathname.split('/').pop() || 'index'; // 获取路径末尾部分
+        if (path && path !== 'index') {
+            fetch('/' + path + '.html')
+                .then(response => response.ok ? response.text() : fetch('/index.html').then(res => res.text()))
+                .then(html => {
+                    document.getElementById('main-content').innerHTML = html;
+                    window.history.replaceState({}, '', '/' + path);
+                })
+                .catch(() => {
+                    fetch('/index.html').then(res => res.text()).then(html => {
+                        document.getElementById('main-content').innerHTML = html;
+                    });
+                });
+        }
+
+        function navigate(event, page) {
+            event.preventDefault();
+            fetch('/' + page)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('main-content').innerHTML = html;
+                    window.history.pushState({}, '', '/' + page.replace('.html', ''));
+                });
+        }
+    </script>
+</body>
+</html>
