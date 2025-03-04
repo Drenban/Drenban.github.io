@@ -2,7 +2,7 @@ let workbookData = null;
 let searchHistory = [];
 
 // 加载查询 XLSX 数据
-fetch('/xlsx-data/data.xlsx')
+fetch('xlsx-data/data.xlsx')
     .then(response => response.arrayBuffer())
     .then(data => {
         const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });
