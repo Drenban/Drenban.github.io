@@ -43,23 +43,22 @@ function search() {
 
     // 格式化输出第一个匹配结果
     const result = matches[0];
-    const formattedText = Object.entries(result)
-        .map(([key, value]) => `<span class="field">${key}:</span> <span class="value">${value}</span>`)
-        .join('\n');
+    const lines = Object.entries(result).map(([key, value]) => 
+        `<div class="line"><span class="field">${key}:</span> <span class="value">${value}</span></div>`
+    );
 
-    typeResult(formattedText, resultDiv);
+    typeLines(lines, resultDiv);
 }
 
-// 模拟逐 token 输出（优化速度）
-function typeResult(text, element) {
+// 按字段逐行输出
+function typeLines(lines, element) {
     let index = 0;
-    element.innerHTML = ''; // 清空内容
 
     function typeNext() {
-        if (index < text.length) {
-            element.innerHTML += text[index];
+        if (index < lines.length) {
+            element.innerHTML += lines[index];
             index++;
-            setTimeout(typeNext, 20); // 加快速度到 20ms，更流畅
+            setTimeout(typeNext, 300); // 每 300ms 显示一行
         }
     }
     typeNext();
