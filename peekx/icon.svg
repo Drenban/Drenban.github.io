@@ -1,4 +1,4 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="32" height="32" viewBox="0 0 50 32" fill="none" xmlns="http://www.w3.org/2000/svg">
     <!-- “X” 字母（高度降低，靠左） -->
     <path d="M20 15 L35 45" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
     <path d="M35 15 L20 45" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
