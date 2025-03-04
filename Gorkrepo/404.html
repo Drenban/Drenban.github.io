@@ -44,14 +44,14 @@
     <script>
         const path = window.location.pathname.slice(1);
         if (path && path !== 'index') {
-            fetch(path + '.html')
-                .then(response => response.ok ? response.text() : fetch('index.html').then(res => res.text()))
+            fetch('/' + path + '.html')
+                .then(response => response.ok ? response.text() : fetch('/index.html').then(res => res.text()))
                 .then(html => {
                     document.getElementById('main-content').innerHTML = html;
                     window.history.replaceState({}, '', '/' + path);
                 })
                 .catch(() => {
-                    fetch('index.html').then(res => res.text()).then(html => {
+                    fetch('/index.html').then(res => res.text()).then(html => {
                         document.getElementById('main-content').innerHTML = html;
                     });
                 });
