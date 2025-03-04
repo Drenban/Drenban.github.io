@@ -114,6 +114,7 @@ body {
 .result .line {
     opacity: 0;
     animation: fadeIn 0.3s ease forwards;
+    margin-bottom: 10px; /* 行间距 */
 }
 
 @keyframes fadeIn {
