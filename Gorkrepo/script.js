@@ -81,9 +81,24 @@ function updateHistory() {
     });
 }
 
-// 页面加载时检查用户是否登录
-document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('userLoggedIn') !== 'true') {
-        window.location.href = '/index.html'; // 未登录跳转到登录页面
-    }
-});
+// 页面加载时注册事件监听器
+window.onload = function() {
+    const errorMessage = document.getElementById('errorMessage');
+    const loginButton = document.getElementById('loginButton');
+    const registerButton = document.getElementById('registerButton');
+    loginButton.addEventListener('click', login);
+    registerButton.addEventListener('click', register);
+
+    // 注册按钮事件，切换面板
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const container = document.getElementById('container');
+
+    signUpButton.addEventListener('click', () => 
+        container.classList.add('right-panel-active')
+    );
+
+    signInButton.addEventListener('click', () => 
+        container.classList.remove('right-panel-active')
+    );
+}
