@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PeekX - Query</title>
     <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="logo">
-            <!-- PeekX SVG Logo -->
+            <object type="image/svg+xml" data="/logo.svg" width="180" height="60">PeekX Logo</object>
         </div>
         <div class="logout-section">
             <button id="logout-btn">Logout</button>
@@ -27,9 +28,11 @@
         </div>
         <div class="query-section">
             <div class="input-container">
-                <input type="text" id="query-input" placeholder="Enter query (e.g., Alice)">
+                <input type="text" id="query-input" placeholder="Enter query (e.g., Alice)" onkeydown="if(event.key === 'Enter') search()">
                 <button id="search-btn">
-                    <!-- Magnifier Icon -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
                 </button>
             </div>
         </div>
