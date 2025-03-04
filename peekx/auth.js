@@ -14,13 +14,13 @@ fetch('users.json')
         }
     });
 
-// 前端模拟哈希函数（使用 SHA-256）
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
+// // 前端模拟哈希函数（使用 SHA-256）
+// async function hashPassword(password) {
+//     const encoder = new TextEncoder();
+//     const data = encoder.encode(password);
+//     const hash = await crypto.subtle.digest('SHA-256', data);
+//     return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+// }
 
 // 生成简单的前端令牌（模拟 JWT）
 function generateToken(username) {
