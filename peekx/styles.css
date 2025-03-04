@@ -406,7 +406,7 @@ footer {
     }
 
     .input-area {
-        width: 95%; /* 占满屏幕 */
+        width: 100%; /* 占满屏幕 */
         max-width: 100%;
         padding: 6px 10px;
         position: fixed; /* 固定在底部 */
