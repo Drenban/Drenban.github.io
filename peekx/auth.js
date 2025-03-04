@@ -11,21 +11,33 @@ fetch('xlsx-data/users.xlsx')
         document.getElementById('error-message').textContent = '无法加载用户数据';
     });
 
-// 登录验证
+// 登录验证（加入有效期检查）
 function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
+    const errorMessage = document.getElementById('error-message');
+
     if (!userData) {
-        document.getElementById('error-message').textContent = '用户数据未加载，请稍后重试';
+        errorMessage.textContent = '用户数据未加载，请稍后重试';
         return;
     }
-    const user = userData.find(u => u.username === username && u.password === password);
-    if (user) {
-        localStorage.setItem('userLoggedIn', 'true');
-        window.location.href = 'index.html';
-    } else {
-        document.getElementById('error-message').textContent = '用户名或密码错误';
+
+    const user = userData.find(u => u.email === username && u.password === password);
+    if (!user) {
+        errorMessage.textContent = '邮箱或密码错误';
+        return;
     }
+
+    // 检查有效期
+    const currentDate = new Date();
+    const expiryDate = new Date(user.expiry_date);
+    if (currentDate > expiryDate) {
+        errorMessage.textContent = '账户已过期，请联系管理员';
+        return;
+    }
+
+    localStorage.setItem('userLoggedIn', 'true');
+    window.location.href = 'index.html';
 }
 
 // 退出
