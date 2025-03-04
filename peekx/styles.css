@@ -414,8 +414,8 @@ footer {
         left: 0;
         z-index: 10; /* 确保在上层 */
 /*         background: rgba(15, 23, 42, 0.95); /* 加深背景，避免遮挡 */
-        border-radius: 0; /* 移除圆角，贴合底部 */
-        border-top: 1px solid rgba(255, 255, 255, 0.1); /* 添加顶部边框 */ */
+/*         border-radius: 0; /* 移除圆角，贴合底部 */ */
+/*         border-top: 1px solid rgba(255, 255, 255, 0.1); /* 添加顶部边框 */ 
     }
 
     #query-input {
