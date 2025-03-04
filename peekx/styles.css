@@ -105,32 +105,32 @@ body {
     color: #fff;
 }
 
-/* 右侧主内容 */
+/* 修改位置 1：调整 .main 的样式，使内容在右侧居中 */
 .main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-left: 260px;
-    padding: 20px;
+    margin-left: 260px; /* 留出左侧边栏空间 */
+    padding: 30px; /* 增加内边距，扩大与侧栏间距 */
+    justify-content: center; /* 垂直居中 */
+    align-items: center; /* 水平居中 */
 }
 
-/* 修改位置 1：调整 .content 的居中样式 */
+/* 修改位置 2：移除 .content 的 margin: 0 auto，调整布局 */
 .content {
     width: 100%;
     max-width: 720px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* 保持垂直居中对齐 */
-    padding: 30px;
+    align-items: center;
     gap: 25px;
     flex: 1;
-    margin: 0 auto; /* 水平居中 */
 }
 
-/* 修改位置 2：调整 .output 的宽度和居中 */
+/* 输出区域 */
 .output {
-    width: 80%; /* 改为较窄宽度，便于居中 */
-    max-width: 600px; /* 限制最大宽度 */
+    width: 80%;
+    max-width: 600px;
     min-height: 280px;
     padding: 25px;
     background: rgba(17, 24, 39, 0.9);
@@ -178,10 +178,10 @@ body {
     to { opacity: 1; transform: translateX(0); }
 }
 
-/* 修改位置 3：调整 .input-area 的宽度和居中 */
+/* 输入区域 */
 .input-area {
-    width: 80%; /* 改为较窄宽度，便于居中 */
-    max-width: 600px; /* 限制最大宽度 */
+    width: 80%;
+    max-width: 600px;
     display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.05);
