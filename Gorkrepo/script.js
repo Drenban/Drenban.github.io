@@ -12,7 +12,7 @@ fetch('data.xlsx')
     })
     .catch(error => console.error('加载 XLSX 文件失败:', error));
 
-// 查询并逐 token 输出
+// 查询并优化输出
 function search() {
     const query = document.getElementById('query').value.trim().toLowerCase();
     const resultDiv = document.getElementById('result');
@@ -41,21 +41,25 @@ function search() {
         updateHistory();
     }
 
-    // 逐 token 输出第一个匹配结果
-    const result = JSON.stringify(matches[0], null, 2);
-    typeResult(result, resultDiv);
+    // 格式化输出第一个匹配结果
+    const result = matches[0];
+    const formattedText = Object.entries(result)
+        .map(([key, value]) => `<span class="field">${key}:</span> <span class="value">${value}</span>`)
+        .join('\n');
+
+    typeResult(formattedText, resultDiv);
 }
 
-// 模拟逐 token 输出
+// 模拟逐 token 输出（优化速度）
 function typeResult(text, element) {
     let index = 0;
-    element.textContent = ''; // 清空内容
+    element.innerHTML = ''; // 清空内容
 
     function typeNext() {
         if (index < text.length) {
-            element.textContent += text[index];
+            element.innerHTML += text[index];
             index++;
-            setTimeout(typeNext, 50); // 每 50ms 输出一个字符
+            setTimeout(typeNext, 20); // 加快速度到 20ms，更流畅
         }
     }
     typeNext();
@@ -65,7 +69,7 @@ function typeResult(text, element) {
 function updateHistory() {
     const historyList = document.getElementById('history');
     historyList.innerHTML = '';
-    searchHistory.slice(0, 10).forEach(item => { // 限制显示 10 条
+    searchHistory.slice(0, 10).forEach(item => {
         const li = document.createElement('li');
         li.textContent = item;
         li.onclick = () => {
