@@ -22,16 +22,13 @@
                 <button class="auth-btn">登录</button>
             </div>
 
-            <!-- 查询结果 -->
-            <div class="result-container">
-                <h1>XLSX 数据查询</h1>
-                <div id="result"></div>
-            </div>
-
-            <!-- 底部搜索框 -->
-            <div class="input-container">
-                <input type="text" id="query" placeholder="输入查询条件（如 Alice）">
-                <button onclick="search()">查询</button>
+            <!-- 居中内容 -->
+            <div class="content">
+                <div class="result" id="result"></div>
+                <div class="input-container">
+                    <input type="text" id="query" placeholder="输入查询条件（如 Alice）" onkeydown="if(event.key === 'Enter') search()">
+                    <button onclick="search()">查询</button>
+                </div>
             </div>
         </main>
     </div>
