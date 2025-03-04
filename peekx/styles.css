@@ -137,6 +137,25 @@ footer {
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
+/* 历史按钮 */
+.history-btn {
+    display: none; /* 默认隐藏，手机端显示 */
+    padding: 8px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #93c5fd;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.history-btn:hover {
+    background: rgba(147, 197, 253, 0.1);
+    color: #fff;
+}
+
 .sidebar {
     width: 260px;
     background: rgba(15, 23, 42, 0.95);
@@ -304,81 +323,123 @@ footer {
 
 /* 响应式调整：手机端 (最大宽度 768px) */
 @media (max-width: 768px) {
-    /* 修改位置 1：调整 body 布局，允许滚动 */
     body {
-        min-height: 100vh;
-        overflow-y: auto; /* 允许垂直滚动 */
+        overflow-y: auto;
     }
 
-    /* 修改位置 2：调整 header 和 Logo */
-    header {
-        padding: 10px 15px; /* 减少内边距 */
-        text-align: center; /* Logo 在手机端居中 */
+    .top-section {
+        padding: 10px 15px;
+        justify-content: center; /* Logo 居中 */
     }
 
     .logo {
-        width: 120px; /* 缩小 Logo 宽度 */
-        height: 40px; /* 调整 Logo 高度 */
+        width: 120px;
+        height: 40px;
     }
 
     .logo object {
-        width: 100%; /* 确保 Logo 自适应容器 */
+        width: 100%;
         height: 100%;
     }
 
-    /* 修改位置 3：调整 main 和表单居中 */
-    main {
-        padding: 15px; /* 增加内边距，避免边缘贴合 */
+    .auth-btn {
+        padding: 6px 12px;
+        font-size: 12px;
     }
 
-    .login-form {
-        width: 90%; /* 改为百分比宽度，适配屏幕 */
-        max-width: 280px; /* 限制最大宽度，防止过宽 */
-        gap: 10px; /* 缩小间距 */
+    /* 修改位置 2：隐藏侧栏，显示历史按钮 */
+    .sidebar {
+        display: none; /* 默认隐藏 */
+        width: 200px;
+        top: 140px; /* 调整位置到按钮下方 */
+        z-index: 10;
+        transition: all 0.3s ease;
     }
 
-    .login-form input {
-        padding: 10px; /* 稍减小内边距 */
-        font-size: 14px; /* 减小字体，适配小屏 */
+    .sidebar.active {
+        display: block; /* 按钮点击时显示 */
     }
 
-    .login-form button {
-        padding: 10px; /* 减小按钮高度 */
-        font-size: 14px; /* 减小字体 */
+    .history-btn {
+        display: block; /* 手机端显示按钮 */
     }
 
-    #error-message {
-        font-size: 11px; /* 减小错误信息字体 */
-        margin-top: 8px;
+    /* 修改位置 3：调整主内容占满屏幕 */
+    .main {
+        margin-left: 0; /* 移除侧栏偏移 */
+        padding: 15px;
     }
 
-    /* 修改位置 4：调整 footer */
-    footer {
-        padding: 8px; /* 减小底部内边距 */
-        font-size: 11px; /* 减小版权字体 */
+    .content {
+        max-width: 100%; /* 占满宽度 */
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .output {
+        width: 100%; /* 占满屏幕 */
+        max-width: 100%;
+        min-height: 200px; /* 减小高度 */
+        font-size: 14px;
+    }
+
+    .input-area {
+        width: 100%; /* 占满屏幕 */
+        max-width: 100%;
+        padding: 6px 10px;
+    }
+
+    #query-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .input-area button {
+        padding: 8px;
+    }
+
+    .input-area button svg {
+        width: 18px;
+        height: 18px;
     }
 }
 
-/* 超小屏幕调整：手机竖屏 (最大宽度 480px) */
+/* 超小屏幕调整 (最大宽度 480px) */
 @media (max-width: 480px) {
-    /* 修改位置 5：进一步优化小屏幕 */
-    .login-form {
-        width: 85%; /* 更窄的宽度 */
-        max-width: 240px;
-    }
-
-    .login-form input {
-        padding: 8px; /* 进一步减小内边距 */
-        font-size: 13px; /* 更小字体 */
-    }
-
-    .login-form button {
-        padding: 8px; /* 更小按钮 */
-        font-size: 13px;
+    .top-section {
+        padding: 8px 10px;
     }
 
     .logo {
-        width: 100px; /* 超小屏进一步缩小 Logo */
+        width: 100px;
         height: 35px;
+    }
+
+    .auth-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+
+    .sidebar {
+        width: 180px;
+    }
+
+    .sidebar h2 {
+        font-size: 14px;
+    }
+
+    .sidebar ul li {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .output {
+        padding: 20px;
+        font-size: 13px;
+    }
+
+    #query-input {
+        padding: 8px;
+        font-size: 13px;
     }
 }
