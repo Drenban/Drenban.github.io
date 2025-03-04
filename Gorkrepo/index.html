@@ -41,5 +41,13 @@
     <!-- 引入 SheetJS 和脚本 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        // 页面加载时检查用户是否登录
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('userLoggedIn') !== 'true') {
+                window.location.href = '/index.html'; // 未登录跳转到登录页面
+            }
+        });
+    </script>
 </body>
 </html>
