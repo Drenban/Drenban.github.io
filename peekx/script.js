@@ -42,10 +42,19 @@ function search() {
         if (name && age && Object.keys(conditions).length === 2) {
             isSimpleQuery = true;
         }
-    } else if (/[，,]/.test(query)) {
-        // 简单查询（值模式，如 "Alice,10"）
+    } else if (/[，, ]/.test(query) || /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) { 
+        // 兼容中英文逗号, 空格, 并处理（值模式，如 "Alice,10", "Alice，10", "Alice10"）
         isSimpleQuery = true;
-        [name, age] = query.split(/[，,]/).map(s => s.trim());
+
+        if (/[，, ]/.test(query)) {
+            // 以 逗号（中/英）、空格 分割
+            [name, age] = query.split(/[，, ]+/).map(s => s.trim());
+        } else if (/^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) {
+            // 处理 "Alice10" / "策略10" 这种紧挨着的情况，利用中英文+数字分割
+            name = query.match(/[\u4e00-\u9fa5a-zA-Z]+/)[0];  // 提取**中英文**部分
+            age = query.match(/\d+/)[0];                      // 提取**数字**部分
+        }
+
         conditions['策略'] = name;
         conditions['收盘价'] = age;
     } else {
