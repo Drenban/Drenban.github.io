@@ -97,11 +97,10 @@ body {
     white-space: pre-wrap;
     font-size: 16px;
     text-align: left;
-    line-height: 1.6; /* 增加行距 */
+    line-height: 1.6;
     border-radius: 8px;
 }
 
-/* 字段名加粗，值用不同颜色 */
 .result .field {
     font-weight: 600;
     color: #2c3e50;
@@ -109,6 +108,17 @@ body {
 
 .result .value {
     color: #34495e;
+}
+
+/* 淡入动画 */
+.result .line {
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* 输入框 */
