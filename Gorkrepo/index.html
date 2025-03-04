@@ -42,20 +42,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="script.js"></script>
     <script>
-        const path = window.location.pathname.slice(1);
-        if (path && path !== 'index') {
-            fetch(path + '.html')
-                .then(response => response.ok ? response.text() : fetch('index.html').then(res => res.text()))
-                .then(html => {
-                    document.getElementById('main-content').innerHTML = html;
-                    window.history.replaceState({}, '', '/' + path);
-                })
-                .catch(() => {
-                    fetch('index.html').then(res => res.text()).then(html => {
+            function navigate(event, page) {
+                event.preventDefault();
+                fetch(page)
+                    .then(response => response.text())
+                    .then(html => {
                         document.getElementById('main-content').innerHTML = html;
+                        window.history.pushState({}, '', '/' + page.replace('.html', ''));
                     });
-                });
-        }
-    </script>
+            }
+    
+            window.onpopstate = function(event) {
+                location.reload(); // 回退时刷新页面
+            };
+        </script>
 </body>
 </html>
