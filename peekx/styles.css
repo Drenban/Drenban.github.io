@@ -12,6 +12,7 @@ body {
     color: #e2e8f0;
     min-height: 100vh;
     display: flex;
+    flex-direction: column; /* 修改位置 1：确保 body 垂直布局 */
     overflow: hidden;
 }
 
@@ -32,6 +33,7 @@ body {
     background: #0a192f;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     height: 80px;
+    text-align: center; /* 修改位置 2：Logo 居中 */
 }
 
 .logo {
@@ -230,4 +232,44 @@ body {
 .input-area button svg {
     width: 20px;
     height: 20px;
+}
+
+/* 登录表单 */
+.login-form {
+    width: 300px;
+    display: flex;
+    flex-direction: column; /* 修改位置 4：表单垂直排列 */
+    gap: 15px; /* 输入框和按钮间距 */
+}
+
+.login-form input {
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.login-form input::placeholder {
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.login-form button {
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.login-form button:hover {
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
