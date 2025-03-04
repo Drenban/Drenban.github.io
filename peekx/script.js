@@ -40,32 +40,44 @@ function search() {
     }
 
     const result = matches[0];
-    // 修改位置 1：改为逐个 token 输出
-    const tokens = Object.entries(result).flatMap(([key, value]) => [
+    // 修改位置 1：按键值对分组，逐个 token 输出
+    const tokenPairs = Object.entries(result).map(([key, value]) => [
         `<span class="field">${key}:</span>`,
         `<span class="value">${value}</span>`
     ]);
-    typeTokens(tokens, resultContainer);
+    typeTokenPairs(tokenPairs, resultContainer);
 }
 
-// 修改位置 2：逐个 token 输出函数
-function typeTokens(tokens, element) {
-    let index = 0;
-    const lineDiv = document.createElement('div');
-    lineDiv.className = 'line';
-    element.appendChild(lineDiv);
+// 修改位置 2：逐个 token 输出，每对键值一行
+function typeTokenPairs(tokenPairs, element) {
+    let pairIndex = 0;
+    let tokenIndex = 0;
 
     function typeNext() {
-        if (index < tokens.length) {
+        if (pairIndex < tokenPairs.length) {
+            if (tokenIndex === 0) {
+                // 每对键值创建一个新行
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'line';
+                element.appendChild(lineDiv);
+            }
+
+            const currentLine = element.querySelectorAll('.line')[pairIndex];
             const tokenSpan = document.createElement('span');
-            tokenSpan.innerHTML = tokens[index];
+            tokenSpan.innerHTML = tokenPairs[pairIndex][tokenIndex];
             tokenSpan.style.opacity = '0';
-            lineDiv.appendChild(tokenSpan);
+            currentLine.appendChild(tokenSpan);
+
             setTimeout(() => {
                 tokenSpan.style.opacity = '1';
                 tokenSpan.style.animation = 'slideFadeIn 0.5s ease forwards';
-            }, 50); // 小延迟确保动画可见
-            index++;
+            }, 50);
+
+            tokenIndex++;
+            if (tokenIndex >= tokenPairs[pairIndex].length) {
+                tokenIndex = 0;
+                pairIndex++;
+            }
             setTimeout(typeNext, 300); // 每个 token 间隔 300ms
         }
     }
