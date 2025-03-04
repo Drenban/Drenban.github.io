@@ -23,11 +23,44 @@ function search() {
         return;
     }
 
-    const matches = workbookData.filter(row => 
-        Object.values(row).some(val => 
-            String(val).toLowerCase().includes(query)
-        )
-    );
+    // 修改位置 1：解析查询条件
+    const conditions = {};
+    if (query.includes(':')) {
+        const parts = query.split(',').map(part => part.trim());
+        parts.forEach(part => {
+            const [key, value] = part.split(':').map(s => s.trim());
+            if (key && value !== undefined) {
+                conditions[key] = value;
+            }
+        });
+    }
+
+    // 修改位置 2：筛选数据
+    const matches = workbookData.filter(row => {
+        // 无条件时模糊匹配所有字段
+        if (Object.keys(conditions).length === 0) {
+            return Object.values(row).some(val => 
+                String(val).toLowerCase().includes(query)
+            );
+        }
+
+        // 多条件匹配
+        return Object.entries(conditions).every(([key, value]) => {
+            const rowValue = String(row[key] || '').toLowerCase();
+            // 范围查询
+            if (value.includes('-')) {
+                const [min, max] = value.split('-').map(Number);
+                const numValue = Math.floor(Number(rowValue));
+                return numValue >= min && numValue <= max;
+            } else if (value.startsWith('>')) {
+                return Math.floor(Number(rowValue)) > Number(value.slice(1));
+            } else if (value.startsWith('<')) {
+                return Math.floor(Number(rowValue)) < Number(value.slice(1));
+            }
+            // 默认模糊匹配
+            return rowValue.includes(value);
+        });
+    });
 
     if (matches.length === 0) {
         resultContainer.textContent = '未找到匹配结果';
@@ -39,11 +72,14 @@ function search() {
         updateHistory();
     }
 
-    const result = matches[0];
-    // 修改位置 1：按键值对生成字符串数组，逐行逐字符输出
-    const lines = Object.entries(result).map(([key, value]) => 
-        `<span class="field">${key}:</span> <span class="value">${value}</span>`
-    );
+    // 修改位置 3：输出所有匹配结果
+    const lines = matches.flatMap((result, index) => {
+        const resultLines = Object.entries(result).map(([key, value]) => 
+            `<span class="field">${key}:</span> <span class="value">${value}</span>`
+        );
+        // 添加分隔符（可选）
+        return index < matches.length - 1 ? [...resultLines, '<hr>'] : resultLines;
+    });
     typeLines(lines, resultContainer);
 }
 
