@@ -146,6 +146,8 @@ function typeLines(lines, element) {
                 currentLine.innerHTML = lines[lineIndex].slice(0, charIndex + 1);
                 charIndex++;
                 setTimeout(typeNext, 20); // 每个字符间隔 20ms
+                // 实时滚动到最新字符
+                element.scrollTop = element.scrollHeight;
             } else {
                 // 当前行完成后，重置 charIndex 并进入下一行
                 charIndex = 0;
