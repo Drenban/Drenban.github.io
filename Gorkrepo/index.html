@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XLSX 查询</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>查询 XLSX 数据</h1>
+        <input type="text" id="query" placeholder="输入查询条件（如 Alice）">
+        <button onclick="search()">查询</button>
+        <div id="result"></div>
+    </div>
+
+    <!-- 引入 SheetJS 库（CDN 或本地） -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
