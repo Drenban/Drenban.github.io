@@ -301,3 +301,84 @@ footer {
     width: 20px;
     height: 20px;
 }
+
+/* 响应式调整：手机端 (最大宽度 768px) */
+@media (max-width: 768px) {
+    /* 修改位置 1：调整 body 布局，允许滚动 */
+    body {
+        min-height: 100vh;
+        overflow-y: auto; /* 允许垂直滚动 */
+    }
+
+    /* 修改位置 2：调整 header 和 Logo */
+    header {
+        padding: 10px 15px; /* 减少内边距 */
+        text-align: center; /* Logo 在手机端居中 */
+    }
+
+    .logo {
+        width: 120px; /* 缩小 Logo 宽度 */
+        height: 40px; /* 调整 Logo 高度 */
+    }
+
+    .logo object {
+        width: 100%; /* 确保 Logo 自适应容器 */
+        height: 100%;
+    }
+
+    /* 修改位置 3：调整 main 和表单居中 */
+    main {
+        padding: 15px; /* 增加内边距，避免边缘贴合 */
+    }
+
+    .login-form {
+        width: 90%; /* 改为百分比宽度，适配屏幕 */
+        max-width: 280px; /* 限制最大宽度，防止过宽 */
+        gap: 10px; /* 缩小间距 */
+    }
+
+    .login-form input {
+        padding: 10px; /* 稍减小内边距 */
+        font-size: 14px; /* 减小字体，适配小屏 */
+    }
+
+    .login-form button {
+        padding: 10px; /* 减小按钮高度 */
+        font-size: 14px; /* 减小字体 */
+    }
+
+    #error-message {
+        font-size: 11px; /* 减小错误信息字体 */
+        margin-top: 8px;
+    }
+
+    /* 修改位置 4：调整 footer */
+    footer {
+        padding: 8px; /* 减小底部内边距 */
+        font-size: 11px; /* 减小版权字体 */
+    }
+}
+
+/* 超小屏幕调整：手机竖屏 (最大宽度 480px) */
+@media (max-width: 480px) {
+    /* 修改位置 5：进一步优化小屏幕 */
+    .login-form {
+        width: 85%; /* 更窄的宽度 */
+        max-width: 240px;
+    }
+
+    .login-form input {
+        padding: 8px; /* 进一步减小内边距 */
+        font-size: 13px; /* 更小字体 */
+    }
+
+    .login-form button {
+        padding: 8px; /* 更小按钮 */
+        font-size: 13px;
+    }
+
+    .logo {
+        width: 100px; /* 超小屏进一步缩小 Logo */
+        height: 35px;
+    }
+}
