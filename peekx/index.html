@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeekX - Query</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <!-- PeekX SVG Logo -->
+        </div>
+        <div class="logout-section">
+            <button id="logout-btn">Logout</button>
+        </div>
+    </header>
+    <div class="sidebar">
+        <div class="history-header">
+            <h2>History</h2>
+        </div>
+        <ul id="history-list"></ul>
+    </div>
+    <main>
+        <div class="output-area">
+            <div id="result-container"></div>
+        </div>
+        <div class="query-section">
+            <div class="input-container">
+                <input type="text" id="query-input" placeholder="Enter query (e.g., Alice)">
+                <button id="search-btn">
+                    <!-- Magnifier Icon -->
+                </button>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="/auth.js"></script>
+    <script src="/script.js"></script>
+</body>
+</html>
