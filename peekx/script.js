@@ -99,3 +99,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('search-btn').addEventListener('click', search);
     }
 });
+
+// 原有代码保持不变，仅添加历史按钮交互
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.includes('index.html')) {
+        document.getElementById('search-btn').addEventListener('click', search);
+        document.getElementById('logout-btn').addEventListener('click', logout);
+
+        // 修改位置 4：历史按钮点击展开/关闭
+        const historyToggle = document.getElementById('history-toggle');
+        const historySidebar = document.getElementById('history-sidebar');
+        historyToggle.addEventListener('click', () => {
+            historySidebar.classList.toggle('active');
+        });
+
+        // 修改位置 5：点击历史项后关闭侧栏并查询
+        document.getElementById('history-list').addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                document.getElementById('query-input').value = e.target.textContent;
+                search();
+                historySidebar.classList.remove('active');
+            }
+        });
+    }
+});
