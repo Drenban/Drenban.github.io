@@ -66,16 +66,28 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     position: relative;
+}
+
+/* 修改位置 2：添加 .header 样式 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #0a192f;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
 }
 
 /* 右上角退出按钮 */
 .auth {
-    position: absolute;
-    top: 15px;
-    right: 15px;
+    display: flex;
+    align-items: center;
 }
 
 .auth-btn {
@@ -96,7 +108,7 @@ body {
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
-/* 修改位置 1：调整 .content 为垂直布局 */
+/* 居中内容 */
 .content {
     width: 100%;
     max-width: 720px;
@@ -104,7 +116,8 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    gap: 25px; /* 输出和输入之间的间距 */
+    gap: 25px;
+    flex: 1;
 }
 
 /* 输出区域 */
@@ -120,7 +133,7 @@ body {
     line-height: 1.7;
     overflow-y: auto;
     position: relative;
-    flex: 1; /* 占据剩余空间 */
+    flex: 1;
 }
 
 .output::before {
@@ -175,7 +188,7 @@ body {
     box-shadow: 0 0 12px rgba(147, 197, 253, 0.2);
 }
 
-#query-input { /* 修改位置 2：更新 ID 选择器 */
+#query-input {
     flex: 1;
     padding: 12px;
     border: none;
