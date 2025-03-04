@@ -144,7 +144,7 @@ function typeLines(lines, element) {
 
             // 处理空行或未定义情况
             const lineContent = lines[lineIndex] || '';
-            if (charIndex < lines[lineIndex].length) {
+            if (charIndex < lineContent.length) {
                 currentLine.innerHTML = lines[lineIndex].slice(0, charIndex + 1);
                 charIndex++;
                 setTimeout(typeNext, 20); // 每个字符间隔 20ms
