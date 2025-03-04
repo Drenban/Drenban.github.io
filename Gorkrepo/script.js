@@ -60,7 +60,7 @@ function typeLines(lines, element) {
             lineDiv.innerHTML = lines[index].html; // 直接解析 HTML
             element.appendChild(lineDiv);
             index++;
-            setTimeout(typeNext, 300); // 每 300ms 显示一行
+            setTimeout(typeNext, 400); // 与动画时间匹配（0.4s）
         }
     }
     typeNext();
