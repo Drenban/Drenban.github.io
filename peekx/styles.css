@@ -454,7 +454,7 @@ footer {
         width: 100%;
         max-width: 100%;
         height: calc(100vh - 95px); /* 50px 顶部 + 45px 输入 */
-        min-height: 200px;
+        min-height: 50px;
         padding: 20px;
         font-size: 13px;
     }
