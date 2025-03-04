@@ -1,4 +1,5 @@
 let workbookData = null;
+let searchHistory = [];
 
 // 加载 XLSX 文件
 fetch('data.xlsx')
@@ -7,7 +8,7 @@ fetch('data.xlsx')
         const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        workbookData = XLSX.utils.sheet_to_json(sheet); // 转换为 JSON
+        workbookData = XLSX.utils.sheet_to_json(sheet);
     })
     .catch(error => console.error('加载 XLSX 文件失败:', error));
 
@@ -34,6 +35,12 @@ function search() {
         return;
     }
 
+    // 添加到历史记录
+    if (query && !searchHistory.includes(query)) {
+        searchHistory.unshift(query);
+        updateHistory();
+    }
+
     // 逐 token 输出第一个匹配结果
     const result = JSON.stringify(matches[0], null, 2);
     typeResult(result, resultDiv);
@@ -52,4 +59,19 @@ function typeResult(text, element) {
         }
     }
     typeNext();
+}
+
+// 更新历史记录显示
+function updateHistory() {
+    const historyList = document.getElementById('history');
+    historyList.innerHTML = '';
+    searchHistory.slice(0, 10).forEach(item => { // 限制显示 10 条
+        const li = document.createElement('li');
+        li.textContent = item;
+        li.onclick = () => {
+            document.getElementById('query').value = item;
+            search();
+        };
+        historyList.appendChild(li);
+    });
 }
