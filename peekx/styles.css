@@ -391,9 +391,8 @@ footer {
     .output {
         width: 100%;
         max-width: 100%;
-        height: 50vh;
-/*         height: calc(100vh - 110px); /* 60px 顶部 + 50px 输入 */ */
-        min-height: 150px;
+        height: calc(100vh - 110px); /* 60px 顶部 + 50px 输入 */
+        min-height: 50px;
         font-size: 14px;
     }
 
