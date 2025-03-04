@@ -337,7 +337,6 @@ footer {
     }
 
     .top-section {
-        height: 60px; /* 明确顶部高度 */
         padding: 10px 15px;
         justify-content: space-between; /* Logo 居中 */
     }
@@ -398,7 +397,6 @@ footer {
     }
 
     .input-area {
-        height: 50px; /* 明确输入区域高度 */
         width: 100%; /* 占满屏幕 */
         max-width: 100%;
         padding: 6px 10px;
@@ -422,7 +420,6 @@ footer {
 /* 超小屏幕调整 (最大宽度 480px) */
 @media (max-width: 480px) {
     .top-section {
-        height: 50px; /* 超小屏减小顶部高度 */
         padding: 8px 10px;
     }
 
@@ -450,7 +447,6 @@ footer {
     }
 
     .input-area {
-        height: 45px; /* 超小屏减小输入高度 */
         padding: 6px 10px;
     }
     
