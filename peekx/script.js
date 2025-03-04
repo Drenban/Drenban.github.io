@@ -117,6 +117,13 @@ function search() {
         });
     }
     typeLines(lines, resultContainer);
+
+    // 修改位置 2：电脑端自动滚动到最新输出
+    setTimeout(() => {
+        if (window.innerWidth > 768) {
+            resultContainer.scrollTop = resultContainer.scrollHeight;
+        }
+    }, lines.length * 320); // 等待输出完成
 }
 
 // 修改位置 2：逐行逐字符输出，每行完整后换行
