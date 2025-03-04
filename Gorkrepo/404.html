@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XLSX 查询</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <h2>历史搜索</h2>
+            <ul id="history"></ul>
+            <a href="/about" onclick="navigate(event, 'about.html')">关于</a>
+        </aside>
+        <main class="main" id="main-content">
+            <!-- 现有内容 -->
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        const path = window.location.pathname.slice(1);
+        if (path && path !== 'index') {
+            fetch(path + '.html')
+                .then(response => response.ok ? response.text() : fetch('index.html').then(res => res.text()))
+                .then(html => {
+                    document.getElementById('main-content').innerHTML = html;
+                    window.history.replaceState({}, '', '/' + path);
+                })
+                .catch(() => {
+                    fetch('index.html').then(res => res.text()).then(html => {
+                        document.getElementById('main-content').innerHTML = html;
+                    });
+                });
+        }
+    </script>
+</body>
+</html>
