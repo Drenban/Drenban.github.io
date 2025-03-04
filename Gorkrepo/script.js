@@ -81,24 +81,24 @@ function updateHistory() {
     });
 }
 
-// 页面加载时注册事件监听器
-window.onload = function() {
-    const errorMessage = document.getElementById('errorMessage');
-    const loginButton = document.getElementById('loginButton');
-    const registerButton = document.getElementById('registerButton');
-    loginButton.addEventListener('click', login);
-    registerButton.addEventListener('click', register);
+// // 页面加载时注册事件监听器
+// window.onload = function() {
+//     const errorMessage = document.getElementById('errorMessage');
+//     const loginButton = document.getElementById('loginButton');
+//     const registerButton = document.getElementById('registerButton');
+//     loginButton.addEventListener('click', login);
+//     registerButton.addEventListener('click', register);
 
-    // 注册按钮事件，切换面板
-    const signUpButton = document.getElementById('signUp');
-    const signInButton = document.getElementById('signIn');
-    const container = document.getElementById('container');
+//     // 注册按钮事件，切换面板
+//     const signUpButton = document.getElementById('signUp');
+//     const signInButton = document.getElementById('signIn');
+//     const container = document.getElementById('container');
 
-    signUpButton.addEventListener('click', () => 
-        container.classList.add('right-panel-active')
-    );
+//     signUpButton.addEventListener('click', () => 
+//         container.classList.add('right-panel-active')
+//     );
 
-    signInButton.addEventListener('click', () => 
-        container.classList.remove('right-panel-active')
-    );
-}
+//     signInButton.addEventListener('click', () => 
+//         container.classList.remove('right-panel-active')
+//     );
+// }
