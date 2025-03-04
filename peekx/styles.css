@@ -8,212 +8,204 @@
 
 /* 全局样式 */
 body {
-    background: #1e1e1e;
-    color: #ffffff;
+    background: linear-gradient(145deg, #0a192f 0%, #172a45 100%);
+    color: #e2e8f0;
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
+    overflow: hidden;
 }
 
-/* 头部 */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background: #000000;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-}
-
-.logout-section button {
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #666666;
-    padding: 5px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.logout-section button:hover {
-    background: #666666;
-}
-
-/* 登录页面 */
-main {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.login-form {
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.login-form input {
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #666666;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.login-form input::placeholder {
-    color: #666666;
-}
-
-.login-form button {
-    background: #1e3a8a;
-    color: #ffffff;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.login-form button:hover {
-    background: #60a5fa;
-}
-
-#error-message {
-    color: #666666;
-    font-size: 12px;
-    text-align: center;
-}
-
-/* 查询页面 */
-.sidebar {
-    width: 250px;
-    background: #2d2d2d;
-    padding: 20px;
-    height: calc(100vh - 60px);
-    position: fixed;
-    top: 60px;
-    left: 0;
-    overflow-y: auto;
-}
-
-.history-header {
-    margin-bottom: 15px;
-}
-
-.history-header h2 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #ffffff;
-}
-
-#history-list {
-    list-style: none;
-}
-
-#history-list li {
-    background: #1e1e1e;
-    color: #ffffff;
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-#history-list li:hover {
-    background: #666666;
-}
-
-/* 修改位置 2：调整 main 布局为垂直排列 */
-main {
-    margin-left: 250px;
-    padding: 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.output-area {
-    background: #000000;
-    border: 1px solid #666666;
-    border-radius: 5px;
-    padding: 15px;
-    flex: 1; /* 占据剩余空间 */
-    min-height: 0; /* 防止溢出 */
-    overflow-y: auto;
-}
-
-#result-container {
-    color: #ffffff;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-#result-container .field {
-    font-weight: 600;
-    margin-right: 5px;
-}
-
-#result-container .value {
-    font-weight: 400;
-}
-
-/* 修改位置 3：调整 query-section 为底部固定宽度 */
-.query-section {
-    display: flex;
-    justify-content: center;
-}
-
-.input-container {
+/* 布局容器 */
+.layout {
     display: flex;
     width: 100%;
-    max-width: 600px;
+    height: 100vh;
 }
 
-#query-input {
-    flex: 1;
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #666666;
-    padding: 10px;
-    border-radius: 5px 0 0 5px;
+/* 左侧边栏 */
+.sidebar {
+    width: 260px;
+    background: rgba(15, 23, 42, 0.95);
+    padding: 20px;
+    overflow-y: auto;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #93c5fd;
+    letter-spacing: 0.5px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    color: #d1d5db;
     font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.sidebar ul li:hover {
+    background: rgba(147, 197, 253, 0.1);
+    color: #fff;
+}
+
+/* 主内容区域 */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* 右上角退出按钮 */
+.auth {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.auth-btn {
+    padding: 8px 18px;
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+/* 修改位置 1：调整 .content 为垂直布局 */
+.content {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    gap: 25px; /* 输出和输入之间的间距 */
+}
+
+/* 输出区域 */
+.output {
+    width: 100%;
+    min-height: 280px;
+    padding: 25px;
+    background: rgba(17, 24, 39, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    color: #e2e8f0;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-y: auto;
+    position: relative;
+    flex: 1; /* 占据剩余空间 */
+}
+
+.output::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(147, 197, 253, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.output .field {
+    font-weight: 600;
+    color: #93c5fd;
+    margin-right: 8px;
+}
+
+.output .value {
+    color: #d1d5db;
+}
+
+.output .line {
+    opacity: 0;
+    animation: slideFadeIn 0.5s ease forwards;
+    margin-bottom: 14px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@keyframes slideFadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* 输入区域 */
+.input-area {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 12px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.input-area:focus-within {
+    border-color: #93c5fd;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 12px rgba(147, 197, 253, 0.2);
+}
+
+#query-input { /* 修改位置 2：更新 ID 选择器 */
+    flex: 1;
+    padding: 12px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    background: transparent;
+    color: #e2e8f0;
+    caret-color: #93c5fd;
 }
 
 #query-input::placeholder {
-    color: #666666;
+    color: #94a3b8;
+    font-style: italic;
 }
 
-#search-btn {
-    background: #1e3a8a;
-    color: #ffffff;
-    border: none;
+.input-area button {
     padding: 10px;
-    border-radius: 0 5px 5px 0;
+    background: none;
+    border: none;
     cursor: pointer;
+    color: #93c5fd;
+    transition: all 0.3s ease;
 }
 
-#search-btn:hover {
-    background: #60a5fa;
+.input-area button:hover {
+    color: #fff;
+    transform: scale(1.1);
 }
 
-#search-btn svg {
+.input-area button svg {
     width: 20px;
     height: 20px;
-}
-
-/* 底部 */
-footer {
-    text-align: center;
-    padding: 10px;
-    color: #666666;
-    font-size: 12px;
 }
