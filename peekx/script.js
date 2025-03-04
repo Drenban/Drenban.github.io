@@ -40,23 +40,33 @@ function search() {
     }
 
     const result = matches[0];
-    const lines = Object.entries(result).map(([key, value]) => ({
-        html: `<div class="line"><span class="field">${key}:</span> <span class="value">${value}</span></div>`
-    }));
-
-    typeLines(lines, resultContainer);
+    // 修改位置 1：改为逐个 token 输出
+    const tokens = Object.entries(result).flatMap(([key, value]) => [
+        `<span class="field">${key}:</span>`,
+        `<span class="value">${value}</span>`
+    ]);
+    typeTokens(tokens, resultContainer);
 }
 
-// 逐行输出
-function typeLines(lines, element) {
+// 修改位置 2：逐个 token 输出函数
+function typeTokens(tokens, element) {
     let index = 0;
+    const lineDiv = document.createElement('div');
+    lineDiv.className = 'line';
+    element.appendChild(lineDiv);
+
     function typeNext() {
-        if (index < lines.length) {
-            const lineDiv = document.createElement('div');
-            lineDiv.innerHTML = lines[index].html;
-            element.appendChild(lineDiv);
+        if (index < tokens.length) {
+            const tokenSpan = document.createElement('span');
+            tokenSpan.innerHTML = tokens[index];
+            tokenSpan.style.opacity = '0';
+            lineDiv.appendChild(tokenSpan);
+            setTimeout(() => {
+                tokenSpan.style.opacity = '1';
+                tokenSpan.style.animation = 'slideFadeIn 0.5s ease forwards';
+            }, 50); // 小延迟确保动画可见
             index++;
-            setTimeout(typeNext, 500);
+            setTimeout(typeNext, 300); // 每个 token 间隔 300ms
         }
     }
     typeNext();
