@@ -42,10 +42,10 @@ function search() {
         if (name && age && Object.keys(conditions).length === 2) {
             isSimpleQuery = true;
         }
-    } else if (query.includes(',')) {
+    } else if (/[，,]/.test(query)) {
         // 简单查询（值模式，如 "Alice,10"）
         isSimpleQuery = true;
-        [name, age] = query.split(',').map(s => s.trim());
+        [name, age] = query.split(/[，,]/).map(s => s.trim());
         conditions['策略'] = name;
         conditions['收盘价'] = age;
     } else {
