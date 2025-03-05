@@ -2,12 +2,12 @@
     "users": [
         {
             "username": "admin@example.com",
-            "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+            "password": "123456",
             "expiry_date": "2025-12-31"
         },
         {
             "username": "user@example.com",
-            "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+            "password": "password",
             "expiry_date": "2025-03-04"
         },
         {
@@ -34,6 +34,6 @@
             "username": "phonenumber@vip.com",
             "password": "pass888",
             "expiry_date": "2026-01-20"
-        },
+        }
     ]
 }
