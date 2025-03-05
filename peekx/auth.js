@@ -1,24 +1,21 @@
 let userData = null;
 
 // 加载用户 JSON 数据
-fetch('users.json')
-    .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-    })
-    .then(data => {
-        userData = data.users; // 假设 JSON 结构为 { "users": [...] }
+async function loadUserData() {
+    try {
+        const response = await fetch('users.json');
+        if (!response.ok) throw new Error('Failed to fetch users.json');
+        const data = await response.json();
+        userData = data.users;
         console.log('用户数据加载成功:', userData); // 调试用
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('加载用户数据失败:', error);
         const errorMessage = document.getElementById('error-message');
-        if (errorMessage) {
-            errorMessage.textContent = '无法加载用户数据，请稍后再试';
-        }
-    });
+        if (errorMessage) errorMessage.textContent = '无法加载用户数据，请稍后再试';
+    }
+}
 
-// 前端模拟哈希函数（使用 SHA-256）
+// 前端哈希函数（SHA-256）
 async function hashPassword(password) {
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
@@ -26,7 +23,7 @@ async function hashPassword(password) {
     return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// 生成简单的前端令牌（模拟 JWT）
+// 生成简单的前端令牌
 function generateToken(username) {
     const payload = { username, exp: Date.now() + 3600000 }; // 1小时有效期
     return btoa(JSON.stringify(payload));
@@ -36,15 +33,8 @@ function generateToken(username) {
 function isMembershipValid(expiryDate) {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
-
     const expiry = new Date(expiryDate);
-    if (isNaN(expiry.getTime())) {
-        console.error("无效的到期日期:", expiryDate);
-        return false;
-    }
-    expiry.setHours(0, 0, 0, 0);
-
-    return expiry.getTime() > currentDate.getTime();
+    return expiry.getTime() > currentDate.getTime() && !isNaN(expiry.getTime());
 }
 
 // 输入清理
@@ -52,29 +42,23 @@ function sanitizeInput(input) {
     return input.replace(/[<>&;"]/g, '');
 }
 
-// 登录验证（优化异步加载）
+// 登录验证
 async function login(event) {
     if (event) event.preventDefault();
     const username = sanitizeInput(document.getElementById('username').value.trim());
     const password = sanitizeInput(document.getElementById('password').value.trim());
     const errorMessage = document.getElementById('error-message') || document.getElementById('error');
 
-    // 等待 userData 加载
     if (!userData) {
-        try {
-            const response = await fetch('users.json');
-            if (!response.ok) throw new Error('Failed to fetch users.json');
-            const data = await response.json();
-            userData = data.users;
-            console.log('异步加载 userData:', userData);
-        } catch (error) {
-            console.error('加载用户数据失败:', error);
-            errorMessage.textContent = '无法加载用户数据，请稍后再试';
+        await loadUserData(); // 确保数据加载
+        if (!userData) {
+            errorMessage.textContent = '用户数据未加载，请稍后重试';
             return;
         }
     }
 
-    const user = userData.find(u => u.username === username && u.password === password);
+    const hashedPassword = await hashPassword(password);
+    const user = userData.find(u => u.username === username && u.password === hashedPassword);
     if (!user) {
         errorMessage.textContent = '邮箱或密码错误';
         return;
@@ -87,19 +71,15 @@ async function login(event) {
 
     const token = generateToken(username);
     localStorage.setItem('token', token);
-    console.log('登录成功，Token:', token);
     window.location.href = 'index.html';
 }
 
-// 验证令牌（前端模拟）
+// 验证令牌
 function verifyToken(token) {
     try {
         const payload = JSON.parse(atob(token));
-        const isValid = payload.exp > Date.now();
-        console.log('Token 验证:', isValid ? '有效' : '失效', payload);
-        return isValid;
-    } catch (error) {
-        console.error('无效的 Token:', error);
+        return payload.exp > Date.now();
+    } catch {
         return false;
     }
 }
@@ -147,4 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pathname.includes('index.html') && logoutBtn) {
         logoutBtn.addEventListener('click', logout);
     }
+
+    // 初始加载用户数据
+    loadUserData();
 });
