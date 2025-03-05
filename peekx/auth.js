@@ -52,22 +52,29 @@ function sanitizeInput(input) {
     return input.replace(/[<>&;"]/g, '');
 }
 
-// 登录验证
+// 登录验证（优化异步加载）
 async function login(event) {
     if (event) event.preventDefault();
     const username = sanitizeInput(document.getElementById('username').value.trim());
     const password = sanitizeInput(document.getElementById('password').value.trim());
     const errorMessage = document.getElementById('error-message') || document.getElementById('error');
 
+    // 等待 userData 加载
     if (!userData) {
-        errorMessage.textContent = '用户数据未加载，请稍后重试';
-        console.log('userData 未加载:', userData);
-        return;
+        try {
+            const response = await fetch('users.json');
+            if (!response.ok) throw new Error('Failed to fetch users.json');
+            const data = await response.json();
+            userData = data.users;
+            console.log('异步加载 userData:', userData);
+        } catch (error) {
+            console.error('加载用户数据失败:', error);
+            errorMessage.textContent = '无法加载用户数据，请稍后再试';
+            return;
+        }
     }
 
-    // 如果 users.json 使用明文密码，则不哈希；若使用哈希，则启用下面一行
-    // const hashedPassword = await hashPassword(password);
-    const user = userData.find(u => u.username === username && u.password === password /* 或 hashedPassword */);
+    const user = userData.find(u => u.username === username && u.password === password);
     if (!user) {
         errorMessage.textContent = '邮箱或密码错误';
         return;
