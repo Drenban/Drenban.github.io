@@ -3,18 +3,21 @@
         "id": 1,
         "question": "PeekX 的支持时间是什么时候？",
         "keywords": ["支持时间", "工作时间", "客服时间", "PeekX"],
+        "intent": "time",
         "answer": "PeekX 的客服支持时间是周一至周五，9:00-18:00。"
     },
     {
         "id": 2,
         "question": "如何重置 PeekX 的密码？",
         "keywords": ["重置密码", "忘记密码", "密码修改", "PeekX"],
+        "intent": "password",
         "answer": "请前往登录页面，点击‘忘记密码’，按照提示输入邮箱以重置密码。"
     },
     {
         "id": 3,
         "question": "PeekX 产品价格是多少？",
         "keywords": ["价格", "费用", "多少钱", "产品", "PeekX"],
+        "intent": "price",
         "answer": "PeekX 产品价格根据套餐不同而变化，请访问定价页面查看详情。"
     }
 ]
