@@ -1,11 +1,12 @@
 let miniSearch;
+let jiebaInstance;
 window.searchHistory = [];
 
 if (typeof MiniSearch === 'undefined') {
-  console.error('MiniSearch 未加载，请检查 CDN 或本地文件');
+  console.error('MiniSearch 未加载，请检查 CDN');
 }
-if (typeof jieba === 'undefined') {
-  console.error('jieba-js 未加载，请检查 CDN 或本地文件');
+if (typeof createJieba === 'undefined') {
+  console.error('createJieba 未加载，请检查 CDN');
 }
 
 function decodeBase64UTF8(base64Str) {
@@ -17,12 +18,11 @@ function decodeBase64UTF8(base64Str) {
     return new TextDecoder('utf-8').decode(bytes);
 }
 
-// 初始化 MiniSearch 和加载语料库
 fetch('data/obfuscated_corpus.json')
   .then(response => response.text())
   .then(data => {
     if (!MiniSearch) throw new Error('MiniSearch 未定义');
-    if (!jieba) throw new Error('jieba 未定义');
+    if (!createJieba) throw new Error('createJieba 未定义');
     const decoded = atob(data);
     const corpus = JSON.parse(decoded);
     miniSearch = new MiniSearch({
@@ -35,6 +35,7 @@ fetch('data/obfuscated_corpus.json')
       }
     });
     miniSearch.addAll(corpus);
+    jiebaInstance = createJieba();
     console.log('语料库加载完成');
   })
   .catch(error => console.error('加载语料库失败:', error));
