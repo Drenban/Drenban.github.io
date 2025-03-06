@@ -1,15 +1,25 @@
 let corpus = null;
 let fuse = null;
 
+// UTF-8 Base64 解码函数
+function decodeBase64UTF8(base64Str) {
+    const binaryStr = atob(base64Str);
+    const bytes = new Uint8Array(binaryStr.length);
+    for (let i = 0; i < binaryStr.length; i++) {
+        bytes[i] = binaryStr.charCodeAt(i);
+    }
+    return new TextDecoder('utf-8').decode(bytes);
+}
+
 async function loadCorpus() {
     try {
         const response = await fetch('data/obfuscated_corpus.json');
         if (!response.ok) throw new Error('无法加载语料库');
         const obfuscatedData = await response.text();
-        console.log('混淆数据:', obfuscatedData.substring(0, 50) + '...'); // 检查前50字符
+        console.log('混淆数据:', obfuscatedData.substring(0, 50) + '...');
 
-        const decodedData = atob(obfuscatedData); // Base64 解码
-        console.log('解码后的数据:', decodedData.substring(0, 50) + '...'); // 检查解码结果
+        const decodedData = decodeBase64UTF8(obfuscatedData); // 正确解码 UTF-8
+        console.log('解码后的数据:', decodedData.substring(0, 50) + '...');
 
         corpus = JSON.parse(decodedData);
         console.log('解析后的语料库:', corpus);
@@ -71,7 +81,7 @@ window.searchCorpus = function(query) {
     console.log('处理后的输入:', input);
 
     const results = fuse.search(input);
-    console.log('Fuse.js 搜索结果:', results); // 检查搜索结果
+    console.log('Fuse.js 搜索结果:', results);
 
     const bestMatch = results.length > 0 && results[0].score < 0.6 ? results[0] : null;
     const intent = detectIntent(input);
