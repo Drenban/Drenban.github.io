@@ -44,12 +44,13 @@ function sanitizeInput(input) {
     return input.replace(/[<>&;"]/g, '');
 }
 
-// 登录验证
-document.getElementById('login-form').addEventListener('submit', async function login(event) {
-    if (event) event.preventDefault();
+// 登录验证函数
+async function login() { // 移除 event 参数，因为不再依赖 submit
     const username = sanitizeInput(document.getElementById('username').value.trim());
     const password = sanitizeInput(document.getElementById('password').value.trim());
     const errorMessage = document.getElementById('error-message') || document.getElementById('error');
+
+    console.log('尝试登录:', username); // 调试用
 
     // 加载特定用户的 JSON 数据
     const dataLoaded = await loadUserData(username);
@@ -70,7 +71,7 @@ document.getElementById('login-form').addEventListener('submit', async function 
     } else {
         errorMessage.textContent = '用户名或密码错误';
     }
-});
+}
 
 // 验证令牌
 function verifyToken(token) {
@@ -111,21 +112,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const loginForm = document.getElementById('login-form');
+    // 绑定登录按钮的 click 事件
     const loginBtn = document.getElementById('login-btn');
-    if (pathname.includes('login.html')) {
-        if (loginForm) {
-            loginForm.addEventListener('submit', login);
-        } else if (loginBtn) {
-            loginBtn.addEventListener('click', login);
-        }
+    if (pathname.includes('login.html') && loginBtn) {
+        console.log('找到 login-btn，绑定 click 事件'); // 调试用
+        loginBtn.addEventListener('click', login);
+    } else if (pathname.includes('login.html')) {
+        console.error('未找到 login-btn'); // 调试用
     }
 
     const logoutBtn = document.getElementById('logout-btn');
     if (pathname.includes('index.html') && logoutBtn) {
         logoutBtn.addEventListener('click', logout);
     }
-
-    // 初始加载用户数据
-    loadUserData(username);
 });
