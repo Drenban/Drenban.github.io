@@ -4,17 +4,18 @@ let fuse = null;
 // 加载语料库
 async function loadCorpus() {
     try {
-        const response = await fetch('data/corpus.json');
+        const response = await fetch('data/obfuscated_corpus.json');
         if (!response.ok) throw new Error('无法加载语料库');
-        corpus = await response.json();
+        const obfuscatedData = await response.text();
+        const decodedData = atob(obfuscatedData); // Base64 解码
+        corpus = JSON.parse(decodedData);
         console.log('语料库加载成功:', corpus);
 
-        // 初始化 Fuse.js
         fuse = new Fuse(corpus, {
-            keys: ['question', 'keywords'], // 搜索字段
-            threshold: 0.4, // 模糊匹配阈值（0-1，越低越严格）
-            includeScore: true, // 返回匹配得分
-            minMatchCharLength: 2 // 最小匹配字符长度
+            keys: ['question', 'keywords'],
+            threshold: 0.4,
+            includeScore: true,
+            minMatchCharLength: 2
         });
     } catch (error) {
         console.error('加载语料库失败:', error);
