@@ -73,9 +73,9 @@ window.searchCorpus = function(query) {
     const bestMatch = results.length > 0 && results[0].score < 0.6 ? results[0] : null;
     const intent = detectIntent(input);
     const answer = generateResponse(intent, bestMatch);
-    // resultContainer.textContent = answer;
+    resultContainer.textContent = answer;
 
-    if (callback) callback(answer);
+    // if (callback) callback(answer);
 
     if (query && !window.searchHistory.includes(query)) {
         window.searchHistory.unshift(query);
