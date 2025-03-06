@@ -1,6 +1,13 @@
 let miniSearch;
 window.searchHistory = [];
 
+if (typeof MiniSearch === 'undefined') {
+  console.error('MiniSearch 未加载，请检查 CDN');
+}
+if (typeof jieba === 'undefined') {
+  console.error('jieba-js 未加载，请检查 CDN');
+}
+
 function decodeBase64UTF8(base64Str) {
     const binaryStr = atob(base64Str);
     const bytes = new Uint8Array(binaryStr.length);
