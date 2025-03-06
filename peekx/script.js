@@ -15,20 +15,20 @@ fetch('xlsx-data/data.xlsx')
     });
 
 // XLSX 查询逻辑
-function searchXLSX(query) { // 使用传入的 query 参数
+function searchXLSX(query) {
     const resultContainer = document.getElementById('result-container');
     resultContainer.innerHTML = '';
 
     if (!workbookData) {
         resultContainer.textContent = '服务器繁忙，请稍后再试';
-        return;
+        return false; // 返回 false 表示查询失败
     }
 
     const conditions = {};
     let isSimpleQuery = false;
     let name, age;
 
-    query = query.trim().toLowerCase(); // 使用传入的 query
+    query = query.trim().toLowerCase();
     if (query.includes(':')) {
         query.split(',').forEach(part => {
             const [key, value] = part.split(':').map(s => s.trim());
@@ -48,7 +48,12 @@ function searchXLSX(query) { // 使用传入的 query 参数
         conditions['策略'] = name;
         conditions['收盘价'] = age;
     } else {
-        conditions[''] = query;
+        // 支持直接输入股票代码
+        if (/^\d+$/.test(query)) { // 全数字，认为是股票代码
+            conditions['股票代码'] = query;
+        } else {
+            conditions[''] = query; // 无条件模糊查询
+        }
     }
 
     const matches = workbookData.filter(row => {
@@ -77,8 +82,7 @@ function searchXLSX(query) { // 使用传入的 query 参数
     });
 
     if (matches.length === 0) {
-        resultContainer.textContent = '输入有误，请重新输入';
-        return;
+        return false; // 未找到匹配，返回 false
     }
 
     if (query && !window.searchHistory.includes(query)) {
@@ -108,6 +112,7 @@ function searchXLSX(query) { // 使用传入的 query 参数
             resultContainer.scrollTop = resultContainer.scrollHeight;
         }
     }, lines.length * 320);
+    return true; // 查询成功
 }
 
 function typeLines(lines, element) {
@@ -157,11 +162,11 @@ function search() {
     const query = document.getElementById('query-input').value.trim();
     if (!query) return;
 
-    console.log('搜索输入:', query); // 调试
-    if (query.includes(':') || /[，, ]/.test(query) || /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) {
-        console.log('调用 XLSX 查询');
-        searchXLSX(query);
-    } else {
+    console.log('搜索输入:', query);
+    // 先尝试 XLSX 查询
+    const xlsxSuccess = searchXLSX(query);
+    // 如果 XLSX 查询失败，且输入不符合 XLSX 模式，则尝试语料库查询
+    if (!xlsxSuccess && !(query.includes(':') || /[，, ]/.test(query) || /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query))) {
         console.log('调用语料库查询');
         window.searchCorpus(query);
     }
@@ -173,8 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (searchBtn) {
             searchBtn.addEventListener('click', search);
             console.log('搜索按钮绑定成功');
-        } else {
-            console.error('未找到 search-btn');
         }
 
         const historyToggle = document.getElementById('history-toggle');
