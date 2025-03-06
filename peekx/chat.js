@@ -2,10 +2,10 @@ let miniSearch;
 window.searchHistory = [];
 
 if (typeof MiniSearch === 'undefined') {
-  console.error('MiniSearch 未加载，请检查 CDN');
+  console.error('MiniSearch 未加载，请检查 CDN 或本地文件');
 }
 if (typeof jieba === 'undefined') {
-  console.error('jieba-js 未加载，请检查 CDN');
+  console.error('jieba-js 未加载，请检查 CDN 或本地文件');
 }
 
 function decodeBase64UTF8(base64Str) {
@@ -21,20 +21,17 @@ function decodeBase64UTF8(base64Str) {
 fetch('data/obfuscated_corpus.json')
   .then(response => response.text())
   .then(data => {
+    if (!MiniSearch) throw new Error('MiniSearch 未定义');
+    if (!jieba) throw new Error('jieba 未定义');
     const decoded = atob(data);
     const corpus = JSON.parse(decoded);
     miniSearch = new MiniSearch({
-      fields: ['question', 'keywords', 'synonyms', 'tags'], // 搜索字段
-      storeFields: ['answer'],                              // 返回字段
+      fields: ['question', 'keywords', 'synonyms', 'tags'],
+      storeFields: ['answer'],
       searchOptions: {
-        fuzzy: 0.2,         // 模糊匹配阈值
-        prefix: true,       // 支持前缀匹配
-        weights: {          // 字段权重
-          question: 0.4,
-          keywords: 0.3,
-          synonyms: 0.2,
-          tags: 0.1
-        }
+        fuzzy: 0.2,
+        prefix: true,
+        weights: { question: 0.4, keywords: 0.3, synonyms: 0.2, tags: 0.1 }
       }
     });
     miniSearch.addAll(corpus);
@@ -42,21 +39,20 @@ fetch('data/obfuscated_corpus.json')
   })
   .catch(error => console.error('加载语料库失败:', error));
 
-// 搜索函数
 window.searchCorpus = function(query, callback) {
   const resultContainer = document.getElementById('result-container');
   if (resultContainer) resultContainer.innerHTML = '';
 
-  if (!miniSearch) {
-    if (callback) callback('语料库未加载，请稍后再试');
+  if (!miniSearch || !jieba) {
+    if (callback) callback('语料库或分词工具未加载，请稍后再试');
     return;
   }
 
   const input = query.replace(/\s+/g, ' ').trim();
-  const tokens = jieba.cut(input); // 中文分词
-  const searchQuery = tokens.join(' '); // 拼接分词结果
+  const tokens = jieba.cut(input);
+  const searchQuery = tokens.join(' ');
   const results = miniSearch.search(searchQuery, {
-    combineWith: 'AND', // 所有词需匹配
+    combineWith: 'AND',
     fuzzy: 0.2,
     prefix: true
   });
@@ -72,9 +68,7 @@ window.searchCorpus = function(query, callback) {
   }
 };
 
-// 更新历史记录（保持原有功能）
 window.updateHistory = function() {
-  // 你的历史记录更新逻辑
   console.log('搜索历史:', window.searchHistory);
 };
 
