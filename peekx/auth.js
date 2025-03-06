@@ -4,15 +4,20 @@ let userData = null;
 async function loadUserData(username) {
     try {
         const response = await fetch(`users/${username}.json`);
+        if (response.status === 404) {
+            const errorMessage = document.getElementById('error-message');
+            if (errorMessage) errorMessage.textContent = '用户不存在';
+            return false;
+        }
         if (!response.ok) throw new Error(`Failed to fetch users/${username}.json`);
         const data = await response.json();
-        userData = data; // 直接赋值单个用户对象
-        console.log('用户数据加载成功:', userData); // 调试用
+        userData = data;
+        console.log('用户数据加载成功:', userData);
         return true;
     } catch (error) {
         console.error('加载用户数据失败:', error);
         const errorMessage = document.getElementById('error-message');
-        if (errorMessage) errorMessage.textContent = '无法加载用户数据，请稍后再试';
+        if (errorMessage) errorMessage.textContent = '网络错误，请稍后再试';
         return false;
     }
 }
@@ -27,7 +32,7 @@ async function hashPassword(password) {
 
 // 生成简单的前端令牌
 function generateToken(username) {
-    const payload = { username, exp: Date.now() + 3600000 }; // 1小时有效期
+    const payload = { username, exp: Date.now() + 3600000 };
     return btoa(JSON.stringify(payload));
 }
 
@@ -45,20 +50,18 @@ function sanitizeInput(input) {
 }
 
 // 登录验证函数
-async function login() { // 移除 event 参数，因为不再依赖 submit
+async function login() {
     const loginBtn = document.getElementById('login-btn');
-    loginBtn.disabled = true; // 禁用按钮，防止重复点击
+    loginBtn.disabled = true;
     
     const username = sanitizeInput(document.getElementById('username').value.trim());
     const password = sanitizeInput(document.getElementById('password').value.trim());
     const errorMessage = document.getElementById('error-message') || document.getElementById('error');
 
-    console.log('尝试登录:', username); // 调试用
+    console.log('尝试登录:', username);
 
-    // 加载特定用户的 JSON 数据
     const dataLoaded = await loadUserData(username);
     if (!dataLoaded || !userData) {
-        errorMessage.textContent = '用户不存在或数据未加载，请检查用户名';
         loginBtn.disabled = false;
         return;
     }
@@ -121,10 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 绑定登录按钮的 click 事件
     const loginBtn = document.getElementById('login-btn');
     if (pathname.includes('login.html') && loginBtn) {
-        console.log('找到 login-btn，绑定 click 事件'); // 调试用
+        console.log('找到 login-btn，绑定 click 事件');
         loginBtn.addEventListener('click', login);
     } else if (pathname.includes('login.html')) {
-        console.error('未找到 login-btn'); // 调试用
+        console.error('未找到 login-btn');
     }
 
     const logoutBtn = document.getElementById('logout-btn');
