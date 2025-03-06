@@ -1,5 +1,5 @@
 let workbookData = null;
-window.searchHistory = []; // 全局历史记录
+window.searchHistory = [];
 
 // 加载 XLSX 数据
 fetch('xlsx-data/data.xlsx')
@@ -21,7 +21,7 @@ function searchXLSX(query) {
 
     if (!workbookData) {
         resultContainer.textContent = '服务器繁忙，请稍后再试';
-        return false; // 返回 false 表示查询失败
+        return false;
     }
 
     const conditions = {};
@@ -37,23 +37,24 @@ function searchXLSX(query) {
         name = conditions['celv'] || conditions['策略'];
         age = conditions['shoupanjia'] || conditions['收盘价'];
         if (name && age && Object.keys(conditions).length === 2) isSimpleQuery = true;
-    } else if (/[，, ]/.test(query) || /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) {
-        isSimpleQuery = true;
-        if (/[，, ]/.test(query)) {
-            [name, age] = query.split(/[，, ]+/).map(s => s.trim());
-        } else if (/^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) {
-            name = query.match(/[\u4e00-\u9fa5a-zA-Z]+/)[0];
-            age = query.match(/\d+/)[0];
+    } else if (/[，, ]/.test(query)) {
+        const parts = query.split(/[，, ]+/).map(s => s.trim());
+        if (parts.length === 2) {
+            isSimpleQuery = true;
+            [name, age] = parts;
+            conditions['策略'] = name;
+            conditions['收盘价'] = age;
         }
+    } else if (/^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) {
+        isSimpleQuery = true;
+        name = query.match(/[\u4e00-\u9fa5a-zA-Z]+/)[0];
+        age = query.match(/\d+/)[0];
         conditions['策略'] = name;
         conditions['收盘价'] = age;
+    } else if (/^\d+$/.test(query)) {
+        conditions['股票代码'] = query;
     } else {
-        // 支持直接输入股票代码
-        if (/^\d+$/.test(query)) { // 全数字，认为是股票代码
-            conditions['股票代码'] = query;
-        } else {
-            conditions[''] = query; // 无条件模糊查询
-        }
+        conditions[''] = query;
     }
 
     const matches = workbookData.filter(row => {
@@ -77,12 +78,12 @@ function searchXLSX(query) {
             if (key.toLowerCase() === '收盘价') {
                 return Math.floor(Number(rowValue)) === Math.floor(Number(value));
             }
-            return rowValue.includes(value);
+            return rowValue === value; // 改为精确匹配
         });
     });
 
     if (matches.length === 0) {
-        return false; // 未找到匹配，返回 false
+        return false;
     }
 
     if (query && !window.searchHistory.includes(query)) {
@@ -112,7 +113,7 @@ function searchXLSX(query) {
             resultContainer.scrollTop = resultContainer.scrollHeight;
         }
     }, lines.length * 320);
-    return true; // 查询成功
+    return true;
 }
 
 function typeLines(lines, element) {
@@ -163,12 +164,19 @@ function search() {
     if (!query) return;
 
     console.log('搜索输入:', query);
-    // 先尝试 XLSX 查询
-    const xlsxSuccess = searchXLSX(query);
-    // 如果 XLSX 查询失败，且输入不符合 XLSX 模式，则尝试语料库查询
-    if (!xlsxSuccess && !(query.includes(':') || /[，, ]/.test(query) || /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query))) {
-        console.log('调用语料库查询');
-        window.searchCorpus(query);
+    // 严格匹配 XLSX 查询模式
+    const isXlsxQuery = query.includes(':') || 
+                       (/[，, ]/.test(query) && query.split(/[，, ]+/).length === 2) || 
+                       /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query) || 
+                       /^\d+$/.test(query);
+    
+    if (isXlsxQuery) {
+        const xlsxSuccess = searchXLSX(query);
+        if (!xlsxSuccess) {
+            window.searchCorpus(query); // XLSX 失败时尝试语料库
+        }
+    } else {
+        window.searchCorpus(query); // 直接调用语料库查询
     }
 }
 
