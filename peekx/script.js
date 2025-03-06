@@ -41,14 +41,26 @@ function searchXLSX(query) {
         const parts = query.split(/[，, ]+/).map(s => s.trim());
         if (parts.length === 2) {
             isSimpleQuery = true;
-            [name, age] = parts;
+            // 动态判断顺序
+            if (/^\d+$/.test(parts[0])) { // 第一部分是数字
+                age = parts[0];
+                name = parts[1];
+            } else { // 第一部分是字母
+                name = parts[0];
+                age = parts[1];
+            }
             conditions['策略'] = name;
             conditions['收盘价'] = age;
         }
-    } else if (/^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) {
+    } else if (/^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query) || /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query)) {
         isSimpleQuery = true;
-        name = query.match(/[\u4e00-\u9fa5a-zA-Z]+/)[0];
-        age = query.match(/\d+/)[0];
+        if (/^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) { // 字母+数字
+            name = query.match(/[\u4e00-\u9fa5a-zA-Z]+/)[0];
+            age = query.match(/\d+/)[0];
+        } else { // 数字+字母
+            age = query.match(/\d+/)[0];
+            name = query.match(/[\u4e00-\u9fa5a-zA-Z]+/)[0];
+        }
         conditions['策略'] = name;
         conditions['收盘价'] = age;
     } else if (/^\d+$/.test(query)) {
@@ -78,7 +90,7 @@ function searchXLSX(query) {
             if (key.toLowerCase() === '收盘价') {
                 return Math.floor(Number(rowValue)) === Math.floor(Number(value));
             }
-            return rowValue === value; // 改为精确匹配
+            return rowValue === value;
         });
     });
 
@@ -164,19 +176,19 @@ function search() {
     if (!query) return;
 
     console.log('搜索输入:', query);
-    // 严格匹配 XLSX 查询模式
     const isXlsxQuery = query.includes(':') || 
                        (/[，, ]/.test(query) && query.split(/[，, ]+/).length === 2) || 
                        /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query) || 
+                       /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query) || // 新增反序支持
                        /^\d+$/.test(query);
     
     if (isXlsxQuery) {
         const xlsxSuccess = searchXLSX(query);
         if (!xlsxSuccess) {
-            window.searchCorpus(query); // XLSX 失败时尝试语料库
+            window.searchCorpus(query);
         }
     } else {
-        window.searchCorpus(query); // 直接调用语料库查询
+        window.searchCorpus(query);
     }
 }
 
