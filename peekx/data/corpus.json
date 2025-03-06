@@ -553,10 +553,108 @@
         "answer": "请前往登录页面，点击‘忘记密码’，按照提示输入邮箱以重置密码。"
     },
     {
-        "id": 78,
+        "id": 80,
         "question": "PeekX 产品价格是多少？",
         "keywords": ["价格", "费用", "多少钱", "产品", "PeekX"],
         "intent": "price",
         "answer": "PeekX 产品价格根据套餐不同而变化，请访问定价页面查看详情。"
     },
+    {
+        "id": 81,
+        "question": "彼得·林奇如何看待认知与财富的关系？",
+        "keywords": ["彼得·林奇", "认知", "财富", "赚钱"],
+        "intent": "investment_philosophy",
+        "answer": "“人永远也赚不到自己认知以外的钱。”——彼得·林奇（Peter Lynch）"
+    },
+    {
+        "id": 82,
+        "question": "约翰·博格尔如何评价市场的公平性？",
+        "keywords": ["约翰·博格尔", "市场", "公平性", "投资经验"],
+        "intent": "market_nature",
+        "answer": "“市场是无情的，它不会考虑你是什么人、你有多少经验，它只关心结果。”——约翰·博格尔（John Bogle）"
+    },
+    {
+        "id": 83,
+        "question": "爱德华·索普如何看待交易的核心？",
+        "keywords": ["爱德华·索普", "交易", "概率", "机会"],
+        "intent": "trading_strategy",
+        "answer": "“交易不是寻找正确的答案，而是寻找更高概率的机会。”——爱德华·O·索普（Edward O. Thorp）"
+    },
+    {
+        "id": 84,
+        "question": "吉姆·西蒙斯如何评价盈利与亏损的关系？",
+        "keywords": ["吉姆·西蒙斯", "交易", "盈利", "亏损"],
+        "intent": "risk_management",
+        "answer": "“成功的交易者不仅要在投资中找出潜在的盈利点，更重要的是要避免亏损。”——吉姆·西蒙斯（Jim Simons）"
+    },
+    {
+        "id": 85,
+        "question": "拉里·哈金认为交易中最重要的是什么？",
+        "keywords": ["拉里·哈金", "交易", "风险", "资金管理"],
+        "intent": "risk_management",
+        "answer": "“在交易中，最重要的不是赚多少钱，而是控制好风险。”——拉里·哈金（Larry Hite）"
+    },
+    {
+        "id": 86,
+        "question": "瑞·达利欧如何看待交易策略？",
+        "keywords": ["瑞·达利欧", "交易策略", "市场", "纪律"],
+        "intent": "trading_discipline",
+        "answer": "“最好的交易策略是一个经过充分测试的纪律，市场并不关心你的计划，但你必须关心市场。”——瑞·达利欧（Ray Dalio）"
+    },
+    {
+        "id": 87,
+        "question": "沃伦·巴菲特如何定义风险？",
+        "keywords": ["沃伦·巴菲特", "风险", "投资", "认知"],
+        "intent": "investment_risk",
+        "answer": "“风险来自于你不知道自己在做什么。”——沃伦·巴菲特（Warren Buffett）"
+    },
+    {
+        "id": 88,
+        "question": "巴菲特认为股市中的赢家是什么样的人？",
+        "keywords": ["巴菲特", "耐心", "股票市场", "赢家"],
+        "intent": "investment_mindset",
+        "answer": "“在股票市场中，赢家不是最聪明的人，而是最有耐心的人。”——沃伦·巴菲特（Warren Buffett）"
+    },
+    {
+        "id": 89,
+        "question": "杰西·利弗莫尔如何看待市场分析？",
+        "keywords": ["杰西·利弗莫尔", "市场分析", "应对策略"],
+        "intent": "trading_mindset",
+        "answer": "“不要为‘为什么’寻找答案，而是要找出‘如何’应对。”——杰西·利弗莫尔（Jesse Livermore）"
+    },
+    {
+        "id": 90,
+        "question": "乔治·索罗斯如何形容市场的竞争性？",
+        "keywords": ["乔治·索罗斯", "市场", "竞争", "适应"],
+        "intent": "market_behavior",
+        "answer": "“市场是一个无情的教育系统，淘汰那些不能适应的人。”——乔治·索罗斯（George Soros）"
+    },
+    {
+        "id": 91,
+        "question": "本杰明·格雷厄姆如何看待投资者的最大挑战？",
+        "keywords": ["本杰明·格雷厄姆", "投资", "心理", "挑战"],
+        "intent": "behavioral_finance",
+        "answer": "“大部分投资者最大的敌人是他们自己。”——本杰明·格雷厄姆（Benjamin Graham）"
+    },
+    {
+        "id": 92,
+        "question": "亚当·斯密认为交易中最难的是什么？",
+        "keywords": ["亚当·斯密", "交易", "情绪", "心理控制"],
+        "intent": "trading_psychology",
+        "answer": "“在交易中，最难的是控制自己的情绪。”——亚当·斯密（Adam Smith）"
+    },
+    {
+        "id": 93,
+        "question": "查尔斯·霍普金斯如何看待投资决策？",
+        "keywords": ["查尔斯·霍普金斯", "投资", "情绪", "理性"],
+        "intent": "investment_psychology",
+        "answer": "“不要让情绪影响你的投资决策，理性永远是第一位。”——查尔斯·T·霍普金斯（Charles T. Hoppin）"
+    },
+    {
+        "id": 94,
+        "question": "查尔斯·爱德华·詹金斯如何看待交易方法？",
+        "keywords": ["查尔斯·爱德华·詹金斯", "交易方法", "冷静", "心态"],
+        "intent": "trading_approach",
+        "answer": "“没有一种方法能适用于所有人，但最好的方法是让自己保持冷静。”——查尔斯·爱德华·詹金斯（Charles Edward Jenkins）"
+    }
 ]
