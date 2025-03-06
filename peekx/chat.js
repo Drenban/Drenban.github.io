@@ -39,7 +39,6 @@ function detectIntent(input) {
         { name: 'concept', patterns: ['理念', '是什么', '含义', '定义'], fallback: '您想了解什么概念？请详细说明！' },
         { name: 'problem', patterns: ['问题', '缺点', '困难', '怎么办'], fallback: '您遇到什么问题了吗？请告诉我详情！' },
         { name: 'goal', patterns: ['目标', '目的', '追求', '想要'], fallback: '您想知道什么目标？可以具体描述吗？' }
-        // 可根据需要继续添加其他意图，如 'definition'、'psychology' 等
     ];
 
     for (const intent of intents) {
@@ -53,7 +52,6 @@ function detectIntent(input) {
 function generateResponse(intent, match) {
     if (match) {
         const item = match.item;
-        // 如果语料库没有 source 字段，直接返回 answer
         return item.answer.trim();
     }
     if (intent) {
@@ -75,13 +73,13 @@ function generateResponse(intent, match) {
 window.searchCorpus = function(query, callback) {
     const resultContainer = document.getElementById('result-container');
     if (resultContainer) {
-        resultContainer.innerHTML = ''; // 清空内容
+        resultContainer.innerHTML = '';
     }
 
     if (!corpus || !fuse) {
         const errorMsg = '语料库未加载，请稍后再试';
         if (callback) callback(errorMsg);
-        else console.error(errorMsg); // 如果没有回调，记录错误
+        else console.error(errorMsg);
         return;
     }
 
@@ -94,7 +92,7 @@ window.searchCorpus = function(query, callback) {
     if (callback) {
         callback(answer);
     } else {
-        console.warn('未提供回调函数，结果:', answer); // 如果没有回调，警告但不报错
+        console.warn('未提供回调函数，结果:', answer); 
     }
 
     if (query && !window.searchHistory.includes(query)) {
