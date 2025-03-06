@@ -1,19 +1,19 @@
 let userData = null;
 
-// 加载用户 JSON 数据
-async function loadUserData(username, password) {
+// 加载特定用户的 JSON 数据
+async function loadUserData(username) {
     try {
-        // 动态构造用户对应的 JSON 文件路径
         const response = await fetch(`users/${username}.json`);
-        
-        if (!response.ok) throw new Error('Failed to fetch users.json');
+        if (!response.ok) throw new Error(`Failed to fetch users/${username}.json`);
         const data = await response.json();
-        userData = data.users;
+        userData = data; // 直接赋值单个用户对象
         console.log('用户数据加载成功:', userData); // 调试用
+        return true;
     } catch (error) {
         console.error('加载用户数据失败:', error);
         const errorMessage = document.getElementById('error-message');
         if (errorMessage) errorMessage.textContent = '无法加载用户数据，请稍后再试';
+        return false;
     }
 }
 
@@ -51,30 +51,26 @@ document.getElementById('login-form').addEventListener('submit', async function 
     const password = sanitizeInput(document.getElementById('password').value.trim());
     const errorMessage = document.getElementById('error-message') || document.getElementById('error');
 
-    if (!userData) {
-        await loadUserData(); // 确保数据加载
-        if (!userData) {
-            errorMessage.textContent = '用户数据未加载，请稍后重试';
-            return;
-        }
+    // 加载特定用户的 JSON 数据
+    const dataLoaded = await loadUserData(username);
+    if (!dataLoaded || !userData) {
+        errorMessage.textContent = '用户不存在或数据未加载，请检查用户名';
+        return;
     }
 
     const hashedPassword = await hashPassword(password);
-    const user = userData.find(u => u.username === username && u.password === hashedPassword);
-    if (!user) {
-        errorMessage.textContent = '邮箱或密码错误';
-        return;
+    if (userData.username === username && userData.password === hashedPassword) {
+        if (!isMembershipValid(userData.expiry_date)) {
+            errorMessage.textContent = '账户已过期，请联系管理员';
+            return;
+        }
+        const token = generateToken(username);
+        localStorage.setItem('token', token);
+        window.location.href = 'index.html';
+    } else {
+        errorMessage.textContent = '用户名或密码错误';
     }
-
-    if (!isMembershipValid(user.expiry_date)) {
-        errorMessage.textContent = '账户已过期，请联系管理员';
-        return;
-    }
-
-    const token = generateToken(username);
-    localStorage.setItem('token', token);
-    window.location.href = 'index.html';
-}
+});
 
 // 验证令牌
 function verifyToken(token) {
@@ -92,7 +88,7 @@ function logout() {
     window.location.href = 'login.html';
 }
 
-// 显示查询内容（适用于单页应用）
+// 显示查询内容
 function showQuerySection() {
     const loginSection = document.getElementById('login-section');
     const querySection = document.getElementById('query-section');
@@ -131,5 +127,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 初始加载用户数据
-    loadUserData();
+    loadUserData(username);
 });
