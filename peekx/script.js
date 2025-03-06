@@ -13,7 +13,7 @@ fetch('xlsx-data/data.xlsx')
     });
 
 // 查询
-function search() {
+function searchXLSX(query) {
     const query = document.getElementById('query-input').value.trim().toLowerCase();
     const resultContainer = document.getElementById('result-container');
     resultContainer.innerHTML = '';
@@ -133,6 +133,11 @@ function search() {
             resultContainer.scrollTop = resultContainer.scrollHeight;
         }
     }, lines.length * 320); // 等待输出完成
+
+    if (query && !window.searchHistory.includes(query)) {
+        window.searchHistory.unshift(query);
+        window.updateHistory();
+    }
 }
 
 // 修改位置 2：逐行逐字符输出，每行完整后换行
@@ -171,10 +176,10 @@ function typeLines(lines, element) {
 }
 
 // 更新历史记录
-function updateHistory() {
+window.updateHistory = function() {
     const historyList = document.getElementById('history-list');
     historyList.innerHTML = '';
-    searchHistory.slice(0, 10).forEach(item => {
+    window.searchHistory.slice(0, 10).forEach(item => {
         const li = document.createElement('li');
         li.textContent = item;
         li.addEventListener('click', () => {
@@ -183,35 +188,33 @@ function updateHistory() {
         });
         historyList.appendChild(li);
     });
+};
+
+function search() {
+    const query = document.getElementById('query-input').value.trim();
+    if (!query) return;
+
+    if (query.includes(':') || /[，, ]/.test(query) || /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) {
+        searchXLSX(query);
+    } else {
+        window.searchCorpus(query); // 调用 chat.js 中的函数
+    }
 }
 
-// 初始化
 document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes('index.html')) {
         document.getElementById('search-btn').addEventListener('click', search);
-    }
-});
-
-// 原有代码保持不变，仅添加历史按钮交互
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('index.html')) {
-        document.getElementById('search-btn').addEventListener('click', search);
-        document.getElementById('logout-btn').addEventListener('click', logout);
-
-        // 修改位置 4：历史按钮点击展开/关闭
-        const historyToggle = document.getElementById('history-toggle');
-        const historySidebar = document.getElementById('history-sidebar');
-        historyToggle.addEventListener('click', () => {
-            historySidebar.classList.toggle('active');
+        document.getElementById('history-toggle').addEventListener('click', () => {
+            document.getElementById('history-sidebar').classList.toggle('active');
         });
-
-        // 修改位置 5：点击历史项后关闭侧栏并查询
         document.getElementById('history-list').addEventListener('click', (e) => {
             if (e.target.tagName === 'LI') {
                 document.getElementById('query-input').value = e.target.textContent;
                 search();
-                historySidebar.classList.remove('active');
+                document.getElementById('history-sidebar').classList.remove('active');
             }
         });
+        document.getElementById('logout-btn').addEventListener('click', logout);
+        window.updateHistory();
     }
 });
