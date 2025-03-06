@@ -41,11 +41,10 @@ function searchXLSX(query) {
         const parts = query.split(/[，, ]+/).map(s => s.trim());
         if (parts.length === 2) {
             isSimpleQuery = true;
-            // 动态判断顺序
-            if (/^\d+$/.test(parts[0])) { // 第一部分是数字
+            if (/^\d+$/.test(parts[0])) {
                 age = parts[0];
                 name = parts[1];
-            } else { // 第一部分是字母
+            } else {
                 name = parts[0];
                 age = parts[1];
             }
@@ -54,10 +53,10 @@ function searchXLSX(query) {
         }
     } else if (/^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query) || /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query)) {
         isSimpleQuery = true;
-        if (/^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) { // 字母+数字
+        if (/^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query)) {
             name = query.match(/[\u4e00-\u9fa5a-zA-Z]+/)[0];
             age = query.match(/\d+/)[0];
-        } else { // 数字+字母
+        } else {
             age = query.match(/\d+/)[0];
             name = query.match(/[\u4e00-\u9fa5a-zA-Z]+/)[0];
         }
@@ -176,18 +175,27 @@ function search() {
     if (!query) return;
 
     console.log('搜索输入:', query);
+
+    // XLSX 查询条件
     const isXlsxQuery = query.includes(':') || 
-                       (/[，, ]/.test(query) && query.split(/[，, ]+/).length === 2) || 
-                       /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query) || 
-                       /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query) || // 新增反序支持
-                       /^\d+$/.test(query);
-    
+                        (/[，, ]/.test(query) && query.split(/[，, ]+/).length === 2) || 
+                        /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query) || 
+                        /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query) || 
+                        /^\d+$/.test(query);
+
+    console.log('是否 XLSX 查询:', isXlsxQuery); // 调试分流条件
+
     if (isXlsxQuery) {
+        console.log('尝试 XLSX 查询');
         const xlsxSuccess = searchXLSX(query);
         if (!xlsxSuccess) {
+            console.log('XLSX 查询失败，尝试语料库查询');
             window.searchCorpus(query);
+        } else {
+            console.log('XLSX 查询成功');
         }
     } else {
+        console.log('直接调用语料库查询');
         window.searchCorpus(query);
     }
 }
