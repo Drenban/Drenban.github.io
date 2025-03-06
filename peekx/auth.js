@@ -32,7 +32,9 @@ async function hashPassword(password) {
 
 // 生成简单的前端令牌
 function generateToken(username) {
-    const payload = { username, exp: Date.now() + 3600000 };
+    const salt = crypto.randomUUID();
+    const payload = { username, exp: Date.now() + 3600000, salt };
+    localStorage.setItem('salt', salt);
     return btoa(JSON.stringify(payload));
 }
 
@@ -82,20 +84,26 @@ async function login() {
     }
 }
 
+// 验证令牌
 function verifyToken(token) {
     if (!token) {
         localStorage.removeItem('token');
+        localStorage.removeItem('salt');
+        console.warn('Token 不存在，已清除');
         return false;
     }
     try {
         const payload = JSON.parse(atob(token));
-        if (!payload.exp || payload.salt !== 'fixed-salt') {
+        const storedSalt = localStorage.getItem('salt');
+        if (!payload.exp || payload.salt !== storedSalt) {
             localStorage.removeItem('token');
-            console.warn('Token 校验失败，已清除');
+            localStorage.removeItem('salt');
+            console.warn('Token 校验失败（过期或盐值不匹配），已清除');
             return false;
         }
         if (payload.exp < Date.now()) {
             localStorage.removeItem('token');
+            localStorage.removeItem('salt');
             console.info('Token 已过期，已清除');
             return false;
         }
@@ -103,6 +111,7 @@ function verifyToken(token) {
     } catch (error) {
         console.error('Token 验证失败:', error);
         localStorage.removeItem('token');
+        localStorage.removeItem('salt');
         return false;
     }
 }
