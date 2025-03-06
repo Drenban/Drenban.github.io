@@ -46,6 +46,9 @@ function sanitizeInput(input) {
 
 // 登录验证函数
 async function login() { // 移除 event 参数，因为不再依赖 submit
+    const loginBtn = document.getElementById('login-btn');
+    loginBtn.disabled = true; // 禁用按钮，防止重复点击
+    
     const username = sanitizeInput(document.getElementById('username').value.trim());
     const password = sanitizeInput(document.getElementById('password').value.trim());
     const errorMessage = document.getElementById('error-message') || document.getElementById('error');
@@ -56,6 +59,7 @@ async function login() { // 移除 event 参数，因为不再依赖 submit
     const dataLoaded = await loadUserData(username);
     if (!dataLoaded || !userData) {
         errorMessage.textContent = '用户不存在或数据未加载，请检查用户名';
+        loginBtn.disabled = false;
         return;
     }
 
@@ -63,6 +67,7 @@ async function login() { // 移除 event 参数，因为不再依赖 submit
     if (userData.username === username && userData.password === hashedPassword) {
         if (!isMembershipValid(userData.expiry_date)) {
             errorMessage.textContent = '账户已过期，请联系管理员';
+            loginBtn.disabled = false;
             return;
         }
         const token = generateToken(username);
@@ -70,6 +75,7 @@ async function login() { // 移除 event 参数，因为不再依赖 submit
         window.location.href = 'index.html';
     } else {
         errorMessage.textContent = '用户名或密码错误';
+        loginBtn.disabled = false;
     }
 }
 
