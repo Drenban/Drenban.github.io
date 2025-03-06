@@ -1,20 +1,16 @@
 let workbookData = null;
 window.searchHistory = [];
 
-// 加载 XLSX 数据
 fetch('xlsx-data/data.xlsx')
     .then(response => response.arrayBuffer())
     .then(data => {
         const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });
         workbookData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-        console.log('XLSX 数据加载成功');
     })
     .catch(error => {
-        console.error('加载 XLSX 数据失败:', error);
         document.getElementById('result-container').textContent = '服务器繁忙，请稍后再试';
     });
 
-// XLSX 查询逻辑
 function searchXLSX(query) {
     const resultContainer = document.getElementById('result-container');
     resultContainer.innerHTML = '';
@@ -174,28 +170,20 @@ function search() {
     const query = document.getElementById('query-input').value.trim();
     if (!query) return;
 
-    console.log('搜索输入:', query);
-
-    // XLSX 查询条件
     const isXlsxQuery = query.includes(':') || 
                         (/[，, ]/.test(query) && query.split(/[，, ]+/).length === 2) || 
                         /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query) || 
                         /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query) || 
                         /^\d+$/.test(query);
 
-    console.log('是否 XLSX 查询:', isXlsxQuery); // 调试分流条件
-
     if (isXlsxQuery) {
-        console.log('尝试 XLSX 查询');
         const xlsxSuccess = searchXLSX(query);
         if (!xlsxSuccess) {
-            console.log('XLSX 查询失败，尝试语料库查询');
             window.searchCorpus(query);
         } else {
-            console.log('XLSX 查询成功');
+            console.log('查询成功');
         }
     } else {
-        console.log('直接调用语料库查询');
         window.searchCorpus(query);
     }
 }
@@ -205,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const searchBtn = document.getElementById('search-btn');
         if (searchBtn) {
             searchBtn.addEventListener('click', search);
-            console.log('搜索按钮绑定成功');
         }
 
         const historyToggle = document.getElementById('history-toggle');
