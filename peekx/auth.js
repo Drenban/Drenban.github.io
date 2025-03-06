@@ -45,7 +45,7 @@ function sanitizeInput(input) {
 }
 
 // 登录验证
-async function login(event) {
+document.getElementById('login-form').addEventListener('submit', async function login(event) {
     if (event) event.preventDefault();
     const username = sanitizeInput(document.getElementById('username').value.trim());
     const password = sanitizeInput(document.getElementById('password').value.trim());
