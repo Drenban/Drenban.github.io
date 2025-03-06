@@ -59,12 +59,16 @@ function generateResponse(intent, match) {
     return '抱歉，我不太明白您的意思，可以换个说法试试吗？';
 }
 
-window.searchCorpus = function(query) {
+window.searchCorpus = function(query, callback) {
     const resultContainer = document.getElementById('result-container');
-    resultContainer.innerHTML = '';
+    if (resultContainer) {
+        resultContainer.innerHTML = ''; // 清空内容
+    }
 
     if (!corpus || !fuse) {
-        resultContainer.textContent = '语料库未加载，请稍后再试';
+        const errorMsg = '语料库未加载，请稍后再试';
+        if (callback) callback(errorMsg);
+        else console.error(errorMsg); // 如果没有回调，记录错误
         return;
     }
 
@@ -73,9 +77,12 @@ window.searchCorpus = function(query) {
     const bestMatch = results.length > 0 && results[0].score < 0.6 ? results[0] : null;
     const intent = detectIntent(input);
     const answer = generateResponse(intent, bestMatch);
-    resultContainer.textContent = answer;
 
-    // if (callback) callback(answer);
+    if (callback) {
+        callback(answer);
+    } else {
+        console.warn('未提供回调函数，结果:', answer); // 如果没有回调，警告但不报错
+    }
 
     if (query && !window.searchHistory.includes(query)) {
         window.searchHistory.unshift(query);
