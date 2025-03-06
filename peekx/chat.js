@@ -6,9 +6,13 @@ async function loadCorpus() {
         const response = await fetch('data/obfuscated_corpus.json');
         if (!response.ok) throw new Error('无法加载语料库');
         const obfuscatedData = await response.text();
+        console.log('混淆数据:', obfuscatedData.substring(0, 50) + '...'); // 检查前50字符
+
         const decodedData = atob(obfuscatedData); // Base64 解码
+        console.log('解码后的数据:', decodedData.substring(0, 50) + '...'); // 检查解码结果
+
         corpus = JSON.parse(decodedData);
-        console.log('语料库加载成功:', corpus);
+        console.log('解析后的语料库:', corpus);
 
         fuse = new Fuse(corpus, {
             keys: ['question', 'keywords'],
@@ -16,6 +20,7 @@ async function loadCorpus() {
             includeScore: true,
             minMatchCharLength: 2
         });
+        console.log('Fuse.js 初始化成功');
     } catch (error) {
         console.error('加载语料库失败:', error);
     }
@@ -66,8 +71,9 @@ window.searchCorpus = function(query) {
     console.log('处理后的输入:', input);
 
     const results = fuse.search(input);
-    const bestMatch = results.length > 0 && results[0].score < 0.6 ? results[0] : null;
+    console.log('Fuse.js 搜索结果:', results); // 检查搜索结果
 
+    const bestMatch = results.length > 0 && results[0].score < 0.6 ? results[0] : null;
     const intent = detectIntent(input);
     const answer = generateResponse(intent, bestMatch);
     resultContainer.textContent = answer;
