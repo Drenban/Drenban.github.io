@@ -5,6 +5,7 @@ async function loadCorpus() {
         const response = await fetch('data/corpus.json');
         if (!response.ok) throw new Error('无法加载语料库');
         corpus = await response.json();
+        console.log('语料库加载成功:', corpus);
     } catch (error) {
         console.error('加载语料库失败:', error);
     }
@@ -16,6 +17,7 @@ window.searchCorpus = function(query) {
 
     if (!corpus) {
         resultContainer.textContent = '语料库未加载，请稍后再试';
+        console.warn('语料库未加载');
         return;
     }
 
@@ -40,6 +42,7 @@ window.searchCorpus = function(query) {
         ? bestMatch.answer
         : "抱歉，我无法理解您的问题，请尝试换个说法。";
     resultContainer.textContent = answer;
+    console.log('语料库查询结果:', answer);
 
     if (query && !window.searchHistory.includes(query)) {
         window.searchHistory.unshift(query);
