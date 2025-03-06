@@ -91,6 +91,11 @@ main {
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 #error-message {
     color: #666666;
     font-size: 12px;
