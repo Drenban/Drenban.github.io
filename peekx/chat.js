@@ -21,17 +21,32 @@ window.searchCorpus = function(query) {
         return;
     }
 
-    const input = query.toLowerCase().trim();
+    // 清理输入，去掉多余空格
+    const input = query.toLowerCase().replace(/\s+/g, ' ').trim();
     let bestMatch = null;
     let highestScore = 0;
 
     for (const item of corpus) {
         let score = 0;
-        for (const keyword of item.keywords) {
-            if (input.includes(keyword.toLowerCase())) {
-                score += 1;
-            }
+        const keywords = item.keywords.map(k => k.toLowerCase());
+        
+        // 检查完整问题匹配（更高权重）
+        if (input === item.question.toLowerCase()) {
+            score += 10; // 完整匹配加高分
         }
+        
+        // 关键词匹配
+        keywords.forEach(keyword => {
+            if (input.includes(keyword)) {
+                // 特定关键词加权
+                if (keyword !== 'peekx') {
+                    score += 2; // 非品牌词加更高分
+                } else {
+                    score += 1; // 品牌词加低分
+                }
+            }
+        });
+
         if (score > highestScore) {
             highestScore = score;
             bestMatch = item;
@@ -42,7 +57,7 @@ window.searchCorpus = function(query) {
         ? bestMatch.answer
         : "抱歉，我无法理解您的问题，请尝试换个说法。";
     resultContainer.textContent = answer;
-    console.log('语料库查询结果:', answer);
+    console.log('语料库查询结果:', answer, '得分:', highestScore);
 
     if (query && !window.searchHistory.includes(query)) {
         window.searchHistory.unshift(query);
