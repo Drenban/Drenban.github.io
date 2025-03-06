@@ -14,7 +14,7 @@ fetch('xlsx-data/data.xlsx')
 
 // 查询
 function searchXLSX(query) {
-    const query = document.getElementById('query-input').value.trim().toLowerCase();
+    // const query = document.getElementById('query-input').value.trim().toLowerCase();
     const resultContainer = document.getElementById('result-container');
     resultContainer.innerHTML = '';
 
