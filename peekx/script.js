@@ -114,15 +114,6 @@ function searchXLSX(query) {
         });
     }
     return lines;
-    
-    // typeLines(lines, resultContainer);
-
-    // setTimeout(() => {
-    //     if (window.innerWidth > 768) {
-    //         resultContainer.scrollTop = resultContainer.scrollHeight;
-    //     }
-    // }, lines.length * 320);
-    // return true;
 }
 
 function typeLines(lines, element) {
@@ -179,21 +170,12 @@ function search() {
                         /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query) || 
                         /^\d+$/.test(query);
 
-    // if (isXlsxQuery && searchXLSX(query)) {
-    //     return;
-    // }
-    // window.searchCorpus(query, (result) => {
-    //     // 将结果按行分割并逐条输出
-    //     const lines = result.split('\n').filter(line => line.trim());
-    //     typeLines(lines, resultContainer);
-    // });
     const resultContainer = document.getElementById('result-container');
-    resultContainer.innerHTML = ''; // 清空现有内容
+    resultContainer.innerHTML = '';
 
     if (isXlsxQuery) {
         const xlsxResult = searchXLSX(query);
         if (xlsxResult) {
-            // 处理 xlsx 的逐条输出
             typeLines(xlsxResult, resultContainer);
             setTimeout(() => {
                 if (window.innerWidth > 768) {
@@ -204,7 +186,6 @@ function search() {
         }
     }
 
-    // 处理语料库查询，确保 resultContainer 可用
     window.searchCorpus(query, (result) => {
         if (typeof result !== 'string') {
             console.error('searchCorpus 返回的结果不是字符串:', result);
