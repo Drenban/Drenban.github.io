@@ -3,7 +3,9 @@ let userData = null;
 // 加载用户 JSON 数据
 async function loadUserData() {
     try {
-        const response = await fetch('users.json');
+        // 动态构造用户对应的 JSON 文件路径
+        const response = await fetch(`users/${username}.json`);
+        
         if (!response.ok) throw new Error('Failed to fetch users.json');
         const data = await response.json();
         userData = data.users;
