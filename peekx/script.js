@@ -177,15 +177,10 @@ function search() {
                         /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query) || 
                         /^\d+$/.test(query);
 
-    if (isXlsxQuery) {
-        const xlsxSuccess = searchXLSX(query);
-        if (!xlsxSuccess) {
-            window.searchCorpus(query);
-        } else {
-        }
-    } else {
-        window.searchCorpus(query);
+    if (isXlsxQuery && searchXLSX(query)) {
+        return;
     }
+    window.searchCorpus(query);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
