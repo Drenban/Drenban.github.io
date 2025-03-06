@@ -82,12 +82,27 @@ async function login() {
     }
 }
 
-// 验证令牌
 function verifyToken(token) {
+    if (!token) {
+        localStorage.removeItem('token');
+        return false;
+    }
     try {
         const payload = JSON.parse(atob(token));
-        return payload.exp > Date.now();
-    } catch {
+        if (!payload.exp || payload.salt !== 'fixed-salt') {
+            localStorage.removeItem('token');
+            console.warn('Token 校验失败，已清除');
+            return false;
+        }
+        if (payload.exp < Date.now()) {
+            localStorage.removeItem('token');
+            console.info('Token 已过期，已清除');
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.error('Token 验证失败:', error);
+        localStorage.removeItem('token');
         return false;
     }
 }
