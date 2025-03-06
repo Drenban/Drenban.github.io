@@ -171,7 +171,8 @@ function search() {
     if (!query) return;
 
     const isXlsxQuery = query.includes(':') || 
-                        (/[，, ]/.test(query) && query.split(/[，, ]+/).length === 2) || 
+                        (/[，, ]/.test(query) && query.split(/[，, ]+/).length === 2 && 
+                         (/\d/.test(query.split(/[，, ]+/)[0]) || /\d/.test(query.split(/[，, ]+/)[1]))) || 
                         /^[\u4e00-\u9fa5a-zA-Z]+\d+$/.test(query) || 
                         /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query) || 
                         /^\d+$/.test(query);
@@ -181,7 +182,6 @@ function search() {
         if (!xlsxSuccess) {
             window.searchCorpus(query);
         } else {
-            console.log('查询成功');
         }
     } else {
         window.searchCorpus(query);
