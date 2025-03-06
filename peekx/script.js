@@ -179,42 +179,42 @@ function search() {
                         /^\d+[\u4e00-\u9fa5a-zA-Z]+$/.test(query) || 
                         /^\d+$/.test(query);
 
-    // if (isXlsxQuery && searchXLSX(query)) {
-    //     return;
-    // }
-    // window.searchCorpus(query, (result) => {
-    //     // 将结果按行分割并逐条输出
-    //     const lines = result.split('\n').filter(line => line.trim());
-    //     typeLines(lines, resultContainer);
-    // });
-    const resultContainer = document.getElementById('result-container');
-    resultContainer.innerHTML = ''; // 清空现有内容
-
-    if (isXlsxQuery) {
-        const xlsxResult = searchXLSX(query);
-        if (xlsxResult) {
-            // 处理 xlsx 的逐条输出
-            typeLines(xlsxResult, resultContainer);
-            setTimeout(() => {
-                if (window.innerWidth > 768) {
-                    resultContainer.scrollTop = resultContainer.scrollHeight;
-                }
-            }, xlsxResult.length * 320);
-            return;
-        }
+    if (isXlsxQuery && searchXLSX(query)) {
+        return;
     }
-
-    // 处理语料库查询
     window.searchCorpus(query, (result) => {
-        // 将语料库结果按行分割并逐条输出
+        // 将结果按行分割并逐条输出
         const lines = result.split('\n').filter(line => line.trim());
         typeLines(lines, resultContainer);
-        setTimeout(() => {
-            if (window.innerWidth > 768) {
-                resultContainer.scrollTop = resultContainer.scrollHeight;
-            }
-        }, lines.length * 320);
     });
+    // const resultContainer = document.getElementById('result-container');
+    // resultContainer.innerHTML = ''; // 清空现有内容
+
+    // if (isXlsxQuery) {
+    //     const xlsxResult = searchXLSX(query);
+    //     if (xlsxResult) {
+    //         // 处理 xlsx 的逐条输出
+    //         typeLines(xlsxResult, resultContainer);
+    //         setTimeout(() => {
+    //             if (window.innerWidth > 768) {
+    //                 resultContainer.scrollTop = resultContainer.scrollHeight;
+    //             }
+    //         }, xlsxResult.length * 320);
+    //         return;
+    //     }
+    // }
+
+    // // 处理语料库查询
+    // window.searchCorpus(query, (result) => {
+    //     // 将语料库结果按行分割并逐条输出
+    //     const lines = result.split('\n').filter(line => line.trim());
+    //     typeLines(lines, resultContainer);
+    //     setTimeout(() => {
+    //         if (window.innerWidth > 768) {
+    //             resultContainer.scrollTop = resultContainer.scrollHeight;
+    //         }
+    //     }, lines.length * 320);
+    // });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
