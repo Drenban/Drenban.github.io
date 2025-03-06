@@ -1,5 +1,6 @@
-let corpus = null;
-let fuse = null;
+let miniSearch;
+let jiebaInstance;
+window.searchHistory = [];
 
 function decodeBase64UTF8(base64Str) {
     const binaryStr = atob(base64Str);
@@ -10,23 +11,67 @@ function decodeBase64UTF8(base64Str) {
     return new TextDecoder('utf-8').decode(bytes);
 }
 
-async function loadCorpus() {
-    try {
-        const response = await fetch('data/obfuscated_corpus.json');
-        if (!response.ok) throw new Error('无法加载语料库');
-        const obfuscatedData = await response.text();
-        const decodedData = decodeBase64UTF8(obfuscatedData);
-        corpus = JSON.parse(decodedData);
-
-        fuse = new Fuse(corpus, {
-            keys: ['question', 'keywords'],
-            threshold: 0.4,
-            includeScore: true,
-            minMatchCharLength: 2
-        });
-    } catch (error) {
-    }
+if (typeof MiniSearch === 'undefined') {
+  console.error('MiniSearch 未加载，请检查 lib/index.min.js');
 }
+if (typeof createJieba === 'undefined') {
+  console.error('createJieba 未加载，请检查 lib/jieba.min.js');
+}
+
+fetch('data/obfuscated_corpus.json')
+  .then(response => response.text())
+  .then(data => {
+    if (!MiniSearch) throw new Error('MiniSearch 未定义');
+    if (!createJieba) throw new Error('createJieba 未定义');
+    const decoded = atob(data);
+    const corpus = JSON.parse(decoded);
+    miniSearch = new MiniSearch({
+      fields: ['question', 'keywords', 'synonyms', 'tags'],
+      storeFields: ['answer'],
+      searchOptions: {
+        fuzzy: 0.2,
+        prefix: true,
+        weights: { question: 0.4, keywords: 0.3, synonyms: 0.2, tags: 0.1 }
+      }
+    });
+    miniSearch.addAll(corpus);
+    jiebaInstance = createJieba();
+    console.log('语料库加载完成');
+  })
+  .catch(error => console.error('加载语料库失败:', error));
+
+window.searchCorpus = function(query, callback) {
+  const resultContainer = document.getElementById('result-container');
+  if (resultContainer) resultContainer.innerHTML = '';
+
+  if (!miniSearch || !jiebaInstance) {
+    if (callback) callback('语料库或分词工具未加载，请稍后再试');
+    return;
+  }
+
+  const input = query.replace(/\s+/g, ' ').trim();
+  const tokens = jiebaInstance.cut(input);
+  const searchQuery = tokens.join(' ');
+  const results = miniSearch.search(searchQuery, {
+    combineWith: 'AND',
+    fuzzy: 0.2,
+    prefix: true
+  });
+  const bestMatch = results.length > 0 ? results[0] : null;
+  const intent = detectIntent(input);
+  const answer = generateResponse(intent, bestMatch ? { item: bestMatch } : null);
+
+  if (callback) callback(answer);
+
+  if (query && !window.searchHistory.includes(query)) {
+    window.searchHistory.unshift(query);
+    window.updateHistory();
+  }
+};
+
+window.updateHistory = function() {
+  console.log('搜索历史:', window.searchHistory);
+};
 
 function detectIntent(input) {
     const lowerInput = input.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -115,40 +160,3 @@ function generateResponse(intent, match) {
     }
     return '抱歉，我不太明白您的意思，可以换个说法试试吗？';
 }
-
-window.searchCorpus = function(query, callback) {
-    const resultContainer = document.getElementById('result-container');
-    if (resultContainer) {
-        resultContainer.innerHTML = '';
-    }
-
-    if (!corpus || !fuse) {
-        const errorMsg = '语料库未加载，请稍后再试';
-        if (callback) callback(errorMsg);
-        else console.error(errorMsg);
-        return;
-    }
-
-    const input = query.replace(/\s+/g, ' ').trim();
-    const results = fuse.search(input);
-    const bestMatch = results.length > 0 && results[0].score < 0.6 ? results[0] : null;
-    const intent = detectIntent(input);
-    const answer = generateResponse(intent, bestMatch);
-
-    if (callback) {
-        callback(answer);
-    } else {
-        console.warn('未提供回调函数，结果:', answer); 
-    }
-
-    if (query && !window.searchHistory.includes(query)) {
-        window.searchHistory.unshift(query);
-        window.updateHistory();
-    }
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('index.html')) {
-        loadCorpus();
-    }
-});
