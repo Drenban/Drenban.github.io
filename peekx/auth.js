@@ -1,7 +1,7 @@
 let userData = null;
 
 // 加载用户 JSON 数据
-async function loadUserData() {
+async function loadUserData(username, password) {
     try {
         // 动态构造用户对应的 JSON 文件路径
         const response = await fetch(`users/${username}.json`);
