@@ -1,32 +1,93 @@
 let corpus = null;
 let fuse = null;
+const searchCache = new Map(); // 搜索结果缓存
+window.searchHistory = [];
 
+// Base64 解码函数
 function decodeBase64UTF8(base64Str) {
-    const binaryStr = atob(base64Str);
-    const bytes = new Uint8Array(binaryStr.length);
-    for (let i = 0; i < binaryStr.length; i++) {
-        bytes[i] = binaryStr.charCodeAt(i);
+    try {
+        const binaryStr = atob(base64Str);
+        const bytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
+        }
+        return new TextDecoder('utf-8').decode(bytes);
+    } catch (error) {
+        throw new Error('Base64 解码失败: ' + error.message);
     }
-    return new TextDecoder('utf-8').decode(bytes);
 }
 
+// 异步加载语料库
 async function loadCorpus() {
     try {
         const response = await fetch('data/obfuscated_corpus.json');
-        if (!response.ok) throw new Error('无法加载语料库');
+        if (!response.ok) throw new Error(`无法加载语料库: ${response.status}`);
         const obfuscatedData = await response.text();
         const decodedData = decodeBase64UTF8(obfuscatedData);
         corpus = JSON.parse(decodedData);
 
         fuse = new Fuse(corpus, {
-            keys: ['question', 'keywords'],
-            threshold: 0.4,
-            includeScore: true,
-            minMatchCharLength: 2
+            keys: [
+                { name: 'question', weight: 0.5 },   // 主问题字段
+                { name: 'keywords', weight: 0.3 },   // 关键词字段
+                { name: 'synonyms', weight: 0.15 },  // 同义词字段
+                { name: 'tags', weight: 0.05 }       // 标签字段
+            ],
+            threshold: 0.4,          // 模糊匹配阈值
+            includeScore: true,      // 返回匹配分数
+            includeMatches: true,    // 返回匹配详情
+            minMatchCharLength: 2,   // 最小匹配字符长度
+            shouldSort: true         // 自动排序
         });
+        console.log('语料库加载完成');
     } catch (error) {
+        console.error('加载语料库失败:', error);
     }
 }
+
+// 搜索函数
+window.searchCorpus = function(query, callback) {
+    const resultContainer = document.getElementById('result-container');
+    if (resultContainer) resultContainer.innerHTML = '';
+
+    if (!corpus || !fuse) {
+        const errorMsg = '语料库未加载，请稍后再试';
+        if (callback) callback(errorMsg);
+        else console.error(errorMsg);
+        return;
+    }
+
+    const input = query.trim().toLowerCase();
+
+    // 检查缓存
+    if (searchCache.has(input)) {
+        if (callback) callback(searchCache.get(input));
+        return;
+    }
+
+    const results = fuse.search(input);
+    const bestMatch = results.length > 0 && results[0].score < 0.6 ? results[0] : null;
+    const intent = detectIntent(input);
+    const answer = generateResponse(intent, bestMatch);
+
+    // 缓存结果
+    searchCache.set(input, answer);
+
+    if (callback) callback(answer);
+    else console.warn('未提供回调函数，结果:', answer);
+
+    // 更新搜索历史
+    if (query && !window.searchHistory.includes(query)) {
+        window.searchHistory.unshift(query);
+        if (window.searchHistory.length > 10) window.searchHistory.pop(); // 限制历史长度
+        window.updateHistory();
+    }
+};
+
+// 更新历史
+window.updateHistory = function() {
+    console.log('搜索历史:', window.searchHistory);
+};
 
 function detectIntent(input) {
     const lowerInput = input.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -74,8 +135,9 @@ function detectIntent(input) {
 
 function generateResponse(intent, match) {
     if (match) {
-        const item = match.item;
-        return item.answer.trim();
+        const score = (1 - match.score).toFixed(2); // 转换为相似度（0-1）
+        if (score < 0.5) return '抱歉，找不到准确答案，您可以换个说法试试！';
+        return `${match.item.answer.trim()} (匹配度: ${score})`;
     }
     if (intent) {
         switch (intent.name) {
@@ -116,37 +178,7 @@ function generateResponse(intent, match) {
     return '抱歉，我不太明白您的意思，可以换个说法试试吗？';
 }
 
-window.searchCorpus = function(query, callback) {
-    const resultContainer = document.getElementById('result-container');
-    if (resultContainer) {
-        resultContainer.innerHTML = '';
-    }
-
-    if (!corpus || !fuse) {
-        const errorMsg = '语料库未加载，请稍后再试';
-        if (callback) callback(errorMsg);
-        else console.error(errorMsg);
-        return;
-    }
-
-    const input = query.replace(/\s+/g, ' ').trim();
-    const results = fuse.search(input);
-    const bestMatch = results.length > 0 && results[0].score < 0.6 ? results[0] : null;
-    const intent = detectIntent(input);
-    const answer = generateResponse(intent, bestMatch);
-
-    if (callback) {
-        callback(answer);
-    } else {
-        console.warn('未提供回调函数，结果:', answer); 
-    }
-
-    if (query && !window.searchHistory.includes(query)) {
-        window.searchHistory.unshift(query);
-        window.updateHistory();
-    }
-};
-
+// DOM 加载时初始化
 document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes('index.html')) {
         loadCorpus();
