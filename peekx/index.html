@@ -40,15 +40,17 @@
             </div>
         </main>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/minisearch@7.1.2/dist/umd/index.min.js"></script>
+    <script src="lib/index.min.js"></script>
     <script>
         var Module = {
             onRuntimeInitialized: function() {
                 console.log('WebAssembly 运行时初始化完成');
+                window.jieba = createJieba();
+                console.log('jieba 已初始化');
             }
         };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/js-jieba@1.0.12/dist/jieba.min.js"></script>
+    <script src="lib/jieba.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="auth.js"></script>
     <script src="chat.js"></script>
