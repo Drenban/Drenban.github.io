@@ -137,7 +137,7 @@ function generateResponse(intent, match) {
     if (match) {
         const score = (1 - match.score).toFixed(2); // 转换为相似度（0-1）
         if (score < 0.5) return '抱歉，找不到准确答案，您可以换个说法试试！';
-        return `${match.item.answer.trim()} (匹配度: ${score})`;
+        return `${match.item.answer.trim()}`; // (匹配度: ${score})
     }
     if (intent) {
         switch (intent.name) {
