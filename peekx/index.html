@@ -40,17 +40,7 @@
             </div>
         </main>
     </div>
-    <script src="lib/index.min.js"></script>
-    <script>
-        var Module = {
-            onRuntimeInitialized: function() {
-                console.log('WebAssembly 运行时初始化完成');
-                window.jieba = createJieba();
-                console.log('jieba 已初始化');
-            }
-        };
-    </script>
-    <script src="lib/jieba.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="auth.js"></script>
     <script src="chat.js"></script>
