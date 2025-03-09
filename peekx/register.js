@@ -17,6 +17,8 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
             password: password
         });
 
+        console.log('注册响应:', { data, error }); // 调试输出
+
         if (error) {
             message.style.color = 'red';
             message.textContent = '注册失败: ' + error.message;
