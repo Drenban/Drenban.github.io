@@ -1,3 +1,6 @@
+let workbookData = null;
+window.searchHistory = [];
+
 (function() {
     function generateRandomString(length) {
         const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -23,9 +26,6 @@
         window.history.replaceState({}, document.title, newPath);
     }
 })();
-
-let workbookData = null;
-window.searchHistory = [];
 
 fetch('xlsx-data/data.xlsx')
     .then(response => response.arrayBuffer())
