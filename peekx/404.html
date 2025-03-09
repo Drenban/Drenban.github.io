@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;"> -->
+    <title>PeekX - Query</title>
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="layout">
+        <header class="top-section">
+            <button id="history-toggle" class="history-btn">History</button>
+            <div class="logo">
+                <object type="image/svg+xml" data="logo.svg" width="180" height="60">PeekX Logo</object>
+            </div>
+            <div class="auth">
+                <button id="logout-btn" class="auth-btn">Logout</button>
+            </div>
+        </header>
+        <div class="sidebar" id="history-sidebar">
+            <div class="history-header">
+                <h2>History</h2>
+            </div>
+            <ul id="history-list"></ul>
+        </div>
+        <main class="main">
+            <div class="content">
+                <div class="output" id="result-container"></div>
+                <div class="input-area">
+                    <input type="text" id="query-input" placeholder="How can PeekX help?" onkeydown="if(event.key === 'Enter') search()">
+                    <button id="search-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="auth.js"></script>
+    <script src="chat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
