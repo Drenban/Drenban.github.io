@@ -10,11 +10,11 @@
 
     const currentUrl = window.location.href;
     const pathArray = window.location.pathname.split('/');
-    const basePath = pathArray.slice(0, -1).join('/') + '/';
+    const basePath = '/peekx/';
     const targetUrl = window.location.origin + basePath;
 
-    const isRandomPath = pathArray.length > 2 && pathArray[pathArray.length - 1] !== 'index.html' && pathArray[pathArray.length - 1] !== '';
     const isIndexPath = currentUrl === targetUrl || currentUrl.endsWith('/index.html');
+    const isRandomPath = pathArray.length > 2 && pathArray[1] === 'peekx' && pathArray[2] !== 'index.html';
 
     if (isIndexPath || isRandomPath) {
         const randomSlug = generateRandomString(6);
