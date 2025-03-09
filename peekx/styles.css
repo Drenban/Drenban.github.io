@@ -214,8 +214,7 @@ footer {
     flex-direction: column;
     margin-left: 260px;
     padding: 30px;
-    /* 改为居中对齐整个内容 */
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     position: relative;
     z-index: 1;
@@ -227,10 +226,8 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* 使用Flexbox垂直居中输出区域 */
-    justify-content: center;
-    /* 限制高度，避免与输入栏重叠 */
-    height: calc(100vh - 110px); /* 80px顶部 + 30px输入栏 + 间距 */
+    justify-content: flex-start;
+/*     height: calc(100vh - 110px);  */
 }
 
 .output {
@@ -241,8 +238,6 @@ footer {
     box-shadow: none;
     padding: 0;
     min-height: auto;
-    /* 移除固定最大高度，让内容自适应 */
-    /* max-height: calc(100vh - 110px); */
     color: #e2e8f0;
     font-size: 15px;
     line-height: 1.7;
@@ -250,9 +245,9 @@ footer {
     scrollbar-width: none;
     -ms-overflow-style: none;
     z-index: 1;
-    margin-bottom: 60px; /* 预留输入栏空间 */
-    /* 可选：限制高度以避免溢出 */
-    max-height: 100%; /* 占满.content的高度 */
+    margin-bottom: 60px;
+    margin-top: 20px;
+/*     max-height: 100%; */
 }
 
 .output::-webkit-scrollbar {
@@ -417,7 +412,7 @@ footer {
         padding: 15px;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* 垂直居中 */
+        justify-content: flex-start;
         min-height: calc(100vh - 60px);
     }
 
@@ -427,8 +422,8 @@ footer {
         gap: 15px;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* 输出内容居中 */
-        height: calc(100vh - 100px); /* 60px顶部 + 40px输入栏 */
+        justify-content: flex-start;
+/*         height: calc(100vh - 100px); */
     }
 
     .output {
@@ -446,7 +441,7 @@ footer {
         padding: 0;
         box-shadow: none;
         border-radius: 0;
-        max-height: 100%;
+        margin-top: 10px;
     }
     
     .output::-webkit-scrollbar {
@@ -539,7 +534,7 @@ footer {
         background: transparent;
         box-shadow: none;
         border-radius: 0;
-        max-height: 100%;
+        margin-top: 10px;
     }
 
     .output::-webkit-scrollbar {
