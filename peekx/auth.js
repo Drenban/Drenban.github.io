@@ -105,9 +105,7 @@ async function login() {
         }
         const token = generateToken(username);
         localStorage.setItem('token', token);
-        // 跳转时直接使用伪装URL
-        const randomSlug = generateRandomString(6); // 与URL隐藏一致
-        window.location.href = `/peekx/?r=${randomSlug}`;
+        window.location.href = 'index.html';
     } else {
         errorMessage.textContent = '用户名或密码错误';
         loginBtn.disabled = false;
