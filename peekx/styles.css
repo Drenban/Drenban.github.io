@@ -212,9 +212,9 @@ footer {
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-left: 260px;
+    margin-left: 260px; /* 与边栏宽度一致 */
     padding: 30px;
-    justify-content: flex-start; /* 从顶部开始 */
+    justify-content: flex-start;
     align-items: center;
     position: relative;
     z-index: 1;
@@ -238,8 +238,7 @@ footer {
     box-shadow: none;
     padding: 0;
     min-height: auto;
-    /* 调整最大高度，确保在输入框上方 */
-    max-height: calc(100vh - 110px); /* 80px顶部 + 30px输入框 + 间距 */
+    max-height: calc(100vh - 110px);
     color: #e2e8f0;
     font-size: 15px;
     line-height: 1.7;
@@ -247,9 +246,8 @@ footer {
     scrollbar-width: none;
     -ms-overflow-style: none;
     z-index: 1;
-    margin-bottom: 60px; /* 预留输入框空间 */
-    /* 确保从顶部开始排列 */
-    margin-top: 20px; /* 可选：与顶部保持一定间距 */
+    margin-bottom: 60px;
+    margin-top: 20px;
 }
 
 .output::-webkit-scrollbar {
@@ -316,10 +314,11 @@ footer {
     transition: all 0.3s ease;
     /* 固定到底部 */
     position: fixed;
-    bottom: 10px; /* 距离底部10px */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10; /* 确保在输出内容之上 */
+    bottom: 10px;
+    /* 调整定位以匹配.main的偏移 */
+    left: calc(260px + (100% - 260px) / 2); /* 边栏宽度 + 剩余宽度的一半 */
+    transform: translateX(-50%); /* 居中于右侧区域 */
+    z-index: 10;
 }
 
 .input-area:focus-within {
@@ -411,11 +410,11 @@ footer {
 
     /* 修改位置 3：调整主内容占满屏幕 */
     .main {
-        margin-left: 0;
+        margin-left: 0; /* 边栏隐藏 */
         padding: 15px;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start; /* 从顶部开始 */
+        justify-content: flex-start;
         min-height: calc(100vh - 60px);
     }
 
@@ -445,10 +444,10 @@ footer {
         padding: 0;
         box-shadow: none;
         border-radius: 0;
-        max-height: calc(100vh - 100px); /* 60px顶部 + 40px输入框 */
-        margin-top: 10px; /* 与顶部间距 */
+        max-height: calc(100vh - 100px);
+        margin-top: 10px;
     }
-
+    
     .output::-webkit-scrollbar {
         width: 0; /* 手机端默认隐藏 */
     }
@@ -459,8 +458,8 @@ footer {
         padding: 6px 10px;
         position: fixed;
         bottom: 0;
-        left: 0;
-        transform: none;
+        left: 0; /* 靠左对齐，占满宽度 */
+        transform: none; /* 移除偏移 */
         z-index: 10;
         background: rgba(15, 23, 42, 0.95);
         border-radius: 0;
@@ -539,7 +538,7 @@ footer {
         background: transparent;
         box-shadow: none;
         border-radius: 0;
-        max-height: calc(100vh - 95px); /* 50px顶部 + 45px输入框 */
+        max-height: calc(100vh - 95px);
         margin-top: 10px;
     }
 
