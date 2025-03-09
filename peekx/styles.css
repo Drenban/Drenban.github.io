@@ -214,10 +214,10 @@ footer {
     flex-direction: column;
     margin-left: 260px;
     padding: 30px;
-    justify-content: center;
+    justify-content: flex-start; /* 从顶部开始 */
     align-items: center;
-    position: relative; /* 添加定位上下文 */
-    z-index: 1; /* 低于侧栏层级 */
+    position: relative;
+    z-index: 1;
 }
 
 .content {
@@ -227,31 +227,29 @@ footer {
     flex-direction: column;
     align-items: center;
     gap: 25px;
-    flex: 1;
+/*     flex: 1; */
 }
 
 .output {
     width: 95%;
     max-width: 1000px;
-    /* 移除背景，去掉框感，与页面渐变背景融合 */
     background: transparent;
-    /* 移除圆角和阴影，进一步减少容器感 */
     border-radius: 0;
     box-shadow: none;
-    /* 移除内边距，让内容自然贴近边缘 */
     padding: 0;
-    /* 移除最小高度，让内容自由流动 */
     min-height: auto;
-    /* 保留最大高度以支持滚动，但去掉flex: 1以避免强制拉伸 */
-    max-height: calc(100vh - 200px);
-    color: #e2e8f0; /* 保留文字颜色，确保可读性 */
+    /* 调整最大高度，确保在输入框上方 */
+    max-height: calc(100vh - 110px); /* 80px顶部 + 30px输入框 + 间距 */
+    color: #e2e8f0;
     font-size: 15px;
     line-height: 1.7;
-    overflow-y: auto; /* 改为auto，仅在内容溢出时滚动 */
-    /* 隐藏滚动条 */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-    z-index: 1; /* 保持层级低于侧栏 */
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    z-index: 1;
+    margin-bottom: 60px; /* 预留输入框空间 */
+    /* 确保从顶部开始排列 */
+    margin-top: 20px; /* 可选：与顶部保持一定间距 */
 }
 
 .output::-webkit-scrollbar {
@@ -316,7 +314,12 @@ footer {
     border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
-    z-index: 1; /* 低于侧栏 */
+    /* 固定到底部 */
+    position: fixed;
+    bottom: 10px; /* 距离底部10px */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10; /* 确保在输出内容之上 */
 }
 
 .input-area:focus-within {
@@ -408,40 +411,42 @@ footer {
 
     /* 修改位置 3：调整主内容占满屏幕 */
     .main {
-        margin-left: 0; /* 移除侧栏偏移 */
+        margin-left: 0;
         padding: 15px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between; /* 确保顶部和底部分配空间 */
-        min-height: calc(100vh - 60px); /* 减去顶部高度 */
+        justify-content: flex-start; /* 从顶部开始 */
+        min-height: calc(100vh - 60px);
     }
 
     .content {
-        max-width: 100%; /* 占满宽度 */
+        max-width: 100%;
         padding: 0px;
         gap: 15px;
         display: flex;
         flex-direction: column;
-        flex-grow: 1; /* 占据可用空间 */
-        justify-content: space-between; /* 输出在上，输入在下 */
+        /* 移除flex-grow，让高度自适应 */
+        /* flex-grow: 1; */
+        justify-content: flex-start;
     }
 
     .output {
         width: 100%;
         max-width: 100%;
-        height: auto; /* 移除固定高度，内容自适应 */
-        min-height: auto; /* 去掉最小高度限制 */
+        height: auto;
+        min-height: auto;
         font-size: 14px;
-        margin-bottom: 50px; /* 保留底部空间给输入框 */
-        overflow-y: auto; /* 仅内容溢出时滚动 */
+        margin-bottom: 60px;
+        overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        /* 隐藏滚动条 */
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE/Edge */
-        background: transparent; /* 保持透明 */
-        padding: 0; /* 移除内边距 */
-        box-shadow: none; /* 移除阴影 */
-        border-radius: 0; /* 移除圆角 */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        background: transparent;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+        max-height: calc(100vh - 100px); /* 60px顶部 + 40px输入框 */
+        margin-top: 10px; /* 与顶部间距 */
     }
 
     .output::-webkit-scrollbar {
@@ -449,16 +454,17 @@ footer {
     }
 
     .input-area {
-        width: 100%; /* 占满屏幕 */
+        width: 100%;
         max-width: 100%;
         padding: 6px 10px;
-        position: fixed; /* 固定在底部 */
+        position: fixed;
         bottom: 0;
         left: 0;
-        z-index: 10; /* 确保在上层 */
-        background: rgba(15, 23, 42, 0.95); /* 加深背景，避免遮挡 */
-        border-radius: 0; /* 移除圆角，贴合底部 */
-        border-top: 1px solid rgba(255, 255, 255, 0.1); /* 添加顶部边框 */
+        transform: none;
+        z-index: 10;
+        background: rgba(15, 23, 42, 0.95);
+        border-radius: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     #query-input {
@@ -513,26 +519,28 @@ footer {
         position: fixed;
         bottom: 0;
         left: 0;
+        transform: none;
         z-index: 10;
-        height: 45px; /* 明确高度 */
+        height: 45px;
     }
     
     .output {
         width: 100%;
         max-width: 100%;
-        height: auto; /* 移除固定高度 */
-        min-height: auto; /* 去掉最小高度 */
-        padding: 0; /* 移除内边距 */
+        height: auto;
+        min-height: auto;
+        padding: 0;
         font-size: 13px;
-        margin-bottom: 45px; /* 为输入框预留空间 */
+        margin-bottom: 50px;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        /* 隐藏滚动条 */
         scrollbar-width: none;
         -ms-overflow-style: none;
         background: transparent;
         box-shadow: none;
         border-radius: 0;
+        max-height: calc(100vh - 95px); /* 50px顶部 + 45px输入框 */
+        margin-top: 10px;
     }
 
     .output::-webkit-scrollbar {
