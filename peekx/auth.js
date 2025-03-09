@@ -159,3 +159,29 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutBtn.addEventListener('click', logout);
     }
 });
+
+(function() {
+    function generateRandomString(length) {
+        const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    const currentUrl = window.location.href;
+    const basePath = '/peekx/';
+    const targetUrl = window.location.origin + basePath;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentRandom = urlParams.get('r');
+    const isBasePath = currentUrl === targetUrl || currentUrl.endsWith('/peekx/index.html');
+    const isRandomPath = currentRandom !== null;
+
+    if (isBasePath || isRandomPath) {
+        const randomSlug = generateRandomString(6);
+        const newPath = basePath + '?r=' + randomSlug;
+        window.history.replaceState({}, document.title, newPath);
+    }
+})();
