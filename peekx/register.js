@@ -6,17 +6,33 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('error-message');
+    const message = document.getElementById('message'); // 用于显示结果
 
     try {
-        const { user, error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password
         });
-        if (error) throw error;
-        alert('注册成功！请检查邮箱验证链接。');
-        window.location.href = '/peekx/login.html'; // 跳转到登录页面
-    } catch (error) {
-        errorMessage.textContent = error.message;
+
+        if (error) {
+            // 注册失败，显示错误信息
+            message.style.color = 'red';
+            message.textContent = '注册失败: ' + error.message;
+            console.error('注册错误:', error);
+        } else {
+            // 注册成功，检查返回的数据
+            if (data.user) {
+                message.style.color = 'green';
+                message.textContent = '注册成功！用户 ID: ' + data.user.id;
+                console.log('注册成功:', data.user);
+                setTimeout(() => window.location.href = '/peekx/login.html', 2000);
+            } else {
+                message.textContent = '注册成功，但需要邮箱验证。请检查邮箱。';
+            }
+        }
+    } catch (err) {
+        message.style.color = 'red';
+        message.textContent = '发生未知错误: ' + err.message;
+        console.error('未知错误:', err);
     }
 });
