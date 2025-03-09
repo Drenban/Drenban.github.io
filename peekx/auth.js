@@ -10,7 +10,7 @@ let userData = null;
         return result;
     }
 
-    window.addEventListener('DOMContentLoaded', () => { // 延迟到DOM加载完成
+    window.addEventListener('DOMContentLoaded', () => {
         const currentUrl = window.location.href;
         const basePath = '/peekx/';
         const targetUrl = window.location.origin + basePath;
@@ -28,7 +28,6 @@ let userData = null;
     });
 })();
 
-// 加载特定用户的 JSON 数据
 async function loadUserData(username) {
     try {
         const response = await fetch(`users/${username}.json`);
@@ -50,7 +49,6 @@ async function loadUserData(username) {
     }
 }
 
-// 前端哈希函数（SHA-256）
 async function hashPassword(password) {
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
@@ -58,7 +56,6 @@ async function hashPassword(password) {
     return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// 生成简单的前端令牌
 function generateToken(username) {
     const salt = crypto.randomUUID();
     const payload = { username, exp: Date.now() + 3600000, salt };
@@ -66,7 +63,6 @@ function generateToken(username) {
     return btoa(JSON.stringify(payload));
 }
 
-// 检查会员是否过期
 function isMembershipValid(expiryDate) {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
@@ -74,12 +70,10 @@ function isMembershipValid(expiryDate) {
     return expiry.getTime() > currentDate.getTime() && !isNaN(expiry.getTime());
 }
 
-// 输入清理
 function sanitizeInput(input) {
     return input.replace(/[<>&;"]/g, '');
 }
 
-// 登录验证函数
 async function login() {
     const loginBtn = document.getElementById('login-btn');
     loginBtn.disabled = true;
@@ -112,7 +106,6 @@ async function login() {
     }
 }
 
-// 验证令牌
 function verifyToken(token) {
     if (!token) {
         localStorage.removeItem('token');
@@ -144,13 +137,11 @@ function verifyToken(token) {
     }
 }
 
-// 退出
 function logout() {
     localStorage.removeItem('token');
     window.location.href = 'login.html';
 }
 
-// 显示查询内容
 function showQuerySection() {
     const loginSection = document.getElementById('login-section');
     const querySection = document.getElementById('query-section');
@@ -160,14 +151,12 @@ function showQuerySection() {
     }
 }
 
-// 检查登录状态并绑定事件
 document.addEventListener('DOMContentLoaded', () => {
     const pathname = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
     const hasRandomParam = urlParams.has('r');
     const token = localStorage.getItem('token');
 
-    // 修改路径检查，支持伪装URL
     const isIndexPage = pathname === '/peekx/' || pathname.endsWith('/peekx/index.html') || hasRandomParam;
 
     if (isIndexPage) {
