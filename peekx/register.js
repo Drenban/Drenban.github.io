@@ -1,7 +1,7 @@
 // register.js
-if (typeof Supabase === 'undefined') {
-    console.error('Supabase 未定义，请检查 CDN 加载');
-    document.getElementById('error-message').textContent = 'Supabase 未加载，请刷新页面或检查网络';
+if (typeof supabase === 'undefined') {
+    console.error('supabase 未定义，请检查 CDN 加载');
+    document.getElementById('error-message').textContent = 'supabase 未加载，请刷新页面或检查网络';
 } else {
     const supabaseUrl = 'https://xupnsfldgnmeicumtqpp.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1cG5zZmxkZ25tZWljdW10cXBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE1Mjc1OTUsImV4cCI6MjA1NzEwMzU5NX0.hOHdx2iFHqA6LX2T-8xP4fWuYxK3HxZtTV2zjBHD3ro';
