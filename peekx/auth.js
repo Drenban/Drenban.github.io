@@ -131,14 +131,13 @@ async function login() {
     const loginBtn = document.getElementById('login-btn');
     const errorMessage = document.getElementById('error-message');
     loginBtn.disabled = true;
-    errorMessage.textContent = ''; // 清空错误消息
+    errorMessage.textContent = '';
 
     const username = sanitizeInput(document.getElementById('username').value.trim());
     const password = sanitizeInput(document.getElementById('password').value.trim());
 
     console.log('尝试登录:', username);
 
-    // 1. 优先尝试 Supabase 登录
     if (typeof supabase !== 'undefined') {
         const supabaseUrl = 'https://xupnsfldgnmeicumtqpp.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1cG5zZmxkZ25tZWljdW10cXBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE1Mjc1OTUsImV4cCI6MjA1NzEwMzU5NX0.hOHdx2iFHqA6LX2T-8xP4fWuYxK3HxZtTV2zjBHD3ro';
@@ -146,7 +145,7 @@ async function login() {
 
         try {
             const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: username, // 使用 username 作为邮箱
+                email: username,
                 password: password
             });
             console.log('Supabase 登录响应:', { data, error });
@@ -155,8 +154,9 @@ async function login() {
                 errorMessage.style.color = 'green';
                 errorMessage.textContent = '登录成功（Supabase）！用户 ID: ' + data.user.id;
                 localStorage.setItem('session', JSON.stringify(data.session));
+                localStorage.setItem('token', data.session.access_token);
                 setTimeout(() => window.location.href = '/peekx/index.html', 2000);
-                return; // Supabase 成功，直接返回
+                return;
             } else {
                 console.warn('Supabase 登录失败:', error.message);
                 errorMessage.textContent = 'Supabase 登录失败: ' + error.message;
@@ -165,12 +165,8 @@ async function login() {
             console.error('Supabase 登录错误:', err);
             errorMessage.textContent = 'Supabase 登录错误: ' + err.message;
         }
-    } else {
-        console.error('supabase 未定义，跳过 Supabase 登录');
-        errorMessage.textContent = 'Supabase 未加载，尝试本地登录';
     }
 
-    // 2. 如果 Supabase 失败，尝试 JSON 登录
     const userData = await loadUserData(username);
     if (!userData) {
         errorMessage.textContent = '用户不存在或网络错误';
@@ -187,9 +183,10 @@ async function login() {
         }
         const token = generateToken(username);
         localStorage.setItem('token', token);
+        localStorage.setItem('salt', userData.salt || 'default-salt'); // 确保 salt 存在
         errorMessage.style.color = 'green';
         errorMessage.textContent = '登录成功（JSON）！欢迎回来';
-        setTimeout(() => window.location.href = 'index.html', 2000);
+        setTimeout(() => window.location.href = '/peekx/index.html', 2000);
     } else {
         errorMessage.textContent = '用户名或密码错误';
         loginBtn.disabled = false;
@@ -201,6 +198,37 @@ async function login() {
 //     await login();
 // });
 
+// function verifyToken(token) {
+//     if (!token) {
+//         localStorage.removeItem('token');
+//         localStorage.removeItem('salt');
+//         console.warn('Token 不存在，已清除');
+//         return false;
+//     }
+//     try {
+//         const payload = JSON.parse(atob(token));
+//         const storedSalt = localStorage.getItem('salt');
+//         if (!payload.exp || payload.salt !== storedSalt) {
+//             localStorage.removeItem('token');
+//             localStorage.removeItem('salt');
+//             console.warn('Token 校验失败（过期或盐值不匹配），已清除');
+//             return false;
+//         }
+//         if (payload.exp < Date.now()) {
+//             localStorage.removeItem('token');
+//             localStorage.removeItem('salt');
+//             console.info('Token 已过期，已清除');
+//             return false;
+//         }
+//         return true;
+//     } catch (error) {
+//         console.error('Token 验证失败:', error);
+//         localStorage.removeItem('token');
+//         localStorage.removeItem('salt');
+//         return false;
+//     }
+// }
+
 function verifyToken(token) {
     if (!token) {
         localStorage.removeItem('token');
@@ -209,20 +237,39 @@ function verifyToken(token) {
         return false;
     }
     try {
-        const payload = JSON.parse(atob(token));
-        const storedSalt = localStorage.getItem('salt');
-        if (!payload.exp || payload.salt !== storedSalt) {
+        let payload;
+        if (token.includes('.')) {
+            const [, payloadBase64] = token.split('.');
+            payload = JSON.parse(atob(payloadBase64));
+        } else {
+            payload = JSON.parse(atob(token));
+        }
+
+        if (!payload.exp) {
             localStorage.removeItem('token');
             localStorage.removeItem('salt');
-            console.warn('Token 校验失败（过期或盐值不匹配），已清除');
+            console.warn('Token 无有效到期时间，已清除');
             return false;
         }
-        if (payload.exp < Date.now()) {
+
+        const expiryMs = payload.exp * 1000;
+        if (expiryMs < Date.now()) {
             localStorage.removeItem('token');
             localStorage.removeItem('salt');
             console.info('Token 已过期，已清除');
             return false;
         }
+
+        if (!token.includes('.')) {
+            const storedSalt = localStorage.getItem('salt');
+            if (!payload.salt || payload.salt !== storedSalt) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('salt');
+                console.warn('Token 校验失败（盐值不匹配），已清除');
+                return false;
+            }
+        }
+
         return true;
     } catch (error) {
         console.error('Token 验证失败:', error);
@@ -246,6 +293,36 @@ function showQuerySection() {
     }
 }
 
+// document.addEventListener('DOMContentLoaded', () => {
+//     const pathname = window.location.pathname;
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const hasRandomParam = urlParams.has('r');
+//     const token = localStorage.getItem('token');
+
+//     const isIndexPage = pathname === '/peekx/' || pathname.endsWith('/peekx/index.html') || hasRandomParam;
+
+//     if (isIndexPage) {
+//         if (!token || !verifyToken(token)) {
+//             window.location.href = 'login.html';
+//         } else {
+//             showQuerySection();
+//         }
+//     }
+
+//     const loginBtn = document.getElementById('login-btn');
+//     if (pathname.includes('login.html') && loginBtn) {
+//         console.log('找到 login-btn，绑定 click 事件');
+//         loginBtn.addEventListener('click', login);
+//     } else if (pathname.includes('login.html')) {
+//         console.error('未找到 login-btn');
+//     }
+
+//     const logoutBtn = document.getElementById('logout-btn');
+//     if (isIndexPage && logoutBtn) {
+//         logoutBtn.addEventListener('click', logout);
+//     }
+// });
+
 document.addEventListener('DOMContentLoaded', () => {
     const pathname = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
@@ -255,6 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isIndexPage = pathname === '/peekx/' || pathname.endsWith('/peekx/index.html') || hasRandomParam;
 
     if (isIndexPage) {
+        console.log('Token:', token, 'Verify:', verifyToken(token));
         if (!token || !verifyToken(token)) {
             window.location.href = 'login.html';
         } else {
