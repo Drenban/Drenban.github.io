@@ -1,3 +1,26 @@
+(function() {
+    function generateRandomString(length) {
+        const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    const currentUrl = window.location.href;
+    const pathArray = window.location.pathname.split('/');
+    const basePath = pathArray.slice(0, -1).join('/') + '/';
+    const targetUrl = window.location.origin + basePath;
+
+    if (currentUrl !== targetUrl) {
+        const randomSlug = generateRandomString(6);
+        const newPath = basePath + randomSlug + '/';
+
+        window.history.replaceState({}, document.title, newPath);
+    }
+})();
+
 let workbookData = null;
 window.searchHistory = [];
 
@@ -235,32 +258,3 @@ document.addEventListener('DOMContentLoaded', () => {
         window.updateHistory();
     }
 });
-
-// hide-url.js
-(function() {
-    // 生成随机假名（6位字母和数字组合）
-    function generateRandomString(length) {
-        const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let result = '';
-        for (let i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-        return result;
-    }
-
-    // 获取当前URL并处理路径
-    const currentUrl = window.location.href;
-    const pathArray = window.location.pathname.split('/');
-    const basePath = pathArray.slice(0, -1).join('/') + '/'; // 去掉文件名，保留目录
-    const targetUrl = window.location.origin + basePath; // 动态生成基础URL
-
-    // 检查当前URL是否已经是目标URL（避免重复修改）
-    if (currentUrl !== targetUrl) {
-        // 生成随机假名并拼接
-        const randomSlug = generateRandomString(6); // 生成6位随机字符串
-        const newPath = basePath + randomSlug + '/'; // 拼接假名
-
-        // 修改地址栏显示
-        window.history.replaceState({}, document.title, newPath);
-    }
-})();
