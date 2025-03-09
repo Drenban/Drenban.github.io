@@ -10,20 +10,22 @@ let userData = null;
         return result;
     }
 
-    const currentUrl = window.location.href;
-    const basePath = '/peekx/';
-    const targetUrl = window.location.origin + basePath;
+    window.addEventListener('DOMContentLoaded', () => { // 延迟到DOM加载完成
+        const currentUrl = window.location.href;
+        const basePath = '/peekx/';
+        const targetUrl = window.location.origin + basePath;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentRandom = urlParams.get('r');
-    const isBasePath = currentUrl === targetUrl || currentUrl.endsWith('/peekx/index.html');
-    const isRandomPath = currentRandom !== null;
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentRandom = urlParams.get('r');
+        const isBasePath = currentUrl === targetUrl || currentUrl.endsWith('/peekx/index.html');
+        const isRandomPath = currentRandom !== null;
 
-    if (isBasePath || isRandomPath) {
-        const randomSlug = generateRandomString(6);
-        const newPath = basePath + '?r=' + randomSlug;
-        window.history.replaceState({}, document.title, newPath);
-    }
+        if (isBasePath || isRandomPath) {
+            const randomSlug = generateRandomString(6);
+            const newPath = basePath + '?r=' + randomSlug;
+            window.history.replaceState({}, document.title, newPath);
+        }
+    });
 })();
 
 // 加载特定用户的 JSON 数据
@@ -103,7 +105,9 @@ async function login() {
         }
         const token = generateToken(username);
         localStorage.setItem('token', token);
-        window.location.href = 'index.html';
+        // 跳转时直接使用伪装URL
+        const randomSlug = generateRandomString(6); // 与URL隐藏一致
+        window.location.href = `/peekx/?r=${randomSlug}`;
     } else {
         errorMessage.textContent = '用户名或密码错误';
         loginBtn.disabled = false;
@@ -161,9 +165,14 @@ function showQuerySection() {
 // 检查登录状态并绑定事件
 document.addEventListener('DOMContentLoaded', () => {
     const pathname = window.location.pathname;
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasRandomParam = urlParams.has('r');
     const token = localStorage.getItem('token');
 
-    if (pathname.includes('index.html')) {
+    // 修改路径检查，支持伪装URL
+    const isIndexPage = pathname === '/peekx/' || pathname.endsWith('/peekx/index.html') || hasRandomParam;
+
+    if (isIndexPage) {
         if (!token || !verifyToken(token)) {
             window.location.href = 'login.html';
         } else {
@@ -171,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 绑定登录按钮的 click 事件
     const loginBtn = document.getElementById('login-btn');
     if (pathname.includes('login.html') && loginBtn) {
         console.log('找到 login-btn，绑定 click 事件');
@@ -181,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const logoutBtn = document.getElementById('logout-btn');
-    if (pathname.includes('index.html') && logoutBtn) {
+    if (isIndexPage && logoutBtn) {
         logoutBtn.addEventListener('click', logout);
     }
 });
