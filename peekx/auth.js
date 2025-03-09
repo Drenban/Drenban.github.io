@@ -197,9 +197,9 @@ async function login() {
 }
 
 // 绑定登录按钮事件
-document.getElementById('login-btn').addEventListener('click', async () => {
-    await login();
-});
+// document.getElementById('login-btn').addEventListener('click', async () => {
+//     await login();
+// });
 
 function verifyToken(token) {
     if (!token) {
