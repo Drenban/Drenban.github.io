@@ -13,10 +13,12 @@
     const basePath = pathArray.slice(0, -1).join('/') + '/';
     const targetUrl = window.location.origin + basePath;
 
-    if (currentUrl !== targetUrl) {
+    const isRandomPath = pathArray.length > 2 && pathArray[pathArray.length - 1] !== 'index.html' && pathArray[pathArray.length - 1] !== '';
+    const isIndexPath = currentUrl === targetUrl || currentUrl.endsWith('/index.html');
+
+    if (isIndexPath || isRandomPath) {
         const randomSlug = generateRandomString(6);
         const newPath = basePath + randomSlug + '/';
-
         window.history.replaceState({}, document.title, newPath);
     }
 })();
