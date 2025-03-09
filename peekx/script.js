@@ -9,16 +9,17 @@
     }
 
     const currentUrl = window.location.href;
-    const pathArray = window.location.pathname.split('/');
     const basePath = '/peekx/';
     const targetUrl = window.location.origin + basePath;
 
-    const isIndexPath = currentUrl === targetUrl || currentUrl.endsWith('/index.html');
-    const isRandomPath = pathArray.length > 2 && pathArray[1] === 'peekx' && pathArray[2] !== 'index.html';
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentRandom = urlParams.get('r');
+    const isBasePath = currentUrl === targetUrl || currentUrl.endsWith('/peekx/index.html');
+    const isRandomPath = currentRandom !== null;
 
-    if (isIndexPath || isRandomPath) {
+    if (isBasePath || isRandomPath) {
         const randomSlug = generateRandomString(6);
-        const newPath = basePath + randomSlug + '/';
+        const newPath = basePath + '?r=' + randomSlug;
         window.history.replaceState({}, document.title, newPath);
     }
 })();
