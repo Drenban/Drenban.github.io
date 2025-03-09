@@ -233,29 +233,32 @@ footer {
 .output {
     width: 95%;
     max-width: 1000px;
-    min-height: 280px;
-    padding: 25px;
-    background: rgba(17, 24, 39, 0.9);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    color: #e2e8f0;
+    /* 移除背景，去掉框感，与页面渐变背景融合 */
+    background: transparent;
+    /* 移除圆角和阴影，进一步减少容器感 */
+    border-radius: 0;
+    box-shadow: none;
+    /* 移除内边距，让内容自然贴近边缘 */
+    padding: 0;
+    /* 移除最小高度，让内容自由流动 */
+    min-height: auto;
+    /* 保留最大高度以支持滚动，但去掉flex: 1以避免强制拉伸 */
+    max-height: calc(100vh - 200px);
+    color: #e2e8f0; /* 保留文字颜色，确保可读性 */
     font-size: 15px;
     line-height: 1.7;
-    overflow-y: scroll; /* 修改位置 1：改为 scroll 以支持滚动 */
-    max-height: calc(100vh - 200px);
-    position: relative;
-    flex: 1;
+    overflow-y: auto; /* 改为auto，仅在内容溢出时滚动 */
     /* 隐藏滚动条 */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE/Edge */
-    z-index: 1; /* 低于侧栏 */
+    z-index: 1; /* 保持层级低于侧栏 */
 }
 
 .output::-webkit-scrollbar {
     width: 0; /* Webkit 浏览器隐藏滚动条 */
 }
 
-/* 修改位置 2：鼠标悬停时显示滚动条（电脑端） */
+/* 鼠标悬停时显示滚动条（电脑端） */
 .output:hover::-webkit-scrollbar {
     width: 8px; /* 悬停时显示 */
 }
@@ -274,15 +277,9 @@ footer {
     background: #60a5fa;
 }
 
+/* 移除伪元素背景渐变，进一步简化 */
 .output::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(147, 197, 253, 0.05) 0%, transparent 70%);
-    pointer-events: none;
+    content: none; /* 去掉径向渐变装饰 */
 }
 
 .output .field {
@@ -300,7 +297,8 @@ footer {
     animation: slideFadeIn 0.5s ease forwards;
     margin-bottom: 14px;
     padding: 4px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* 保留细微分隔线，但降低透明度以减少干扰 */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 @keyframes slideFadeIn {
@@ -431,20 +429,24 @@ footer {
     .output {
         width: 100%;
         max-width: 100%;
-        height: calc(100vh - 110px); /* 60px 顶部 + 50px 输入 */
-        min-height: 200px;
+        height: auto; /* 移除固定高度，内容自适应 */
+        min-height: auto; /* 去掉最小高度限制 */
         font-size: 14px;
-        margin-bottom: 50px; /* 为输入框预留空间 */
-        overflow-y: scroll; /* 修改位置 3：支持滚动 */
+        margin-bottom: 50px; /* 保留底部空间给输入框 */
+        overflow-y: auto; /* 仅内容溢出时滚动 */
         -webkit-overflow-scrolling: touch;
         /* 隐藏滚动条 */
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* IE/Edge */
+        background: transparent; /* 保持透明 */
+        padding: 0; /* 移除内边距 */
+        box-shadow: none; /* 移除阴影 */
+        border-radius: 0; /* 移除圆角 */
     }
 
     .output::-webkit-scrollbar {
-            width: 0; /* 手机端默认隐藏 */
-        }
+        width: 0; /* 手机端默认隐藏 */
+    }
 
     .input-area {
         width: 100%; /* 占满屏幕 */
@@ -518,16 +520,19 @@ footer {
     .output {
         width: 100%;
         max-width: 100%;
-        height: calc(100vh - 95px); /* 50px 顶部 + 45px 输入 */
-        min-height: 50px;
-        padding: 20px;
+        height: auto; /* 移除固定高度 */
+        min-height: auto; /* 去掉最小高度 */
+        padding: 0; /* 移除内边距 */
         font-size: 13px;
         margin-bottom: 45px; /* 为输入框预留空间 */
-        overflow-y: scroll;
+        overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         /* 隐藏滚动条 */
         scrollbar-width: none;
         -ms-overflow-style: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
     }
 
     .output::-webkit-scrollbar {
