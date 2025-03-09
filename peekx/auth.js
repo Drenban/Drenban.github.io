@@ -28,26 +28,26 @@ let userData = null;
     });
 })();
 
-async function loadUserData(username) {
-    try {
-        const response = await fetch(`users/${username}.json`);
-        if (response.status === 404) {
-            const errorMessage = document.getElementById('error-message');
-            if (errorMessage) errorMessage.textContent = '用户不存在';
-            return false;
-        }
-        if (!response.ok) throw new Error(`Failed to fetch users/${username}.json`);
-        const data = await response.json();
-        userData = data;
-        console.log('用户数据加载成功:', userData);
-        return true;
-    } catch (error) {
-        console.error('加载用户数据失败:', error);
-        const errorMessage = document.getElementById('error-message');
-        if (errorMessage) errorMessage.textContent = '网络错误，请稍后再试';
-        return false;
-    }
-}
+// async function loadUserData(username) {
+//     try {
+//         const response = await fetch(`users/${username}.json`);
+//         if (response.status === 404) {
+//             const errorMessage = document.getElementById('error-message');
+//             if (errorMessage) errorMessage.textContent = '用户不存在';
+//             return false;
+//         }
+//         if (!response.ok) throw new Error(`Failed to fetch users/${username}.json`);
+//         const data = await response.json();
+//         userData = data;
+//         console.log('用户数据加载成功:', userData);
+//         return true;
+//     } catch (error) {
+//         console.error('加载用户数据失败:', error);
+//         const errorMessage = document.getElementById('error-message');
+//         if (errorMessage) errorMessage.textContent = '网络错误，请稍后再试';
+//         return false;
+//     }
+// }
 
 async function hashPassword(password) {
     const encoder = new TextEncoder();
@@ -74,18 +74,106 @@ function sanitizeInput(input) {
     return input.replace(/[<>&;"]/g, '');
 }
 
+// async function login() {
+//     const loginBtn = document.getElementById('login-btn');
+//     loginBtn.disabled = true;
+    
+//     const username = sanitizeInput(document.getElementById('username').value.trim());
+//     const password = sanitizeInput(document.getElementById('password').value.trim());
+//     const errorMessage = document.getElementById('error-message') || document.getElementById('error');
+
+//     console.log('尝试登录:', username);
+
+//     const dataLoaded = await loadUserData(username);
+//     if (!dataLoaded || !userData) {
+//         loginBtn.disabled = false;
+//         return;
+//     }
+
+//     const hashedPassword = await hashPassword(password);
+//     if (userData.username === username && userData.password === hashedPassword) {
+//         if (!isMembershipValid(userData.expiry_date)) {
+//             errorMessage.textContent = '账户已过期，请联系管理员';
+//             loginBtn.disabled = false;
+//             return;
+//         }
+//         const token = generateToken(username);
+//         localStorage.setItem('token', token);
+//         window.location.href = 'index.html';
+//     } else {
+//         errorMessage.textContent = '用户名或密码错误';
+//         loginBtn.disabled = false;
+//     }
+// }
+
+// auth.js
+
+// 独立的数据加载函数
+async function loadUserData(username) {
+    try {
+        const response = await fetch(`users/${username}.json`);
+        if (response.status === 404) {
+            console.warn(`用户 ${username} 不存在`);
+            return false;
+        }
+        if (!response.ok) throw new Error(`Failed to fetch users/${username}.json`);
+        const data = await response.json();
+        console.log('用户数据加载成功:', data);
+        return data;
+    } catch (error) {
+        console.error('加载用户数据失败:', error);
+        return false;
+    }
+}
+
+// 登录函数
 async function login() {
     const loginBtn = document.getElementById('login-btn');
+    const errorMessage = document.getElementById('error-message');
     loginBtn.disabled = true;
-    
+    errorMessage.textContent = ''; // 清空错误消息
+
     const username = sanitizeInput(document.getElementById('username').value.trim());
     const password = sanitizeInput(document.getElementById('password').value.trim());
-    const errorMessage = document.getElementById('error-message') || document.getElementById('error');
 
     console.log('尝试登录:', username);
 
-    const dataLoaded = await loadUserData(username);
-    if (!dataLoaded || !userData) {
+    // 1. 优先尝试 Supabase 登录
+    if (typeof supabase !== 'undefined') {
+        const supabaseUrl = 'https://xupnsfldgnmeicumtqpp.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1cG5zZmxkZ25tZWljdW10cXBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE1Mjc1OTUsImV4cCI6MjA1NzEwMzU5NX0.hOHdx2iFHqA6LX2T-8xP4fWuYxK3HxZtTV2zjBHD3ro';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        try {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: username, // 使用 username 作为邮箱
+                password: password
+            });
+            console.log('Supabase 登录响应:', { data, error });
+
+            if (!error) {
+                errorMessage.style.color = 'green';
+                errorMessage.textContent = '登录成功（Supabase）！用户 ID: ' + data.user.id;
+                localStorage.setItem('session', JSON.stringify(data.session));
+                setTimeout(() => window.location.href = '/peekx/index.html', 2000);
+                return; // Supabase 成功，直接返回
+            } else {
+                console.warn('Supabase 登录失败:', error.message);
+                errorMessage.textContent = 'Supabase 登录失败: ' + error.message;
+            }
+        } catch (err) {
+            console.error('Supabase 登录错误:', err);
+            errorMessage.textContent = 'Supabase 登录错误: ' + err.message;
+        }
+    } else {
+        console.error('supabase 未定义，跳过 Supabase 登录');
+        errorMessage.textContent = 'Supabase 未加载，尝试本地登录';
+    }
+
+    // 2. 如果 Supabase 失败，尝试 JSON 登录
+    const userData = await loadUserData(username);
+    if (!userData) {
+        errorMessage.textContent = '用户不存在或网络错误';
         loginBtn.disabled = false;
         return;
     }
@@ -99,12 +187,19 @@ async function login() {
         }
         const token = generateToken(username);
         localStorage.setItem('token', token);
-        window.location.href = 'index.html';
+        errorMessage.style.color = 'green';
+        errorMessage.textContent = '登录成功（JSON）！欢迎回来';
+        setTimeout(() => window.location.href = 'index.html', 2000);
     } else {
         errorMessage.textContent = '用户名或密码错误';
         loginBtn.disabled = false;
     }
 }
+
+// 绑定登录按钮事件
+document.getElementById('login-btn').addEventListener('click', async () => {
+    await login();
+});
 
 function verifyToken(token) {
     if (!token) {
