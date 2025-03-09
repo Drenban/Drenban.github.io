@@ -235,3 +235,26 @@ document.addEventListener('DOMContentLoaded', () => {
         window.updateHistory();
     }
 });
+
+function() {
+    function generateRandomString(length) {
+        const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    const currentUrl = window.location.href;
+    const pathArray = window.location.pathname.split('/');
+    const basePath = pathArray.slice(0, -1).join('/') + '/';
+    const targetUrl = window.location.origin + basePath;
+
+    if (currentUrl !== targetUrl) {
+        const randomSlug = generateRandomString(6);
+        const newPath = basePath + randomSlug + '/';
+
+        window.history.replaceState({}, document.title, newPath);
+    }
+}
