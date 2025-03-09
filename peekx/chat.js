@@ -180,7 +180,13 @@ function generateResponse(intent, match) {
 
 // DOM 加载时初始化
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('index.html')) {
+    const pathname = window.location.pathname;
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasRandomParam = urlParams.has('r');
+
+    const isIndexPage = pathname === '/peekx/' || pathname.endsWith('/peekx/index.html') || hasRandomParam;
+
+    if (isIndexPage) {
         loadCorpus();
     }
 });
