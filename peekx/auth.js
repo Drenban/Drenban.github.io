@@ -185,7 +185,7 @@ async function login() {
         localStorage.setItem('token', token);
         errorMessage.style.color = 'green';
         errorMessage.textContent = '登录成功（JSON）！欢迎回来';
-        setTimeout(() => window.location.href = '/peekx/index.html', 2000);
+        // setTimeout(() => window.location.href = '/peekx/index.html', 2000);
     } else {
         errorMessage.textContent = '用户名或密码错误';
         loginBtn.disabled = false;
@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isIndexPage) {
         console.log('Token:', token, 'Verify:', verifyToken(token));
         if (!token || !verifyToken(token)) {
-            // window.location.href = 'login.html';
+            window.location.href = 'login.html';
         } else {
             showQuerySection();
         }
