@@ -138,12 +138,14 @@ async function login() {
 
     console.log('尝试登录:', username);
 
+    let supabaseFailed = false;
     if (typeof supabase !== 'undefined') {
         const supabaseUrl = 'https://xupnsfldgnmeicumtqpp.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1cG5zZmxkZ25tZWljdW10cXBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE1Mjc1OTUsImV4cCI6MjA1NzEwMzU5NX0.hOHdx2iFHqA6LX2T-8xP4fWuYxK3HxZtTV2zjBHD3ro';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
         try {
+            console.log('Supabase 请求参数:', { email: username, password });
             const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: username,
                 password: password
@@ -159,11 +161,13 @@ async function login() {
                 return;
             } else {
                 console.warn('Supabase 登录失败:', error.message);
-                errorMessage.textContent = 'Supabase 登录失败: ' + error.message;
+                supabaseFailed = true;
+                // errorMessage.textContent = 'Supabase 登录失败: ' + error.message;
             }
         } catch (err) {
             console.error('Supabase 登录错误:', err);
-            errorMessage.textContent = 'Supabase 登录错误: ' + err.message;
+            supabaseFailed = true;
+            // errorMessage.textContent = 'Supabase 登录错误: ' + err.message;
         }
     }
 
@@ -175,6 +179,8 @@ async function login() {
     }
 
     const hashedPassword = await hashPassword(password);
+    console.log('输入密码哈希:', hashedPassword);
+    console.log('预期密码哈希:', userData.password);
     if (userData.username === username && userData.password === hashedPassword) {
         if (!isMembershipValid(userData.expiry_date)) {
             errorMessage.textContent = '账户已过期，请联系管理员';
@@ -187,7 +193,7 @@ async function login() {
         errorMessage.textContent = '登录成功（JSON）！欢迎回来';
         // setTimeout(() => window.location.href = '/peekx/index.html', 2000);
     } else {
-        errorMessage.textContent = '用户名或密码错误';
+        errorMessage.textContent = supabaseFailed ? '用户名或密码错误' : 'Supabase 登录失败，请检查凭据';
         loginBtn.disabled = false;
     }
 }
