@@ -1,4 +1,4 @@
-const stripe = Stripe('pk_test_你的公钥'); // 从 Stripe 仪表板获取
+const stripe = Stripe('pk_test_51R10bBHGvybulR0MnAjvMctJGlfng9ooJtVn2tDtMbHdfvtYc8Io7mdBhhXISRy07ChDXeXh4pwxu0xdRD2n8GN4003QwBK1I9');
 
 async function startPayment(days, amount) {
     const email = localStorage.getItem('expiredEmail');
