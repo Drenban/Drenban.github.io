@@ -1,16 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>续费</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeekX - Renewal</title>
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
     <script src="payment.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 2rem;
+        }
+        .plans {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .plan {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .plan:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        .plan button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .plan button:hover {
+            background: #218838;
+        }
+        #payment-message {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 480px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            .plans {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>账户已过期，请选择续费套餐</h1>
-    <button id="month-btn">1 个月 - $10</button>
-    <button id="quarter-btn">3 个月 - $25</button>
-    <button id="year-btn">1 年 - $90</button>
-    <div id="payment-message"></div>
+    <div class="container">
+        <h1>账户已过期，请选择续费套餐</h1>
+        <div class="plans">
+            <div class="plan">
+                <h2>1 个月</h2>
+                <p>$10</p>
+                <button id="month-btn">选择</button>
+            </div>
+            <div class="plan">
+                <h2>3 个月</h2>
+                <p>$25</p>
+                <button id="quarter-btn">选择</button>
+            </div>
+            <div class="plan">
+                <h2>1 年</h2>
+                <p>$90</p>
+                <button id="year-btn">选择</button>
+            </div>
+        </div>
+        <div id="payment-message"></div>
+    </div>
 </body>
 </html>
