@@ -1,7 +1,47 @@
+// 执行这句，看你当前 auth.users 有哪些列：
+SELECT * 
+FROM information_schema.columns
+WHERE table_schema = 'auth'
+  AND table_name = 'users';
+
+// 查询 raw_user_meta_data 里的某个字段（比如 full_name）
+SELECT raw_user_meta_data->>'full_name' AS full_name
+FROM auth.users;
+
+// 查询整个 raw_user_meta_data
+SELECT raw_user_meta_data FROM auth.users;
+SELECT raw_user_meta_data FROM auth.users WHERE email = 'drenban@yandex.com';
+
+// 用这个 SQL 查表结构，看看有没有 raw_user_meta_data 这个字段：
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'users'
+  AND table_schema = 'auth';
+
+// 如果你想快速预览所有字段和数据，可以直接：
+SELECT * FROM auth.users LIMIT 10;
+
+// PostgreSQL 有一个系统视图 information_schema.columns，可以列出所有表结构信息。
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns
+WHERE table_name = 'users'
+  AND table_schema = 'auth';
+
+// 如果你表叫 auth.users，而 raw_user_meta_data 不存在，你可能需要：
+SELECT id, email FROM auth.users;
+
+// 提取 JSON 字段（如果 raw_user_meta_data 是 JSON 字段里的一部分）
+SELECT id, email, user_data->>'raw_user_meta_data' AS raw_user_meta_data
+FROM auth.users
+
+// 执行下面的 SQL 查一下表结构：
+SELECT column_name
+FROM information_schema.columns
+WHERE table_name = 'auth.users';
+
 Wm:QjP8he-t6cWB
 pk_test_51R10bBHGvybulR0MnAjvMctJGlfng9ooJtVn2tDtMbHdfvtYc8Io7mdBhhXISRy07ChDXeXh4pwxu0xdRD2n8GN4003QwBK1I9
 sk_test_51R10bBHGvybulR0Mjiq3NEJ4mrfKevxviI9Dk2ONgGGD7sQPOly9s0ki3EGSnqQZnVDlfaIQ0D7xYWfHn3ZkEuXi00YLmQTU2J
-
 
 1/price_1R111ZHGvybulR0MWJj8YEeL
 2/price_1R112JHGvybulR0MIYVovRvA
