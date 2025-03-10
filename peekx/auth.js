@@ -255,7 +255,7 @@ function verifyToken(token) {
             return false;
         }
 
-        if (expiryMs < Date.now()) {
+        if (payload.exp < Date.now()) {
             localStorage.removeItem('token');
             localStorage.removeItem('salt');
             console.info('Token 已过期，已清除');
