@@ -150,7 +150,7 @@ async function login() {
 
             if (!error) {
                 errorMessage.style.color = 'green';
-                errorMessage.textContent = '登录成功（Supabase）！欢迎回来;
+                errorMessage.textContent = '登录成功（Supabase）！欢迎回来';
                 localStorage.setItem('session', JSON.stringify(data.session));
                 localStorage.setItem('token', data.session.access_token);
                 setTimeout(() => window.location.href = '/peekx/index.html', 2000);
