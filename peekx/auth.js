@@ -161,13 +161,13 @@ async function login() {
                 return;
             } else {
                 console.warn('Supabase 登录失败:', error.message);
+                errorMessage.textContent = 'Supabase 登录失败: ' + error.message;
                 supabaseFailed = true;
-                // errorMessage.textContent = 'Supabase 登录失败: ' + error.message;
             }
         } catch (err) {
             console.error('Supabase 登录错误:', err);
+            errorMessage.textContent = 'Supabase 登录错误: ' + err.message;
             supabaseFailed = true;
-            // errorMessage.textContent = 'Supabase 登录错误: ' + err.message;
         }
     }
 
