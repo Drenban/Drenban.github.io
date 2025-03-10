@@ -183,7 +183,6 @@ async function login() {
         }
         const token = generateToken(username);
         localStorage.setItem('token', token);
-        localStorage.setItem('salt', userData.salt || 'default-salt'); // 确保 salt 存在
         errorMessage.style.color = 'green';
         errorMessage.textContent = '登录成功（JSON）！欢迎回来';
         setTimeout(() => window.location.href = '/peekx/index.html', 2000);
@@ -241,6 +240,7 @@ function verifyToken(token) {
         if (token.includes('.')) {
             const [, payloadBase64] = token.split('.');
             payload = JSON.parse(atob(payloadBase64));
+            payload.exp = payload.exp * 1000;
         } else {
             payload = JSON.parse(atob(token));
         }
@@ -252,7 +252,6 @@ function verifyToken(token) {
             return false;
         }
 
-        const expiryMs = payload.exp * 1000;
         if (expiryMs < Date.now()) {
             localStorage.removeItem('token');
             localStorage.removeItem('salt');
