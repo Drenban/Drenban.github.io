@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isIndexPage) {
         console.log('Token:', token, 'Verify:', verifyToken(token));
         if (!token || !verifyToken(token)) {
-            window.location.href = 'login.html';
+            // window.location.href = 'login.html';
         } else {
             showQuerySection();
         }
