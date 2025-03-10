@@ -243,7 +243,6 @@ function verifyToken(token) {
             console.log('JWT Exp (毫秒):', payload.exp);
         } else {
             payload = JSON.parse(atob(token));
-            console.log('Custom Exp (毫秒):', payload.exp);
         }
 
         if (!payload.exp) {
@@ -332,7 +331,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const isIndexPage = pathname === '/peekx/' || pathname.endsWith('/peekx/index.html') || hasRandomParam;
 
     if (isIndexPage) {
-        console.log('Token:', token, 'Verify:', verifyToken(token));
         if (!token || !verifyToken(token)) {
             window.location.href = 'login.html';
         } else {
@@ -342,7 +340,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loginBtn = document.getElementById('login-btn');
     if (pathname.includes('login.html') && loginBtn) {
-        console.log('找到 login-btn，绑定 click 事件');
         loginBtn.addEventListener('click', login);
     } else if (pathname.includes('login.html')) {
         console.error('未找到 login-btn');
