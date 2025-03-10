@@ -150,8 +150,19 @@ async function login() {
 
             if (!error) {
                 const expiryDate = data.user.user_metadata?.expiry_date;
-                if (!expiryDate || !isMembershipValid(expiryDate)) {
-                    errorMessage.textContent = '账户已过期，请联系管理员';
+                if (!expiryDate) {
+                    console.warn('Supabase 用户缺少 expiry_date 字段，视为过期');
+                    errorMessage.textContent = '您的会员未设置有效期，请续费或联系管理员';
+                    localStorage.setItem('expiredEmail', username);
+                    setTimeout(() => window.location.href = 'payment.html', 2000);
+                    loginBtn.disabled = false;
+                    return;
+                }
+                if (!isMembershipValid(expiryDate)) {
+                    console.warn('用户有效期已过期:', expiryDate);
+                    errorMessage.textContent = '您的会员已过期，请续费，或联系管理员获取帮助';
+                    localStorage.setItem('expiredEmail', username);
+                    setTimeout(() => window.location.href = 'payment.html', 2000);
                     loginBtn.disabled = false;
                     return;
                 }
@@ -181,8 +192,20 @@ async function login() {
 
     const hashedPassword = await hashPassword(password);
     if (userData.username === username && userData.password === hashedPassword) {
-        if (!isMembershipValid(userData.expiry_date)) {
-            errorMessage.textContent = '账户已过期，请联系管理员';
+        const expiryDate = userData.expiry_date;
+        if (!expiryDate) {
+            console.warn('JSON 用户缺少 expiry_date 字段，视为过期');
+            errorMessage.textContent = '您的会员未设置有效期，请续费或联系管理员';
+            localStorage.setItem('expiredEmail', username);
+            setTimeout(() => window.location.href = 'payment.html', 2000);
+            loginBtn.disabled = false;
+            return;
+        }
+        if (!isMembershipValid(expiryDate)) {
+            console.warn('JSON 用户有效期已过期:', expiryDate);
+            errorMessage.textContent = '您的会员已过期，请续费，或联系管理员获取帮助';
+            localStorage.setItem('expiredEmail', username);
+            setTimeout(() => window.location.href = 'payment.html', 2000);
             loginBtn.disabled = false;
             return;
         }
