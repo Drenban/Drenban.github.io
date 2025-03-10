@@ -149,6 +149,13 @@ async function login() {
             });
 
             if (!error) {
+                const expiryDate = data.user.user_metadata?.expiry_date;
+                if (!expiryDate || !isMembershipValid(expiryDate)) {
+                    errorMessage.textContent = '账户已过期，请联系管理员';
+                    loginBtn.disabled = false;
+                    return;
+                }
+                
                 errorMessage.style.color = 'green';
                 errorMessage.textContent = '登录成功（Supabase）！欢迎回来';
                 localStorage.setItem('session', JSON.stringify(data.session));
