@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>续费</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="payment.js" defer></script>
+</head>
+<body>
+    <h1>账户已过期，请选择续费套餐</h1>
+    <button id="month-btn">1 个月 - $10</button>
+    <button id="quarter-btn">3 个月 - $25</button>
+    <button id="year-btn">1 年 - $90</button>
+    <div id="payment-message"></div>
+</body>
+</html>
