@@ -136,8 +136,6 @@ async function login() {
     const username = sanitizeInput(document.getElementById('username').value.trim());
     const password = sanitizeInput(document.getElementById('password').value.trim());
 
-    console.log('尝试登录:', username);
-
     let supabaseFailed = false;
     if (typeof supabase !== 'undefined') {
         const supabaseUrl = 'https://xupnsfldgnmeicumtqpp.supabase.co';
@@ -145,12 +143,10 @@ async function login() {
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
         try {
-            console.log('Supabase 请求参数:', { email: username, password });
             const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: username,
                 password: password
             });
-            console.log('Supabase 登录响应:', { data, error });
 
             if (!error) {
                 errorMessage.style.color = 'green';
@@ -177,8 +173,6 @@ async function login() {
     }
 
     const hashedPassword = await hashPassword(password);
-    console.log('输入密码哈希:', hashedPassword);
-    console.log('预期密码哈希:', userData.password);
     if (userData.username === username && userData.password === hashedPassword) {
         if (!isMembershipValid(userData.expiry_date)) {
             errorMessage.textContent = '账户已过期，请联系管理员';
@@ -189,7 +183,7 @@ async function login() {
         localStorage.setItem('token', token);
         errorMessage.style.color = 'green';
         errorMessage.textContent = '登录成功（JSON）！欢迎回来';
-        // setTimeout(() => window.location.href = '/peekx/index.html', 2000);
+        setTimeout(() => window.location.href = '/peekx/index.html', 2000);
     } else {
         errorMessage.textContent = supabaseFailed ? '用户名或密码错误' : 'Supabase 登录失败，请检查凭据';
         loginBtn.disabled = false;
