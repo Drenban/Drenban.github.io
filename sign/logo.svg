@@ -1,0 +1,21 @@
+<svg width="180" height="60" viewBox="0 0 180 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- “X” 字母（高度降低，靠左） -->
+    <path d="M20 15 L35 45" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M35 15 L20 45" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- 放大镜（调整位置） -->
+    <g>
+        <circle cx="40" cy="15" r="5" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+        <line x1="44" y1="19" x2="48" y2="23" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+        <animateTransform 
+            attributeName="transform" 
+            type="rotate" 
+            from="0 40 15" 
+            to="360 40 15" 
+            dur="3s" 
+            repeatCount="indefinite"/>
+    </g>
+
+    <!-- “PeekX” 文字（位置不变） -->
+    <text x="55" y="40" font-family="Futura, Montserrat, Inter, sans-serif" font-size="22" fill="#ffffff" font-weight="500">PeekX</text>
+</svg>
