@@ -150,6 +150,7 @@ async function login() {
 
             if (!error) {
                 const expiryDate = data.user.user_metadata?.expiry_date;
+                console.log('会员有效期:', expiryDate);
                 if (!expiryDate || !isMembershipValid(expiryDate)) {
                     errorMessage.textContent = '账户已过期，请联系管理员';
                     loginBtn.disabled = false;
