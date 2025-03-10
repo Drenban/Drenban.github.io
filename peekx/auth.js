@@ -238,9 +238,7 @@ function verifyToken(token) {
         if (token.includes('.')) {
             const [, payloadBase64] = token.split('.');
             payload = JSON.parse(atob(payloadBase64));
-            console.log('JWT Exp (秒):', payload.exp);
             payload.exp = payload.exp * 1000;
-            console.log('JWT Exp (毫秒):', payload.exp);
         } else {
             payload = JSON.parse(atob(token));
         }
