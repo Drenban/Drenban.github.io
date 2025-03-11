@@ -1,20 +1,10 @@
-// interaction.js：
-// 处理鼠标交互、模式切换和动画循环。
-// 接受相机和材质作为输入，更新状态。
-
-// === 连接调用部分 ===
-// 输入：前景相机、背景相机、噪声材质、前景渲染器、背景渲染器
-// 输出：无（直接绑定事件和动画）
 export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
     const clock = new THREE.Clock();
     let mode = 'Static';
 
-    // === 效果部分 ===
     const frameContainer = document.querySelector('.frame-container');
     const modeToggle = document.getElementById('mode-toggle');
 
-    // === 功能部分 ===
-    // 鼠标移动（画框噪声）
     frameContainer.addEventListener('mousemove', (e) => {
         const rect = frameContainer.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
@@ -24,7 +14,6 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
         }
     });
 
-    // 点击干扰
     frameContainer.addEventListener('click', () => {
         noiseMaterial.uniforms.iNoiseOffset.value = Math.random() * 10.0;
         let decay = setInterval(() => {
@@ -33,7 +22,6 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
         }, 50);
     });
 
-    // 鼠标移动（背景相机）
     document.addEventListener('mousemove', (e) => {
         if (mode === 'Free Nav') {
             const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -45,7 +33,6 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
         }
     });
 
-    // 模式切换
     modeToggle.addEventListener('click', () => {
         mode = mode === 'Static' ? 'Free Nav' : 'Static';
         modeToggle.textContent = `切换模式 (${mode})`;
@@ -55,12 +42,10 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
         }
     });
 
-    // 动画循环
     function animate() {
         requestAnimationFrame(animate);
-        console.log('Rendering frame...', scene.children.length, bgScene.children.length); // 检查场景内容
+        console.log('Rendering frame...', bgScene.children.length);
         noiseMaterial.uniforms.iTime.value = clock.getElapsedTime();
-        // renderer.render(scene, camera);
         bgRenderer.render(bgScene, bgCamera);
     }
     animate();
