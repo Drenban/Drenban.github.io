@@ -1,12 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store</title>
+    <title>PeekX - 实时交互平台</title>
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Store Page</h1>
-    <p>This is the store page for my GitHub Pages site.</p>
+    <!-- 加载动画 -->
+    <div class="loading">
+        <p>Now Loading (0%)</p>
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- 3D Canvas -->
+    <canvas id="canvas"></canvas>
+
+    <!-- 主内容 -->
+    <div class="logo">
+        <object type="image/svg+xml" data="logo.svg" width="180" height="60">PeekX Logo</object>
+    </div>
+    <div class="hero">
+        <h1>欢迎体验 PeekX</h1>
+        <p>一个现代化的实时交互平台，带你探索无限可能。</p>
+        <a href="login.html" class="cta-button">立即登录</a>
+    </div>
+
+    <!-- 脚本 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script type="module">
+        import { init } from './main.js';
+        init();
+    </script>
 </body>
 </html>
