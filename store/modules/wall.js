@@ -8,7 +8,7 @@
 export function createWall(width, height) {
     // === 效果部分 ===
     const geometry = new THREE.PlaneGeometry(width, height);
-    const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const wall = new THREE.Mesh(geometry, material);
     wall.position.z = -10;
 
