@@ -128,18 +128,18 @@ body {
     transition: width 0.1s ease;
 }
 
-/* 电视容器 */
-.tv-container {
+/* 画框容器 */
+.frame-container {
     position: relative;
-    width: 600px;
-    height: 400px;
+    width: 200px;
+    height: 200px;
     background: #000000;
-    border: 10px solid #1e293b;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border: 8px solid #1e293b;
+    border-radius: 4px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     overflow: hidden;
     z-index: 1;
-    margin: 20px auto; /* 居中 */
+    margin: 20px auto;
 }
 
 #canvas {
@@ -147,11 +147,16 @@ body {
     height: 100%;
 }
 
+/* 调整 hero 位置 */
+.hero {
+    margin-top: 20px;
+}
+
 /* 响应式 */
 @media (max-width: 480px) {
-    .tv-container {
-        width: 90%;
-        height: 250px;
+    .frame-container {
+        width: 150px;
+        height: 150px;
         border-width: 6px;
     }
 
