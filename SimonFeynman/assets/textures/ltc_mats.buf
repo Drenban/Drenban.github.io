@@ -1,0 +1,15 @@
+curl "https://drenban.github.io/SimonFeynman/assets/textures/ltc_mats.buf" ^
+  -H "authority: cineshader.com" ^
+  -H "accept: */*" ^
+  -H "accept-language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6" ^
+  -H "cookie: _ga=GA1.1.495646752.1740204202; AWSALB=l16shqLfipnUgFaSq2xZ9CBKbrPr6FmZWc6IbdoN/UODfV7jGSI1y/0tQFcSz5AX0u5wd1mwOvAFV39OxGq3Dq5ETPPYBTBTAEW+zKV5xDaYIHWaEDV61WM6crUZ; AWSALBCORS=l16shqLfipnUgFaSq2xZ9CBKbrPr6FmZWc6IbdoN/UODfV7jGSI1y/0tQFcSz5AX0u5wd1mwOvAFV39OxGq3Dq5ETPPYBTBTAEW+zKV5xDaYIHWaEDV61WM6crUZ; _ga_4TLVTP5HQJ=GS1.1.1741689758.7.1.1741693864.0.0.0" ^
+  -H "if-none-match: ^\^"7b9e4d1a9d7b0c39731913b691bd1a55-ssl-df^\^"" ^
+  -H "referer: https://cineshader.com/" ^
+  -H "sec-ch-ua: ^\^"Microsoft Edge^\^";v=^\^"113^\^", ^\^"Chromium^\^";v=^\^"113^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^"" ^
+  -H "sec-ch-ua-mobile: ?0" ^
+  -H "sec-ch-ua-platform: ^\^"Windows^\^"" ^
+  -H "sec-fetch-dest: empty" ^
+  -H "sec-fetch-mode: cors" ^
+  -H "sec-fetch-site: same-origin" ^
+  -H "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57" ^
+  --compressed
