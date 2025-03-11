@@ -1,6 +1,7 @@
 export function setupScene() {
+    // === 前景场景（画框） ===
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // 正方形画框视角
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // 正方形画框视角 (1:1)
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
     const frameContainer = document.querySelector('.frame-container');
     renderer.setSize(frameContainer.clientWidth, frameContainer.clientHeight); // 画框大小 200x200
@@ -9,44 +10,43 @@ export function setupScene() {
     const clock = new THREE.Clock();
     let mode = 'Static';
 
-    // === 3D 画廊环境（背景场景） ===
+    // === 背景场景（3D 画廊环境） ===
     const bgScene = new THREE.Scene();
     const bgCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const bgRenderer = new THREE.WebGLRenderer({ antialias: true });
     bgRenderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(bgRenderer.domElement); // 背景画布
+    document.body.appendChild(bgRenderer.domElement); // 添加背景画布
     bgRenderer.domElement.style.position = 'absolute';
     bgRenderer.domElement.style.top = '0';
     bgRenderer.domElement.style.left = '0';
     bgRenderer.domElement.style.zIndex = '0';
 
-    // 获取相机参数
-    const fov = camera.fov;
+    // 计算相机视野尺寸，确保墙面和地板填满视角
+    const fov = bgCamera.fov; // 75 度
     const aspect = window.innerWidth / window.innerHeight;
-    const distance = camera.position.z - (-10); // 墙体的深度（Z = -10）
-    
-    const height = 2 * Math.tan((fov * 0.5) * (Math.PI / 180)) * distance;
-    const width = height * aspect;
-    
-    // 背景墙
+    const distance = 15; // 相机到墙面的距离 (bgCamera.z = 5 到 z = -10)
+    const height = 2 * Math.tan((fov * 0.5) * (Math.PI / 180)) * distance; // 墙面高度
+    const width = height * aspect; // 墙面宽度
+
+    // 背景墙：贴在 z = -10，尺寸匹配相机视野
     const wallGeometry = new THREE.PlaneGeometry(width, height);
-    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x172a45 });
+    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // 黑色墙面
     const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
-    backWall.position.z = -10;
+    backWall.position.z = -10; // 墙面深度
     bgScene.add(backWall);
-    
-    // 地板宽度等于墙宽，深度自定义或等于墙高度
-    const floorGeometry = new THREE.PlaneGeometry(width, width); // 可以改为 (width, depth)
-    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x0a192f });
+
+    // 地板：宽度匹配墙面，深度从相机位置到墙面
+    const floorGeometry = new THREE.PlaneGeometry(width, distance);
+    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // 黑色地板
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -height / 2; // 移动到底部
-    floor.position.z = -10;         // 深度匹配墙面
+    floor.rotation.x = -Math.PI / 2; // 平躺
+    floor.position.y = -height / 2; // 贴近墙底
+    floor.position.z = -5; // 中心位置，从 z = 5 到 z = -10
     bgScene.add(floor);
 
-    bgCamera.position.z = 5; // 相机初始位置保持
+    bgCamera.position.z = 5; // 背景相机初始位置
 
-    // === Shader 画框（前景场景） ===
+    // === Shader 画框 ===
     const material = new THREE.ShaderMaterial({
         uniforms: {
             iTime: { value: 0 },
@@ -136,21 +136,21 @@ export function setupScene() {
         `
     });
 
-    // 画框贴在墙面上
+    // 画框：贴在墙面上
     const geometry = new THREE.PlaneGeometry(2, 2);
     const plane = new THREE.Mesh(geometry, material);
-    plane.position.set(0, 0, -9.9); // 贴近墙面 (z = -10)
+    plane.position.set(0, 0, -9.9); // 紧贴墙面 (z = -10)
     scene.add(plane);
 
     const frameGeometry = new THREE.BoxGeometry(2.4, 2.4, 0.2);
     const frameMaterial = new THREE.MeshBasicMaterial({ color: 0x1e293b });
     const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-    frame.position.set(0, 0, -10); // 边框紧贴墙面
+    frame.position.set(0, 0, -10); // 边框贴墙
     scene.add(frame);
 
     camera.position.z = 5;
 
-    // === 交互逻辑 ===
+    // === 交互事件 ===
     frameContainer.addEventListener('mousemove', (e) => {
         const rect = frameContainer.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
@@ -175,7 +175,7 @@ export function setupScene() {
             bgCamera.position.x = THREE.MathUtils.clamp(mouseX * 2, -1, 1);
             bgCamera.position.y = THREE.MathUtils.clamp(-mouseY * 2, -1, 1);
             bgCamera.position.z = 5 + mouseY * 0.5;
-            bgCamera.lookAt(0, 0, -10); // 注视墙面
+            bgCamera.lookAt(0, 0, -10);
         }
     });
 
@@ -185,23 +185,33 @@ export function setupScene() {
         modeToggle.textContent = `切换模式 (${mode})`;
         if (mode === 'Static') {
             bgCamera.position.set(0, 0, 5);
-            bgCamera.lookAt(0, 0, -10); // 注视墙面
+            bgCamera.lookAt(0, 0, -10);
         }
     });
 
+    // === 窗口调整 ===
     window.addEventListener('resize', () => {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        bgCamera.aspect = width / height;
+        // 背景相机和渲染器
+        bgCamera.aspect = window.innerWidth / window.innerHeight;
         bgCamera.updateProjectionMatrix();
-        bgRenderer.setSize(width, height);
+        bgRenderer.setSize(window.innerWidth, window.innerHeight);
 
+        // 前景相机和渲染器
         const frameWidth = frameContainer.clientWidth;
         const frameHeight = frameContainer.clientHeight;
         camera.aspect = frameWidth / frameHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(frameWidth, frameHeight);
         material.uniforms.iResolution.value.set(frameWidth, frameHeight);
+
+        // 更新墙面和地板尺寸
+        const newHeight = 2 * Math.tan((bgCamera.fov * 0.5) * (Math.PI / 180)) * distance;
+        const newWidth = newHeight * bgCamera.aspect;
+        backWall.geometry.dispose();
+        backWall.geometry = new THREE.PlaneGeometry(newWidth, newHeight);
+        floor.geometry.dispose();
+        floor.geometry = new THREE.PlaneGeometry(newWidth, distance);
+        floor.position.y = -newHeight / 2;
     });
 
     // === 动画循环 ===
@@ -214,49 +224,4 @@ export function setupScene() {
     animate();
 
     return { scene, camera, renderer, material };
-
-    // === 交互逻辑 ===
-    frameContainer.addEventListener('mousemove', (e) => {
-        const rect = frameContainer.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = rect.height - (e.clientY - rect.top);
-
-        // 鼠标位置传递到 Shader 的 uniform
-        material.uniforms.iMouse.value.set(mouseX, mouseY);
-    });
-
-    // === 渲染循环 ===
-    function animate() {
-        const elapsedTime = clock.getElapsedTime();
-
-        // 更新 Shader 时间和噪声偏移
-        material.uniforms.iTime.value = elapsedTime;
-        material.uniforms.iNoiseOffset.value += 0.01;
-
-        // 渲染背景和前景
-        bgRenderer.render(bgScene, bgCamera);
-        renderer.render(scene, camera);
-
-        renderer.setAnimationLoop(animate);
-    }
-
-    animate();
-
-    // === 响应窗口大小 ===
-    window.addEventListener('resize', () => {
-        // 更新背景相机和渲染器
-        bgCamera.aspect = window.innerWidth / window.innerHeight;
-        bgCamera.updateProjectionMatrix();
-        bgRenderer.setSize(window.innerWidth, window.innerHeight);
-
-        // 更新前景渲染器和相机
-        const aspect = frameContainer.clientWidth / frameContainer.clientHeight;
-        camera.aspect = aspect;
-        camera.updateProjectionMatrix();
-        renderer.setSize(frameContainer.clientWidth, frameContainer.clientHeight);
-
-        // 更新 Shader 分辨率
-        material.uniforms.iResolution.value.set(frameContainer.clientWidth, frameContainer.clientHeight);
-    });
 }
-
