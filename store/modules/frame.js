@@ -3,7 +3,7 @@
 // 输入：噪声材质、可选配置
 // 输出：包含画布和平面边框的对象
 
-import * as THREE from 'three';
+// import * as THREE from 'three';
 
 /**
  * 创建一个带边框的画布
