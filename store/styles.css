@@ -13,6 +13,7 @@ body {
     justify-content: center;
     align-items: center;
     background: #0a192f; /* 单一暗色背景 */
+    position: relative; /* 添加定位上下文 */
 }
 
 .frame-container {
@@ -24,7 +25,7 @@ body {
     border-radius: 4px;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 0, 0, 0.4);
     overflow: hidden;
-    z-index: 1;
+    z-index: 10; /* 提高层级，与 .logo 和 .hero 一致 */
     margin: 20px auto;
 }
 
