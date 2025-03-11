@@ -46,7 +46,7 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
         requestAnimationFrame(animate);
         console.log('Rendering frame...', bgScene.children.length);
         noiseMaterial.uniforms.iTime.value = clock.getElapsedTime();
-        bgRenderer.render(bgScene, bgCamera);
+        bgRenderer.render(bgScene, bgCamera); // 只渲染 bgScene
     }
     animate();
 }
