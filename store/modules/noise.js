@@ -91,7 +91,8 @@ export function createNoiseMaterial(resolution) {
                 float peak = sin(uv.y * 10.0 + iTime * 2.0 + waveNoise) * 0.5;
                 float noise = 0.5 + baseNoise * 1.0 + waveNoise * 0.8 + peak;
                 noise = clamp(noise, 0.0, 1.0);
-                gl_FragColor = vec4(vec3(noise), 1.0);
+                // gl_FragColor = vec4(vec3(noise), 1.0);
+                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // 测试：强制红色
             }
         `
     });
