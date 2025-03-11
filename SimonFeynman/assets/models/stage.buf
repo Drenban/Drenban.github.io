@@ -1,0 +1,25 @@
+$session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+$session.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
+$session.Cookies.Add((New-Object System.Net.Cookie("_ga", "GA1.1.495646752.1740204202", "/", ".cineshader.com")))
+$session.Cookies.Add((New-Object System.Net.Cookie("AWSALB", "l16shqLfipnUgFaSq2xZ9CBKbrPr6FmZWc6IbdoN/UODfV7jGSI1y/0tQFcSz5AX0u5wd1mwOvAFV39OxGq3Dq5ETPPYBTBTAEW+zKV5xDaYIHWaEDV61WM6crUZ", "/", "cineshader.com")))
+$session.Cookies.Add((New-Object System.Net.Cookie("AWSALBCORS", "l16shqLfipnUgFaSq2xZ9CBKbrPr6FmZWc6IbdoN/UODfV7jGSI1y/0tQFcSz5AX0u5wd1mwOvAFV39OxGq3Dq5ETPPYBTBTAEW+zKV5xDaYIHWaEDV61WM6crUZ", "/", "cineshader.com")))
+$session.Cookies.Add((New-Object System.Net.Cookie("_ga_4TLVTP5HQJ", "GS1.1.1741689758.7.1.1741693864.0.0.0", "/", ".cineshader.com")))
+Invoke-WebRequest -UseBasicParsing -Uri "https://cineshader.com/assets/models/stage.buf" `
+-WebSession $session `
+-Headers @{
+"authority"="cineshader.com"
+  "method"="GET"
+  "path"="/assets/models/stage.buf"
+  "scheme"="https"
+  "accept"="*/*"
+  "accept-encoding"="gzip, deflate, br"
+  "accept-language"="zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+  "if-none-match"="`"644cffdad1f0707088927150c59b5b94-ssl-df`""
+  "referer"="https://cineshader.com/"
+  "sec-ch-ua"="`"Microsoft Edge`";v=`"113`", `"Chromium`";v=`"113`", `"Not-A.Brand`";v=`"24`""
+  "sec-ch-ua-mobile"="?0"
+  "sec-ch-ua-platform"="`"Windows`""
+  "sec-fetch-dest"="empty"
+  "sec-fetch-mode"="cors"
+  "sec-fetch-site"="same-origin"
+}
