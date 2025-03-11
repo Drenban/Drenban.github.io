@@ -20,20 +20,28 @@ export function setupScene() {
     bgRenderer.domElement.style.left = '0';
     bgRenderer.domElement.style.zIndex = '0';
 
-    // 墙面：增加深度 (z = -10) 和高度 (20)
-    const wallGeometry = new THREE.PlaneGeometry(20, 20); // 高度从 10 增加到 20
-    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x172a45 }); // 颜色改为黑色
+    // 获取相机参数
+    const fov = camera.fov;
+    const aspect = window.innerWidth / window.innerHeight;
+    const distance = camera.position.z - (-10); // 墙体的深度（Z = -10）
+    
+    const height = 2 * Math.tan((fov * 0.5) * (Math.PI / 180)) * distance;
+    const width = height * aspect;
+    
+    // 背景墙
+    const wallGeometry = new THREE.PlaneGeometry(width, height);
+    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x172a45 });
     const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
-    backWall.position.z = -10; // 景深从 -5 增加到 -10
+    backWall.position.z = -10;
     bgScene.add(backWall);
-
-    // 地板：匹配墙面深度
-    const floorGeometry = new THREE.PlaneGeometry(20, 20);
-    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x0a192f }); // 颜色改为黑色
+    
+    // 地板宽度等于墙宽，深度自定义或等于墙高度
+    const floorGeometry = new THREE.PlaneGeometry(width, width); // 可以改为 (width, depth)
+    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x0a192f });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -10; // 高度从 -5 增加到 -10，与墙面对齐
-    floor.position.z = -5; // 地板中心调整
+    floor.position.y = -height / 2; // 移动到底部
+    floor.position.z = -10;         // 深度匹配墙面
     bgScene.add(floor);
 
     bgCamera.position.z = 5; // 相机初始位置保持
