@@ -8,7 +8,7 @@
 export function createFloor(width, depth, height) {
     // === 效果部分 ===
     const geometry = new THREE.PlaneGeometry(width, depth);
-    const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const material = new THREE.MeshBasicMaterial({ color: 0x0a192f });
     const floor = new THREE.Mesh(geometry, material);
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -height / 2;
