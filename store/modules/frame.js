@@ -1,42 +1,30 @@
 // frame.js
-// 创建画框和画布对象
-// 输入：噪声材质、可选配置
-// 输出：包含画布和平面边框的对象
+// 创建画框平面和边框，使用噪声材质生成动态效果。
 
-// import * as THREE from 'three';
+import * as THREE from 'three';
+
+// 常量定义
+const PLANE_SIZE = 2;
+const FRAME_SIZE = 2.4;
+const FRAME_DEPTH = 0.2;
+const FRAME_COLOR = 0x1e293b;
+
+// 共享几何体和材质
+const planeGeo = new THREE.PlaneGeometry(PLANE_SIZE, PLANE_SIZE);
+const frameGeo = new THREE.BoxGeometry(FRAME_SIZE, FRAME_SIZE, FRAME_DEPTH);
+const frameMat = new THREE.MeshBasicMaterial({ color: FRAME_COLOR });
 
 /**
- * 创建一个带边框的画布
- * @param {THREE.Material} noiseMaterial - 用于画布的材质
- * @param {Object} options - 配置参数
- * @param {number} options.planeSize - 画布尺寸（默认 2）
- * @param {number} options.frameSize - 边框尺寸（默认 2.4）
- * @param {number} options.frameDepth - 边框厚度（默认 0.2）
- * @param {THREE.Color | number | string} options.frameColor - 边框颜色（默认深灰蓝 #1e293b）
- * @param {number} options.planeZ - 画布 Z 坐标（默认 -9.9）
- * @param {number} options.frameZ - 边框 Z 坐标（默认 -10）
- * @returns {Object} { plane, frame }
+ * 创建画框和边框对象
+ * @param {THREE.ShaderMaterial} noiseMaterial - 用于画框平面的噪声材质
+ * @returns {{ plane: THREE.Mesh, frame: THREE.Mesh }} - 包含画框平面和边框的网格对象
  */
-export function createFrame(noiseMaterial, options = {}) {
-  const {
-    planeSize = 2,
-    frameSize = 2.4,
-    frameDepth = 0.2,
-    frameColor = 0x1e293b,
-    planeZ = -9.9,
-    frameZ = -10,
-  } = options;
+export function createFrame(noiseMaterial) {
+    const plane = new THREE.Mesh(planeGeo, noiseMaterial);
+    plane.position.set(0, 0, -9.9);
 
-  // 画布
-  const planeGeometry = new THREE.PlaneGeometry(planeSize, planeSize);
-  const plane = new THREE.Mesh(planeGeometry, noiseMaterial);
-  plane.position.set(0, 0, planeZ);
+    const frame = new THREE.Mesh(frameGeo, frameMat);
+    frame.position.set(0, 0, -10);
 
-  // 边框
-  const frameGeometry = new THREE.BoxGeometry(frameSize, frameSize, frameDepth);
-  const frameMaterial = new THREE.MeshBasicMaterial({ color: frameColor });
-  const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-  frame.position.set(0, 0, frameZ);
-
-  return { plane, frame };
+    return { plane, frame };
 }
