@@ -8,13 +8,13 @@
 export function setupCameraRenderer(frameContainer) {
     // === 效果部分 ===
     // 前景（画框）
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
-    renderer.setSize(frameContainer.clientWidth, frameContainer.clientHeight);
-    console.log('Renderer canvas:', renderer.domElement); // 确认绑定
-    renderer.xr.enabled = true;
-    camera.position.z = 5;
+    // const scene = new THREE.Scene();
+    // const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    // const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+    // renderer.setSize(frameContainer.clientWidth, frameContainer.clientHeight);
+    // console.log('Renderer canvas:', renderer.domElement); // 确认绑定
+    // renderer.xr.enabled = true;
+    // camera.position.z = 5;
 
     // 背景（画廊）
     const bgScene = new THREE.Scene();
@@ -47,17 +47,18 @@ export function setupCameraRenderer(frameContainer) {
             bgCamera.aspect = window.innerWidth / window.innerHeight;
             bgCamera.updateProjectionMatrix();
             bgRenderer.setSize(window.innerWidth, window.innerHeight);
+            callback({ width: frameContainer.clientWidth, height: frameContainer.clientHeight }, getViewSize());
 
             // 前景
-            const frameWidth = frameContainer.clientWidth;
-            const frameHeight = frameContainer.clientHeight;
-            camera.aspect = frameWidth / frameHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(frameWidth, frameHeight);
+            // const frameWidth = frameContainer.clientWidth;
+            // const frameHeight = frameContainer.clientHeight;
+            // camera.aspect = frameWidth / frameHeight;
+            // camera.updateProjectionMatrix();
+            // renderer.setSize(frameWidth, frameHeight);
 
-            callback({ width: frameWidth, height: frameHeight }, getViewSize());
+            // callback({ width: frameWidth, height: frameHeight }, getViewSize());
         });
     }
 
-    return { scene, camera, renderer, bgScene, bgCamera, bgRenderer, getViewSize, onResize };
+    return {bgScene, bgCamera, bgRenderer, getViewSize, onResize };
 }
