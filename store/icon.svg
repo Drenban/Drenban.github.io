@@ -1,3 +1,27 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <path d="M 20 52 V 12 H 36 A 12 12 0 0 1 48 24 A 12 12 0 0 1 36 36 H 28 V 52 L 28 60 H 60 V 4 H 4 V 60 H 20 Z" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  <path
+    d="
+      M20 52             <!-- 起点：P的下端 -->
+      V12               <!-- 向上到顶部 -->
+      H36               <!-- 向右到弧形起点 -->
+      A12 12 0 0 1 48 24  <!-- 上半圆 -->
+      A12 12 0 0 1 36 36  <!-- 下半圆 -->
+      H28               <!-- 向左，完成P形 -->
+      V52               <!-- 回到底部 -->
+
+      L28 58            <!-- 连到外框底部 -->
+      H58               <!-- 向右到底部右角 -->
+      V6                <!-- 向上到右上角 -->
+      H6                <!-- 向左到左上角 -->
+      V58               <!-- 向下到左下角 -->
+      H20               <!-- 向右回P的左下角 -->
+      L20 52            <!-- 闭合路径 -->
+      Z
+    "
+    fill="none"
+    stroke="#000000"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
 </svg>
