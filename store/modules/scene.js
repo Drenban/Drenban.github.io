@@ -56,5 +56,11 @@ export function setupScene() {
         updateResolution(frameSize.width, frameSize.height);
     });
 
+    // 渲染完成后隐藏加载界面
+    const loading = document.querySelector('.loading');
+    if (loading) {
+        loading.classList.add('hidden');
+    }
+
     return { scene, camera, renderer, bgScene, bgCamera, bgRenderer, material };
 }
