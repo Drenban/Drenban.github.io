@@ -1,21 +1,35 @@
 export function setupScene() {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // 正方形宽高比 1:1
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // 全屏视角
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
     const frameContainer = document.querySelector('.frame-container');
-    renderer.setSize(frameContainer.clientWidth, frameContainer.clientHeight);
+    renderer.setSize(window.innerWidth, window.innerHeight); // 全屏渲染
     renderer.xr.enabled = true;
 
     const clock = new THREE.Clock();
-    let mode = 'Static'; // 默认模式
+    let mode = 'Static';
 
-    // Shader 材质
+    // 3D 画廊环境
+    const wallGeometry = new THREE.PlaneGeometry(20, 10);
+    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x172a45 });
+    const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
+    backWall.position.z = -5;
+    scene.add(backWall);
+
+    const floorGeometry = new THREE.PlaneGeometry(20, 20);
+    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x0a192f });
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -5;
+    scene.add(floor);
+
+    // Shader 画框
     const material = new THREE.ShaderMaterial({
         uniforms: {
             iTime: { value: 0 },
             iResolution: { value: new THREE.Vector2(frameContainer.clientWidth, frameContainer.clientHeight) },
             iMouse: { value: new THREE.Vector2() },
-            iNoiseOffset: { value: 0.0 } // 点击干扰偏移
+            iNoiseOffset: { value: 0.0 }
         },
         vertexShader: `
             void main() {
@@ -40,7 +54,7 @@ export function setupScene() {
 
                 vec3 g = step(x0.yzx, x0.xyz);
                 vec3 l = 1.0 - g;
-                vec3 i1 = min(g.xyz, l.zxy);
+                vec3 i1 = min ближеg.xyz, l.zxy);
                 vec3 i2 = max(g.xyz, l.zxy);
 
                 vec3 x1 = x0 - i1 + 1.0 * C.xxx;
@@ -108,12 +122,21 @@ export function setupScene() {
         `
     });
 
-    const geometry = new THREE.PlaneGeometry(4, 4); // 小尺寸适配画框
+    const geometry = new THREE.PlaneGeometry(2, 2); // 画框大小
     const plane = new THREE.Mesh(geometry, material);
+    plane.position.set(0, 0, -2); // 悬浮在墙前
     scene.add(plane);
+
+    // 画框边框（3D）
+    const frameGeometry = new THREE.BoxGeometry(2.4, 2.4, 0.2);
+    const frameMaterial = new THREE.MeshBasicMaterial({ color: 0x1e293b });
+    const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+    frame.position.set(0, 0, -2.1);
+    scene.add(frame);
+
     camera.position.z = 5;
 
-    // 鼠标交互（限制在画框内）
+    // 鼠标交互
     frameContainer.addEventListener('mousemove', (e) => {
         const rect = frameContainer.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
@@ -123,22 +146,24 @@ export function setupScene() {
         }
     });
 
-    // 点击干扰噪声
+    // 点击干扰
     frameContainer.addEventListener('click', () => {
         material.uniforms.iNoiseOffset.value = Math.random() * 10.0;
-        setTimeout(() => {
-            material.uniforms.iNoiseOffset.value *= 0.9; // 逐渐衰减
-        }, 100);
+        let decay = setInterval(() => {
+            material.uniforms.iNoiseOffset.value *= 0.9;
+            if (material.uniforms.iNoiseOffset.value < 0.1) clearInterval(decay);
+        }, 50);
     });
 
-    // 画廊晃动（Free Nav 模式）
+    // 画廊晃动（Free Nav）
     document.addEventListener('mousemove', (e) => {
         if (mode === 'Free Nav') {
-            const mouseX = (e.clientX / window.innerWidth - 0.5) * 2; // -1 到 1
+            const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
             const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-            camera.position.x = mouseX * 0.5;
-            camera.position.y = -mouseY * 0.5;
-            camera.lookAt(0, 0, 0);
+            camera.position.x = THREE.MathUtils.clamp(mouseX * 2, -1, 1); // 限制幅度
+            camera.position.y = THREE.MathUtils.clamp(-mouseY * 2, -1, 1);
+            camera.position.z = 5 + mouseY * 0.5; // 轻微前后移动
+            camera.lookAt(0, 0, -2);
         }
     });
 
@@ -149,18 +174,18 @@ export function setupScene() {
         modeToggle.textContent = `切换模式 (${mode})`;
         if (mode === 'Static') {
             camera.position.set(0, 0, 5);
-            camera.lookAt(0, 0, 0);
+            camera.lookAt(0, 0, -2);
         }
     });
 
     // 窗口调整
     window.addEventListener('resize', () => {
-        const width = frameContainer.clientWidth;
-        const height = frameContainer.clientHeight;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
-        material.uniforms.iResolution.value.set(width, height);
+        material.uniforms.iResolution.value.set(frameContainer.clientWidth, frameContainer.clientHeight);
     });
 
     // 动画循环
