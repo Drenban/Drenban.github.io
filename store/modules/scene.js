@@ -13,7 +13,6 @@ export function setupScene() {
         return;
     }
 
-    // 只使用背景场景和渲染器
     const { bgScene, bgCamera, bgRenderer, getViewSize, onResize } = setupCameraRenderer(frameContainer);
     const { width, height, distance } = getViewSize();
 
@@ -24,9 +23,10 @@ export function setupScene() {
 
     const { material, updateResolution } = createNoiseMaterial(new THREE.Vector2(frameContainer.clientWidth, frameContainer.clientHeight));
     const { plane, frame } = createFrame(material);
-    bgScene.add(plane); // 画框放入背景场景
+    bgScene.add(plane);
     bgScene.add(frame);
 
+    // 确保参数正确传递
     setupInteraction(bgCamera, material, bgRenderer, bgScene);
 
     onResize((frameSize, viewSize) => {
