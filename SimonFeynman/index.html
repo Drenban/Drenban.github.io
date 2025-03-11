@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>CineShader</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://use.typekit.net/upz7xsh.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+    <link rel="dns-prefetch" href="https://shadertoy.com">
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="A cinematic real-time shader visualiser brought to you by Lusion">
+    <meta name="twitter:description" content="A cinematic real-time shader visualiser brought to you by Lusion">
+    <meta property="og:description" content="A cinematic real-time shader visualiser brought to you by Lusion">
+    <meta name="twitter:title" content="CineShader">
+    <meta property="og:site_name" content="CineShader">
+    <meta property="og:title" content="CineShader">
+    <meta name="twitter:site" content="@lusionltd">
+    <meta name="twitter:creator" content="@lusionltd">
+    <meta name="twitter:url" content="https://cineshader.com">
+    <meta property="og:url" content="https://cineshader.com">
+    <meta property="og:image" content="https://cineshader.com/assets/images/share.png">
+    <meta name="twitter:image" content="https://cineshader.com/assets/images/share.png">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/images/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/images/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/images/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/images/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/images/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/images/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/images/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/images/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/images/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/images/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+    <link rel="manifest" href="assets/images/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+    <!-- Main Application Container -->
+    <div id="app">
+        <!-- Header Navigation -->
+        <header class="header">
+            <nav class="header__menu">
+                <a href="https://labs.lusion.co/" target="_blank">
+                    <div class="header__menu_item--lab">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="425" height="45" viewBox="0 0 425 45" fill="none">
+                            <!-- Lusion Labs Logo SVG (simplified for brevity) -->
+                            <g fill="#fff" class="lablogo-labs">...</g>
+                            <g fill="#fff" class="lablogo-dots">...</g>
+                            <g fill="#fff" class="lablogo-lusion">...</g>
+                        </svg>
+                    </div>
+                </a>
+                <ul class="menu__items">
+                    <li class="menu__item">
+                        <button class="menu__audio" aria-label="Toggle Audio"></button>
+                    </li>
+                    <li class="menu__item menu__item--is-separator"><span>|</span></li>
+                    <li class="menu__item"><a href="/" class="menu__link" rel="internal">Home</a></li>
+                    <li class="menu__item menu__item--is-gallery"><a href="/gallery" class="menu__link" rel="internal">Gallery</a></li>
+                    <li class="menu__item menu__item--is-editor"><a href="/editor" class="menu__link" rel="internal">Editor</a></li>
+                    <li class="menu__item"><a href="/about" class="menu__link" rel="internal">About</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main Canvas -->
+        <canvas id="main-canvas"></canvas>
+
+        <!-- Shader Context -->
+        <div id="shader-context">
+            <h4 id="shader-title"></h4>
+            <div id="shader-desc"></div>
+        </div>
+
+        <!-- View Information -->
+        <div class="view-infos">
+            <h4 class="view-infos__title"></h4>
+            <div class="view-infos__subtitle">by <a href="https://www.shadertoy.com/user/" target="_blank" class="button-inline view-infos__author"></a></div>
+            <p class="view-infos__description"></p>
+            <div class="view-infos__buttons">
+                <a href="https://www.shadertoy.com/view/" target="_blank" class="button-default view-infos__link">Open in Shadertoy</a>
+                <div class="view-infos__fork">
+                    <div class="select-wrapper">
+                        <select class="select-default view-infos__select" title="Choose the editor's tab where this sketch will be copied">
+                            <option value="1" selected="selected">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <button class="button-default view-infos__fork-button" aria-label="Edit">Edit</button>
+                </div>
+                <button class="button-default view-infos__back">Back to editor</button>
+            </div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="gallery">
+            <div class="gallery__wrapper">
+                <header class="gallery__header">
+                    <p class="gallery__subtitle">
+                        Discover the CineShaders created by the <a class="button-inline" href="https://www.shadertoy.com" target="_blank">Shadertoy</a> community.<br>
+                        Click on any to preview it in the 3D environment.<br>
+                        If you want to add yours, please <button class="button-inline about-prompt-button" data-id="save-and-share" aria-label="Open the save and share instructions">follow these instructions</button>.
+                    </p>
+                    <div class="gallery__controls">
+                        <span class="gallery__controls-text">Sort by:</span>
+                        <div class="select-wrapper select-wrapper--gallery">
+                            <select class="select-default gallery__select" title="Select the Shadertoy sorting method">
+                                <option value="popular" selected="selected">Popular</option>
+                                <option value="newest">Newest</option>
+                                <option value="hot">Hot</option>
+                                <option value="name">Name</option>
+                                <option value="love">Love</option>
+                            </select>
+                        </div>
+                    </div>
+                </header>
+                <main class="gallery__inner"></main>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="about">
+            <div class="about__wrapper">
+                <div class="about__inner">
+                    <div class="about__infos">
+                        <div class="about__category">
+                            <h5 class="category__title">Credits</h5>
+                            <div class="category__text">
+                                CineShader proudly uses:<br><br>
+                                <span class="about-credit-custom-bullet"><a class="button-inline" href="https://www.shadertoy.com/" target="_blank">Shadertoy.com</a> API</span>
+                                <span class="about-credit-custom-bullet"><a class="button-inline" href="https://github.com/patriciogonzalezvivo/glslEditor" target="_blank">GLSL Editor</a>'s Helpers</span>
+                                <span class="about-credit-custom-bullet"><a class="button-inline" href="https://codemirror.net/" target="_blank">CodeMirror</a></span>
+                                <span class="about-credit-custom-bullet"><a class="button-inline" href="https://threejs.org/" target="_blank">Three.js</a></span>
+                                <span class="about-credit-custom-bullet"><a class="button-inline" href="https://greensock.com/gsap/" target="_blank">GSAP</a></span><br>
+                                <hr class="about-about-separator">
+                                Special thanks to:<br><br>
+                                <span class="about-credit-custom-bullet"><a class="button-inline" href="http://patriciogonzalezvivo.com/" target="_blank">Patricio Gonzalez Vivo</a> for <a class="button-inline" href="https://thebookofshaders.com/" target="_blank">The Book of Shaders</a></span>
+                                <span class="about-credit-custom-bullet"><a class="button-inline" href="http://refikanadol.com/" target="_blank">Refik Anadol</a> for his inspirational artwork</span><br>
+                                <hr class="about-about-separator">
+                                Designed and built by <a class="button-inline" href="https://lusion.co/" target="_blank">Lusion</a><br><br>
+                                <span class="about-credit-custom-bullet">Visual Lead: Edan Kwan</span>
+                                <span class="about-credit-custom-bullet">Designer & Lead Developer: Fred Briolet</span>
+                                <span class="about-credit-custom-bullet">Developer: Roch Bouchayer</span>
+                            </div>
+                        </div>
+                        <!-- FAQ and other categories omitted for brevity, can be added similarly -->
+                    </div>
+                    <div class="about__intro">
+                        <h4 class="about__title">About</h4>
+                        <div class="about__description">
+                            CineShader is a real-time 3D shader visualiser leveraging the Shadertoy.com API to bring shader artworks into a cinematic 3D environment.<br><br>
+                            Started as a demo to explain procedural noise to Lusion clients, it evolved into a public tool for Shadertoy users to showcase their shaders differently.<br><br>
+                            <hr class="about-about-separator">
+                            <div class="about-company-title">About Us</div>
+                            Lusion is an award-winning multidisciplinary production studio delivering compelling real-time experiences.<br><br>
+                            <hr class="about-about-separator">
+                            <div class="about-company-title">Follow Us</div>
+                            <a class="about-social button-inline" href="https://lusion.co/" target="_blank">www</a> |
+                            <a class="about-social button-inline" href="https://twitter.com/lusionltd" target="_blank">tw</a> |
+                            <a class="about-social button-inline" href="https://www.linkedin.com/company/lusionltd" target="_blank">in</a> |
+                            <a class="about-social button-inline" href="https://www.instagram.com/lusionltd/" target="_blank">ig</a> |
+                            <a class="about-social button-inline" href="https://www.facebook.com/lusionltd/" target="_blank">fb</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Editor Section -->
+        <div class="editor">
+            <div class="editor__inner">
+                <!-- Editor content omitted for brevity, follows similar structure -->
+            </div>
+        </div>
+
+        <!-- Preloader -->
+        <div id="preloader">
+            <div id="preloader-context">
+                <h2 id="preloader-title">CineShader</h2>
+                <h4 id="preloader-desc">A cinematic real-time shader visualiser<br>brought to you by Lusion</h4>
+                <div id="preloader-text">Now Loading (0%)</div>
+            </div>
+        </div>
+
+        <!-- Prompt -->
+        <div id="prompt">
+            <div id="prompt--bg"></div>
+            <div id="prompt--box">
+                <div id="prompt--msg">Error message here!</div>
+                <input type="text" id="prompt--input">
+                <button id="prompt--ok-btn" class="button-default prompt--button prompt--button__is-ok" aria-label="Ok">OK</button>
+            </div>
+        </div>
+
+        <!-- VR Preloader and Landing -->
+        <div id="preloader-vr">
+            <h2 id="preloader-vr__title">Entering CineShader VR</h2>
+            <p id="preloader-vr__progress">Now Loading (<span id="preloader-vr__progress__percent"></span>%)</p>
+        </div>
+        <div class="xr-landing">
+            <div class="xr-landing__bg"></div>
+            <h3 class="xr-landing__title">Welcome to CineShader VR</h3>
+            <p class="xr-landing__desc">Discover shader artworks<br>from the Shadertoy community<br>in a cinematic VR environment.</p>
+            <button class="button-default button__webxr button__webxr--middle" aria-label="ENTER VR">ENTER VR</button>
+            <a class="xr-landing__craftedby" href="https://lusion.co/" target="_blank">Crafted by Lusion</a>
+        </div>
+
+        <!-- VR Corner Button -->
+        <div class="button-wrapper__webxr--corner">
+            <button class="button-default button__webxr button__webxr--corner" aria-label="Enter VR">Enter VR</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/index.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TLVTP5HQJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-4TLVTP5HQJ');
+    </script>
+</body>
+</html>
