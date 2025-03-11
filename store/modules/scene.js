@@ -214,4 +214,49 @@ export function setupScene() {
     animate();
 
     return { scene, camera, renderer, material };
+
+    // === 交互逻辑 ===
+    frameContainer.addEventListener('mousemove', (e) => {
+        const rect = frameContainer.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = rect.height - (e.clientY - rect.top);
+
+        // 鼠标位置传递到 Shader 的 uniform
+        material.uniforms.iMouse.value.set(mouseX, mouseY);
+    });
+
+    // === 渲染循环 ===
+    function animate() {
+        const elapsedTime = clock.getElapsedTime();
+
+        // 更新 Shader 时间和噪声偏移
+        material.uniforms.iTime.value = elapsedTime;
+        material.uniforms.iNoiseOffset.value += 0.01;
+
+        // 渲染背景和前景
+        bgRenderer.render(bgScene, bgCamera);
+        renderer.render(scene, camera);
+
+        renderer.setAnimationLoop(animate);
+    }
+
+    animate();
+
+    // === 响应窗口大小 ===
+    window.addEventListener('resize', () => {
+        // 更新背景相机和渲染器
+        bgCamera.aspect = window.innerWidth / window.innerHeight;
+        bgCamera.updateProjectionMatrix();
+        bgRenderer.setSize(window.innerWidth, window.innerHeight);
+
+        // 更新前景渲染器和相机
+        const aspect = frameContainer.clientWidth / frameContainer.clientHeight;
+        camera.aspect = aspect;
+        camera.updateProjectionMatrix();
+        renderer.setSize(frameContainer.clientWidth, frameContainer.clientHeight);
+
+        // 更新 Shader 分辨率
+        material.uniforms.iResolution.value.set(frameContainer.clientWidth, frameContainer.clientHeight);
+    });
 }
+
