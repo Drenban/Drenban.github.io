@@ -2,7 +2,7 @@
     <!-- "P" 形状 -->
     <path d="M20 52 V12 H36 A12 12 0 0 1 48 24 A12 12 0 0 1 36 36 H28 V52" 
           fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- 像素化点（数字感） -->
-<!--     <path d="M52 16 H56 V20 H52 Z M52 28 H56 V32 H52 Z" 
-          fill="#000000"/> -->
+    <!-- 外围黑色方框 -->
+    <rect x="4" y="4" width="56" height="56" 
+          fill="none" stroke="#000000" stroke-width="4"/>
 </svg>
