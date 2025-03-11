@@ -1,19 +1,21 @@
 export function setupScene() {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, 600 / 400, 0.1, 1000); // 匹配容器宽高比
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // 正方形宽高比 1:1
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
-    const tvContainer = document.querySelector('.tv-container');
-    renderer.setSize(tvContainer.clientWidth, tvContainer.clientHeight);
+    const frameContainer = document.querySelector('.frame-container');
+    renderer.setSize(frameContainer.clientWidth, frameContainer.clientHeight);
     renderer.xr.enabled = true;
 
     const clock = new THREE.Clock();
+    let mode = 'Static'; // 默认模式
 
     // Shader 材质
     const material = new THREE.ShaderMaterial({
         uniforms: {
             iTime: { value: 0 },
-            iResolution: { value: new THREE.Vector2(tvContainer.clientWidth, tvContainer.clientHeight) },
-            iMouse: { value: new THREE.Vector2() }
+            iResolution: { value: new THREE.Vector2(frameContainer.clientWidth, frameContainer.clientHeight) },
+            iMouse: { value: new THREE.Vector2() },
+            iNoiseOffset: { value: 0.0 } // 点击干扰偏移
         },
         vertexShader: `
             void main() {
@@ -24,6 +26,7 @@ export function setupScene() {
             uniform float iTime;
             uniform vec2 iResolution;
             uniform vec2 iMouse;
+            uniform float iNoiseOffset;
 
             vec4 permute(vec4 x) { return mod(((x * 34.0) + 1.0) * x, 289.0); }
             vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
@@ -98,32 +101,62 @@ export function setupScene() {
             void main() {
                 vec2 uv = gl_FragCoord.xy / iResolution.xy;
                 float mouseRatio = smoothstep(100.0, 0.0, length(iMouse.xy - gl_FragCoord.xy));
-                float noise = 0.25 + fbm(vec3(uv * 12.0 + (iMouse.xy - gl_FragCoord.xy) * mouseRatio * 0.05, iTime * 0.18 + 0.5 * mouseRatio));
-                noise *= 0.25 + snoise(vec3(uv * 4.0 + 1.5, iTime * 0.15));
-                gl_FragColor = vec4(1.0, 1.0, 1.0, noise); // 黑白噪声
+                float noise = 0.25 + fbm(vec3(uv * 12.0 + (iMouse.xy - gl_FragCoord.xy) * mouseRatio * 0.05 + iNoiseOffset, iTime * 0.18 + 0.5 * mouseRatio));
+                noise *= 0.25 + snoise(vec3(uv * 4.0 + 1.5 + iNoiseOffset, iTime * 0.15));
+                gl_FragColor = vec4(1.0, 1.0, 1.0, noise);
             }
         `
     });
 
-    const geometry = new THREE.PlaneGeometry(12, 8); // 适配容器比例
+    const geometry = new THREE.PlaneGeometry(4, 4); // 小尺寸适配画框
     const plane = new THREE.Mesh(geometry, material);
     scene.add(plane);
     camera.position.z = 5;
 
-    // 鼠标交互（限制在容器内）
-    tvContainer.addEventListener('mousemove', (e) => {
-        const rect = tvContainer.getBoundingClientRect();
+    // 鼠标交互（限制在画框内）
+    frameContainer.addEventListener('mousemove', (e) => {
+        const rect = frameContainer.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
-        const mouseY = rect.height - (e.clientY - rect.top); // Y 轴翻转
+        const mouseY = rect.height - (e.clientY - rect.top);
         if (mouseX >= 0 && mouseX <= rect.width && mouseY >= 0 && mouseY <= rect.height) {
             material.uniforms.iMouse.value.set(mouseX, mouseY);
         }
     });
 
+    // 点击干扰噪声
+    frameContainer.addEventListener('click', () => {
+        material.uniforms.iNoiseOffset.value = Math.random() * 10.0;
+        setTimeout(() => {
+            material.uniforms.iNoiseOffset.value *= 0.9; // 逐渐衰减
+        }, 100);
+    });
+
+    // 画廊晃动（Free Nav 模式）
+    document.addEventListener('mousemove', (e) => {
+        if (mode === 'Free Nav') {
+            const mouseX = (e.clientX / window.innerWidth - 0.5) * 2; // -1 到 1
+            const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            camera.position.x = mouseX * 0.5;
+            camera.position.y = -mouseY * 0.5;
+            camera.lookAt(0, 0, 0);
+        }
+    });
+
+    // 模式切换
+    const modeToggle = document.getElementById('mode-toggle');
+    modeToggle.addEventListener('click', () => {
+        mode = mode === 'Static' ? 'Free Nav' : 'Static';
+        modeToggle.textContent = `切换模式 (${mode})`;
+        if (mode === 'Static') {
+            camera.position.set(0, 0, 5);
+            camera.lookAt(0, 0, 0);
+        }
+    });
+
     // 窗口调整
     window.addEventListener('resize', () => {
-        const width = tvContainer.clientWidth;
-        const height = tvContainer.clientHeight;
+        const width = frameContainer.clientWidth;
+        const height = frameContainer.clientHeight;
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
