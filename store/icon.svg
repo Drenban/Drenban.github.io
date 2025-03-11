@@ -1,4 +1,25 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <path d=" M20 52 V12 H36 A12 12 0 0 1 48 24 A12 12 0 0 1 36 36 H28 V52 L28 58 H58 V6 H6 V58 H20 L20 52 Z" 
-    fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path 
+    d="
+      M 20 52           <!-- "P" 起点 -->
+      V 12             <!-- "P" 左腿向上 -->
+      H 36             <!-- "P" 顶部水平 -->
+      A 12 12 0 0 1 48 24  <!-- "P" 上弧 -->
+      A 12 12 0 0 1 36 36  <!-- "P" 下弧 -->
+      H 28             <!-- "P" 中部水平 -->
+      V 52             <!-- "P" 右腿向下 -->
+      L 28 60          <!-- 连接到方框底部 -->
+      H 60             <!-- 方框底边向右 -->
+      V 4              <!-- 方框右边向上 -->
+      H 4              <!-- 方框顶边向左 -->
+      V 60             <!-- 方框左边向下 -->
+      H 20             <!-- 方框底边回到 "P" -->
+      Z                <!-- 闭合路径 -->
+    " 
+    fill="none" 
+    stroke="#000000" 
+    stroke-width="4" 
+    stroke-linecap="round" 
+    stroke-linejoin="round"
+  />
 </svg>
