@@ -18,7 +18,7 @@ export function setupScene() {
         return;
     }
 
-    const { scene, camera, renderer, bgScene, bgCamera, bgRenderer, getViewSize, onResize } = setupCameraRenderer(frameContainer);
+    const {bgScene, bgCamera, bgRenderer, getViewSize, onResize } = setupCameraRenderer(frameContainer);
     const { width, height, distance } = getViewSize();
 
     // 创建背景元素
@@ -31,8 +31,8 @@ export function setupScene() {
     // 创建前景元素
     const { material, updateResolution } = createNoiseMaterial(new THREE.Vector2(frameContainer.clientWidth, frameContainer.clientHeight));
     const { plane, frame } = createFrame(material);
-    scene.add(plane);
-    scene.add(frame);
+    bgScene.add(plane); // 画框放入背景场景
+    bgScene.add(frame);
     console.log('Foreground objects:', scene.children); // 确认添加
 
     // 添加测试立方体
@@ -43,7 +43,7 @@ export function setupScene() {
     scene.add(cube);
 
     // 设置交互
-    setupInteraction(camera, bgCamera, material, renderer, bgRenderer, scene, bgScene);
+    setupInteraction(bgCamera, material, bgRenderer, bgScene);
 
     // === 效果部分 ===
     // （效果由子模块实现，这里仅集成）
