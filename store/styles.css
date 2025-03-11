@@ -17,16 +17,18 @@ body {
 }
 
 .frame-container {
-    position: relative;
+    position: absolute; /* 改为绝对定位，跟随墙面 */
     width: 200px;
     height: 200px;
-    background: #000000;
+    background: transparent; /* 移除背景，让画框可见 */
     border: 8px solid #1e293b;
     border-radius: 4px;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 0, 0, 0.4);
     overflow: hidden;
-    z-index: 10; /* 提高层级，与 .logo 和 .hero 一致 */
-    margin: 20px auto;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 居中 */
 }
 
 #canvas {
