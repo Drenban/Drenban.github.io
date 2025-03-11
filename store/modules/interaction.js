@@ -58,6 +58,7 @@ export function setupInteraction(camera, bgCamera, noiseMaterial, renderer, bgRe
     // 动画循环
     function animate() {
         requestAnimationFrame(animate);
+        console.log('Rendering frame...');
         noiseMaterial.uniforms.iTime.value = clock.getElapsedTime();
         bgRenderer.render(bgScene, bgCamera);
         renderer.render(scene, camera);
