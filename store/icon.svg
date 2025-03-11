@@ -1,12 +1,8 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#3b82f6" />
-            <stop offset="100%" style="stop-color:#60a5fa" />
-        </linearGradient>
-    </defs>
     <!-- "P" 形状 -->
-    <path d="M20 52 V12 H36 A12 12 0 0 1 48 24 A12 12 0 0 1 36 36 H28 V52 Z" fill="url(#grad)" />
-    <!-- 光点 -->
-    <circle cx="52" cy="20" r="4" fill="#93c5fd" opacity="0.8" />
+    <path d="M20 52 V12 H36 A12 12 0 0 1 48 24 A12 12 0 0 1 36 36 H28 V52" 
+          fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- 像素化点（数字感） -->
+    <path d="M52 16 H56 V20 H52 Z M52 28 H56 V32 H52 Z" 
+          fill="#FFFFFF"/>
 </svg>
