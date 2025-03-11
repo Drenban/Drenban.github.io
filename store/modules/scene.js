@@ -26,12 +26,14 @@ export function setupScene() {
     const { wall, update: updateWall } = createWall(width, height);
     bgScene.add(floor);
     bgScene.add(wall);
-
+    console.log('Background objects:', bgScene.children); // 确认添加
+    
     // 创建前景元素
     const { material, updateResolution } = createNoiseMaterial(new THREE.Vector2(frameContainer.clientWidth, frameContainer.clientHeight));
     const { plane, frame } = createFrame(material);
     scene.add(plane);
     scene.add(frame);
+    console.log('Foreground objects:', scene.children); // 确认添加
 
     // 设置交互
     setupInteraction(camera, bgCamera, material, renderer, bgRenderer, scene, bgScene);
