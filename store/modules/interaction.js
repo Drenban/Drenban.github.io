@@ -60,8 +60,8 @@ export function setupInteraction(camera, bgCamera, noiseMaterial, renderer, bgRe
         requestAnimationFrame(animate);
         console.log('Rendering frame...', scene.children.length, bgScene.children.length); // 检查场景内容
         noiseMaterial.uniforms.iTime.value = clock.getElapsedTime();
-        bgRenderer.render(bgScene, bgCamera);
         renderer.render(scene, camera);
+        bgRenderer.render(bgScene, bgCamera);
     }
     animate();
 }
