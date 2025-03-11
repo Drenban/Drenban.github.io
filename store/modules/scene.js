@@ -22,14 +22,14 @@ export function setupScene() {
 
     // 墙面：增加深度 (z = -10) 和高度 (20)
     const wallGeometry = new THREE.PlaneGeometry(20, 20); // 高度从 10 增加到 20
-    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // 颜色改为黑色
+    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x172a45 }); // 颜色改为黑色
     const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
     backWall.position.z = -10; // 景深从 -5 增加到 -10
     bgScene.add(backWall);
 
     // 地板：匹配墙面深度
     const floorGeometry = new THREE.PlaneGeometry(20, 20);
-    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // 颜色改为黑色
+    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x0a192f }); // 颜色改为黑色
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -10; // 高度从 -5 增加到 -10，与墙面对齐
