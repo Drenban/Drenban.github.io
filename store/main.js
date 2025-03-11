@@ -6,17 +6,16 @@ export function init() {
     const progressBar = document.querySelector('.progress-bar');
     const progressText = document.querySelector('.loading p');
 
-    // 模拟加载进度（可选）
+    // 模拟加载（可选）
     let progress = 0;
     const fakeLoad = setInterval(() => {
-        progress += 10;
+        progress += 20;
         progressText.textContent = `Now Loading (${progress}%)`;
         progressBar.style.width = `${progress}%`;
         if (progress >= 100) {
             clearInterval(fakeLoad);
-            loading.classList.add('hidden'); // 加载完成后隐藏
+            setupScene();
+            loading.classList.add('hidden');
         }
-    }, 100);
-
-    setupScene(); // 初始化场景
+    }, 200);
 }
