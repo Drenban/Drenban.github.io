@@ -1,30 +1,39 @@
 export function setupScene() {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // 正方形画框视角
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
     const frameContainer = document.querySelector('.frame-container');
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(frameContainer.clientWidth, frameContainer.clientHeight); // 限制为画框大小
     renderer.xr.enabled = true;
 
     const clock = new THREE.Clock();
     let mode = 'Static';
 
-    // 3D 画廊环境
+    // 3D 画廊环境（全屏背景）
+    const bgScene = new THREE.Scene();
+    const bgCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const bgRenderer = new THREE.WebGLRenderer({ antialias: true });
+    bgRenderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(bgRenderer.domElement); // 背景画布
+    bgRenderer.domElement.style.position = 'absolute';
+    bgRenderer.domElement.style.top = '0';
+    bgRenderer.domElement.style.left = '0';
+    bgRenderer.domElement.style.zIndex = '0';
+
     const wallGeometry = new THREE.PlaneGeometry(20, 10);
     const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x172a45 });
     const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
     backWall.position.z = -5;
-    scene.add(backWall);
+    bgScene.add(backWall);
 
     const floorGeometry = new THREE.PlaneGeometry(20, 20);
     const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x0a192f });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -5;
-    scene.add(floor);
+    bgScene.add(floor);
 
-    // 环境光
-    scene.add(new THREE.AmbientLight(0x404040, 0.5));
+    bgCamera.position.z = 5;
 
     // Shader 画框
     const material = new THREE.ShaderMaterial({
@@ -118,11 +127,12 @@ export function setupScene() {
             void main() {
                 vec2 uv = gl_FragCoord.xy / iResolution.xy;
                 float mouseRatio = smoothstep(100.0, 0.0, length(iMouse.xy - gl_FragCoord.xy));
-                float baseNoise = fbm(vec3(uv * 12.0 + iNoiseOffset, iTime * 0.5));
-                float waveNoise = snoise(vec3(uv * 8.0 + (iMouse.xy - gl_FragCoord.xy) * mouseRatio * 0.05 + iNoiseOffset, iTime * 0.3));
-                float noise = 0.5 + baseNoise * 0.8 + waveNoise * 0.6; // 叠加起伏
-                noise = clamp(noise, 0.0, 1.0); // 限制范围
-                gl_FragColor = vec4(vec3(noise), 1.0); // 灰度立体效果
+                float baseNoise = fbm(vec3(uv * 20.0 + iNoiseOffset, iTime * 0.8));
+                float waveNoise = snoise(vec3(uv * 15.0 + (iMouse.xy - gl_FragCoord.xy) * mouseRatio * 0.1 + iNoiseOffset, iTime * 0.5));
+                float peak = sin(uv.y * 10.0 + iTime * 2.0 + waveNoise) * 0.5; // 增强波峰
+                float noise = 0.5 + baseNoise * 1.0 + waveNoise * 0.8 + peak; // 叠加起伏
+                noise = clamp(noise, 0.0, 1.0);
+                gl_FragColor = vec4(vec3(noise), 1.0); // 灰度立体波浪
             }
         `
     });
@@ -164,10 +174,10 @@ export function setupScene() {
         if (mode === 'Free Nav') {
             const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
             const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-            camera.position.x = THREE.MathUtils.clamp(mouseX * 2, -1, 1);
-            camera.position.y = THREE.MathUtils.clamp(-mouseY * 2, -1, 1);
-            camera.position.z = 5 + mouseY * 0.5;
-            camera.lookAt(0, 0, -2);
+            bgCamera.position.x = THREE.MathUtils.clamp(mouseX * 2, -1, 1);
+            bgCamera.position.y = THREE.MathUtils.clamp(-mouseY * 2, -1, 1);
+            bgCamera.position.z = 5 + mouseY * 0.5;
+            bgCamera.lookAt(0, 0, -2);
         }
     });
 
@@ -177,8 +187,8 @@ export function setupScene() {
         mode = mode === 'Static' ? 'Free Nav' : 'Static';
         modeToggle.textContent = `切换模式 (${mode})`;
         if (mode === 'Static') {
-            camera.position.set(0, 0, 5);
-            camera.lookAt(0, 0, -2);
+            bgCamera.position.set(0, 0, 5);
+            bgCamera.lookAt(0, 0, -2);
         }
     });
 
@@ -186,17 +196,24 @@ export function setupScene() {
     window.addEventListener('resize', () => {
         const width = window.innerWidth;
         const height = window.innerHeight;
-        camera.aspect = width / height;
+        bgCamera.aspect = width / height;
+        bgCamera.updateProjectionMatrix();
+        bgRenderer.setSize(width, height);
+
+        const frameWidth = frameContainer.clientWidth;
+        const frameHeight = frameContainer.clientHeight;
+        camera.aspect = frameWidth / frameHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(width, height);
-        material.uniforms.iResolution.value.set(frameContainer.clientWidth, frameContainer.clientHeight);
+        renderer.setSize(frameWidth, frameHeight);
+        material.uniforms.iResolution.value.set(frameWidth, frameHeight);
     });
 
     // 动画循环
     function animate() {
         requestAnimationFrame(animate);
         material.uniforms.iTime.value = clock.getElapsedTime();
-        renderer.render(scene, camera);
+        bgRenderer.render(bgScene, bgCamera); // 渲染背景
+        renderer.render(scene, camera); // 渲染画框
     }
     animate();
 
