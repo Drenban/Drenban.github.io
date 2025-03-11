@@ -1,7 +1,6 @@
 // frame.js
 // 创建画框平面和边框，使用噪声材质生成动态效果。
-
-import * as THREE from 'three';
+import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.module.js';
 
 // 常量定义
 const PLANE_SIZE = 2;
