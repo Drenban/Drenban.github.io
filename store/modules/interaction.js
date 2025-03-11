@@ -5,7 +5,7 @@
 // === 连接调用部分 ===
 // 输入：前景相机、背景相机、噪声材质、前景渲染器、背景渲染器
 // 输出：无（直接绑定事件和动画）
-export function setupInteraction(camera, bgCamera, noiseMaterial, renderer, bgRenderer, scene, bgScene) {
+export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
     const clock = new THREE.Clock();
     let mode = 'Static';
 
@@ -60,7 +60,7 @@ export function setupInteraction(camera, bgCamera, noiseMaterial, renderer, bgRe
         requestAnimationFrame(animate);
         console.log('Rendering frame...', scene.children.length, bgScene.children.length); // 检查场景内容
         noiseMaterial.uniforms.iTime.value = clock.getElapsedTime();
-        renderer.render(scene, camera);
+        // renderer.render(scene, camera);
         bgRenderer.render(bgScene, bgCamera);
     }
     animate();
