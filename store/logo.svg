@@ -1,22 +1,14 @@
 <svg width="180" height="60" viewBox="0 0 180 60" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#3b82f6" />
-            <stop offset="100%" style="stop-color:#60a5fa" />
-        </linearGradient>
-        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" style="stop-color:#93c5fd;stop-opacity:0.8" />
-            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
-        </radialGradient>
-    </defs>
-    <!-- 背景光晕 -->
-    <circle cx="140" cy="20" r="40" fill="url(#glow)" opacity="0.5">
-        <animate attributeName="r" values="40;45;40" dur="2s" repeatCount="indefinite" />
-    </circle>
     <!-- "P" 形状 -->
-    <path d="M40 50 V10 H70 A20 20 0 0 1 90 30 A20 20 0 0 1 70 50 H40 Z" fill="url(#grad)" />
-    <!-- 小光点 -->
-    <circle cx="130" cy="15" r="5" fill="#93c5fd" opacity="0.8">
-        <animate attributeName="opacity" values="0.8;0.4;0.8" dur="1.5s" repeatCount="indefinite" />
-    </circle>
+    <path d="M40 50 V10 H70 A20 20 0 0 1 90 30 A20 20 0 0 1 70 50 H40" 
+          fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- "X" 形状 -->
+    <path d="M110 10 L130 50 M130 10 L110 50" 
+          fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+    <!-- 电路风格细节（科技感） -->
+    <path d="M90 30 H100 M130 30 H140 M140 26 V34" 
+          fill="none" stroke="#FFFFFF" stroke-width="2"/>
+    <!-- 像素点（数字感） -->
+    <path d="M150 16 H154 V20 H150 Z M150 28 H154 V32 H150 Z" 
+          fill="#FFFFFF"/>
 </svg>
