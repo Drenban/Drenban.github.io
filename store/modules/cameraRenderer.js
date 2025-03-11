@@ -12,6 +12,7 @@ export function setupCameraRenderer(frameContainer) {
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
     renderer.setSize(frameContainer.clientWidth, frameContainer.clientHeight);
+    console.log('Renderer canvas:', renderer.domElement); // 确认绑定
     renderer.xr.enabled = true;
     camera.position.z = 5;
 
@@ -21,6 +22,7 @@ export function setupCameraRenderer(frameContainer) {
     const bgRenderer = new THREE.WebGLRenderer({ antialias: true });
     bgRenderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(bgRenderer.domElement);
+    console.log('Background renderer canvas:', bgRenderer.domElement); // 确认添加
     bgRenderer.domElement.style.position = 'absolute';
     bgRenderer.domElement.style.top = '0';
     bgRenderer.domElement.style.left = '0';
