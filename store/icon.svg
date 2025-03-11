@@ -1,8 +1,1 @@
-<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- "P" 形状，内部填充黑色 -->
-  <path d="M20 52 V12 H36 A12 12 0 0 1 48 24 A12 12 0 0 1 36 36 H28 V52 Z" 
-        fill="#000000" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- 外围方框，空心 -->
-  <path d="M28 58 H58 V6 H6 V58 H20" 
-        fill="none" stroke="#000000" stroke-width="4"/>
-</svg>
+<path d="M 20 52 V 12 H 36 A 12 12 0 0 1 48 24 A 12 12 0 0 1 36 36 H 28 V 52 L 28 58 H 58 V 6 H 6 V 58 H 20"/>
