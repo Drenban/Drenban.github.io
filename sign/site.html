@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PeekX - 首页</title>
+    <title>PeekX - 实时交互平台</title>
     <link rel="icon" href="icon.svg" type="image/svg+xml">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -20,18 +20,20 @@
             background: linear-gradient(145deg, #0a192f 0%, #172a45 100%);
             color: #e2e8f0;
             min-height: 100vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
         }
 
         /* Logo */
         .logo {
-            padding: 20px;
+            position: absolute;
+            top: 20px;
+            padding: 15px;
             text-align: center;
-            margin-bottom: 2rem;
+            z-index: 10;
         }
 
         .logo object {
@@ -40,11 +42,23 @@
             filter: brightness(1.2);
         }
 
+        /* Canvas 容器 */
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
         /* 主内容 */
         .hero {
             text-align: center;
             max-width: 600px;
-            padding: 0 20px;
+            padding: 20px;
+            z-index: 10;
+            position: relative;
         }
 
         .hero h1 {
@@ -72,6 +86,7 @@
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
+            margin: 0 10px;
         }
 
         .hero .cta-button:hover {
@@ -140,11 +155,90 @@
             .hero .cta-button {
                 padding: 10px 20px;
                 font-size: 14px;
+                margin: 5px 0;
+                display: block;
             }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script>
-        // 模拟加载动画
+        // Three.js 和 WebXR 设置
+        let scene, camera, renderer, clock, vrButton;
+        let isVRSupported = false;
+
+        // 初始化 3D 场景
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.xr.enabled = true; // 启用 WebXR
+            clock = new THREE.Clock();
+
+            // 添加 VR 按钮
+            vrButton = document.createElement('button');
+            vrButton.textContent = '进入 VR';
+            vrButton.className = 'cta-button';
+            document.querySelector('.hero').appendChild(vrButton);
+
+            // 检查 VR 支持
+            navigator.xr.isSessionSupported('immersive-vr').then(supported => {
+                isVRSupported = supported;
+                if (!supported) vrButton.style.display = 'none';
+                renderer.xr.addEventListener('sessionstart', onVRSessionStart);
+                vrButton.onclick = () => renderer.xr.getSession() || renderer.xr.requestSession('immersive-vr');
+            });
+
+            // 创建平面并应用 Shader
+            const geometry = new THREE.PlaneGeometry(16, 9);
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    iTime: { value: 0 },
+                    iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+                },
+                vertexShader: `
+                    void main() {
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform float iTime;
+                    uniform vec2 iResolution;
+
+                    void main() {
+                        vec2 uv = gl_FragCoord.xy / iResolution.xy;
+                        vec3 color = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0, 2, 4));
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            });
+            const plane = new THREE.Mesh(geometry, material);
+            scene.add(plane);
+            camera.position.z = 5;
+
+            // 窗口调整
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                material.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
+            });
+
+            // 动画循环
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            material.uniforms.iTime.value = clock.getElapsedTime();
+            renderer.render(scene, camera);
+        }
+
+        function onVRSessionStart() {
+            console.log('VR 会话开始');
+        }
+
+        // 加载动画
         document.addEventListener('DOMContentLoaded', () => {
             const loading = document.querySelector('.loading');
             const progressBar = document.querySelector('.progress-bar');
@@ -159,6 +253,7 @@
                     clearInterval(interval);
                     setTimeout(() => {
                         loading.classList.add('hidden');
+                        init(); // 加载完成后初始化 3D 场景
                     }, 500);
                 }
             }, 100);
@@ -173,6 +268,9 @@
             <div class="progress-bar"></div>
         </div>
     </div>
+
+    <!-- 3D Canvas -->
+    <canvas id="canvas"></canvas>
 
     <!-- 主内容 -->
     <div class="logo">
