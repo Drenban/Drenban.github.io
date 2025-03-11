@@ -20,13 +20,14 @@ export function setupScene() {
     const { wall, update: updateWall } = createWall(width, height);
     bgScene.add(floor);
     bgScene.add(wall);
+    console.log('Background objects:', bgScene.children);
 
     const { material, updateResolution } = createNoiseMaterial(new THREE.Vector2(frameContainer.clientWidth, frameContainer.clientHeight));
     const { plane, frame } = createFrame(material);
     bgScene.add(plane);
     bgScene.add(frame);
+    console.log('All objects:', bgScene.children);
 
-    // 确保参数正确传递
     setupInteraction(bgCamera, material, bgRenderer, bgScene);
 
     onResize((frameSize, viewSize) => {
