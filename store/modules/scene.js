@@ -11,7 +11,13 @@ import { createNoiseMaterial } from './noise.js';
 
 export function setupScene() {
     // === 连接调用部分 ===
+    console.log('Setting up scene...');
     const frameContainer = document.querySelector('.frame-container');
+    if (!frameContainer) {
+        console.error('Frame container not found!');
+        return;
+    }
+
     const { scene, camera, renderer, bgScene, bgCamera, bgRenderer, getViewSize, onResize } = setupCameraRenderer(frameContainer);
     const { width, height, distance } = getViewSize();
 
