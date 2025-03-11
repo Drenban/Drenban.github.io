@@ -5,6 +5,10 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
     const frameContainer = document.querySelector('.frame-container');
     const modeToggle = document.getElementById('mode-toggle');
 
+    // 获取画框对象
+    const plane = bgScene.children.find(child => child.geometry instanceof THREE.PlaneGeometry);
+    const frame = bgScene.children.find(child => child.geometry instanceof THREE.BoxGeometry);
+
     frameContainer.addEventListener('mousemove', (e) => {
         const rect = frameContainer.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
@@ -30,6 +34,12 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
             bgCamera.position.y = THREE.MathUtils.clamp(-mouseY * 2, -1, 1);
             bgCamera.position.z = 5 + mouseY * 0.5;
             bgCamera.lookAt(0, 0, -10);
+
+            // 同步画框位置，保持与墙面的相对距离
+            const wallZ = -10; // 墙面位置
+            const offsetZ = 0.1; // 画框略微凸出墙面
+            plane.position.set(bgCamera.position.x, bgCamera.position.y, wallZ + offsetZ);
+            frame.position.set(bgCamera.position.x, bgCamera.position.y, wallZ);
         }
     });
 
@@ -39,6 +49,9 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
         if (mode === 'Static') {
             bgCamera.position.set(0, 0, 5);
             bgCamera.lookAt(0, 0, -10);
+            // 重置画框位置
+            plane.position.set(0, 0, -9.9);
+            frame.position.set(0, 0, -10);
         }
     });
 
@@ -46,7 +59,7 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
         requestAnimationFrame(animate);
         console.log('Rendering frame...', bgScene.children.length);
         noiseMaterial.uniforms.iTime.value = clock.getElapsedTime();
-        bgRenderer.render(bgScene, bgCamera); // 只渲染 bgScene
+        bgRenderer.render(bgScene, bgCamera);
     }
     animate();
 }
