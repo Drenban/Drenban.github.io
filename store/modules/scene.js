@@ -35,6 +35,13 @@ export function setupScene() {
     scene.add(frame);
     console.log('Foreground objects:', scene.children); // 确认添加
 
+    // 添加测试立方体
+    const cube = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        new THREE.MeshBasicMaterial({ color: 0xff0000 })
+    );
+    scene.add(cube);
+
     // 设置交互
     setupInteraction(camera, bgCamera, material, renderer, bgRenderer, scene, bgScene);
 
