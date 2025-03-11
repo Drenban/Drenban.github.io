@@ -1,9 +1,9 @@
 export function setupScene() {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // 全屏视角
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
     const frameContainer = document.querySelector('.frame-container');
-    renderer.setSize(window.innerWidth, window.innerHeight); // 全屏渲染
+    renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.xr.enabled = true;
 
     const clock = new THREE.Clock();
@@ -22,6 +22,9 @@ export function setupScene() {
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -5;
     scene.add(floor);
+
+    // 环境光
+    scene.add(new THREE.AmbientLight(0x404040, 0.5));
 
     // Shader 画框
     const material = new THREE.ShaderMaterial({
@@ -54,7 +57,7 @@ export function setupScene() {
 
                 vec3 g = step(x0.yzx, x0.xyz);
                 vec3 l = 1.0 - g;
-                vec3 i1 = min ближеg.xyz, l.zxy);
+                vec3 i1 = min(g.xyz, l.zxy);
                 vec3 i2 = max(g.xyz, l.zxy);
 
                 vec3 x1 = x0 - i1 + 1.0 * C.xxx;
@@ -115,19 +118,20 @@ export function setupScene() {
             void main() {
                 vec2 uv = gl_FragCoord.xy / iResolution.xy;
                 float mouseRatio = smoothstep(100.0, 0.0, length(iMouse.xy - gl_FragCoord.xy));
-                float noise = 0.25 + fbm(vec3(uv * 12.0 + (iMouse.xy - gl_FragCoord.xy) * mouseRatio * 0.05 + iNoiseOffset, iTime * 0.18 + 0.5 * mouseRatio));
-                noise *= 0.25 + snoise(vec3(uv * 4.0 + 1.5 + iNoiseOffset, iTime * 0.15));
-                gl_FragColor = vec4(1.0, 1.0, 1.0, noise);
+                float baseNoise = fbm(vec3(uv * 12.0 + iNoiseOffset, iTime * 0.5));
+                float waveNoise = snoise(vec3(uv * 8.0 + (iMouse.xy - gl_FragCoord.xy) * mouseRatio * 0.05 + iNoiseOffset, iTime * 0.3));
+                float noise = 0.5 + baseNoise * 0.8 + waveNoise * 0.6; // 叠加起伏
+                noise = clamp(noise, 0.0, 1.0); // 限制范围
+                gl_FragColor = vec4(vec3(noise), 1.0); // 灰度立体效果
             }
         `
     });
 
-    const geometry = new THREE.PlaneGeometry(2, 2); // 画框大小
+    const geometry = new THREE.PlaneGeometry(2, 2);
     const plane = new THREE.Mesh(geometry, material);
-    plane.position.set(0, 0, -2); // 悬浮在墙前
+    plane.position.set(0, 0, -2);
     scene.add(plane);
 
-    // 画框边框（3D）
     const frameGeometry = new THREE.BoxGeometry(2.4, 2.4, 0.2);
     const frameMaterial = new THREE.MeshBasicMaterial({ color: 0x1e293b });
     const frame = new THREE.Mesh(frameGeometry, frameMaterial);
@@ -155,14 +159,14 @@ export function setupScene() {
         }, 50);
     });
 
-    // 画廊晃动（Free Nav）
+    // 画廊晃动
     document.addEventListener('mousemove', (e) => {
         if (mode === 'Free Nav') {
             const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
             const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-            camera.position.x = THREE.MathUtils.clamp(mouseX * 2, -1, 1); // 限制幅度
+            camera.position.x = THREE.MathUtils.clamp(mouseX * 2, -1, 1);
             camera.position.y = THREE.MathUtils.clamp(-mouseY * 2, -1, 1);
-            camera.position.z = 5 + mouseY * 0.5; // 轻微前后移动
+            camera.position.z = 5 + mouseY * 0.5;
             camera.lookAt(0, 0, -2);
         }
     });
