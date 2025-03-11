@@ -154,7 +154,7 @@ async function login() {
                     console.warn('Supabase 用户缺少 expiry_date 字段，视为过期');
                     errorMessage.textContent = '您的会员未设置有效期，请续费或联系管理员';
                     localStorage.setItem('expiredEmail', username);
-                    setTimeout(() => window.location.href = '/payment/index.html', 2000);
+                    setTimeout(() => window.location.href = '/peekx/payment/index.html', 2000);
                     loginBtn.disabled = false;
                     return;
                 }
@@ -162,7 +162,7 @@ async function login() {
                     console.warn('用户有效期已过期:', expiryDate);
                     errorMessage.textContent = '您的会员已过期，请续费，或联系管理员获取帮助';
                     localStorage.setItem('expiredEmail', username);
-                    setTimeout(() => window.location.href = '/payment/index.html', 2000);
+                    setTimeout(() => window.location.href = '/peekx/payment/index.html', 2000);
                     loginBtn.disabled = false;
                     return;
                 }
@@ -197,7 +197,7 @@ async function login() {
             console.warn('JSON 用户缺少 expiry_date 字段，视为过期');
             errorMessage.textContent = '您的会员未设置有效期，请续费或联系管理员';
             localStorage.setItem('expiredEmail', username);
-            setTimeout(() => window.location.href = '/payment/index.html', 2000);
+            setTimeout(() => window.location.href = '/peekx/payment/index.html', 2000);
             loginBtn.disabled = false;
             return;
         }
@@ -205,7 +205,7 @@ async function login() {
             console.warn('JSON 用户有效期已过期:', expiryDate);
             errorMessage.textContent = '您的会员已过期，请续费，或联系管理员获取帮助';
             localStorage.setItem('expiredEmail', username);
-            setTimeout(() => window.location.href = '/payment/index.html', 2000);
+            setTimeout(() => window.location.href = '/peekx/payment/index.html', 2000);
             loginBtn.disabled = false;
             return;
         }
