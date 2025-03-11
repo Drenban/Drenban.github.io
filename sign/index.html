@@ -3,170 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PeekX - Login</title>
+    <title>PeekX - 实时交互平台</title>
     <link rel="icon" href="icon.svg" type="image/svg+xml">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-<!--     <script src="login.js" defer></script> -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* 重置样式保持不变 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
             font-family: 'Inter', sans-serif;
+            color: #000000;
         }
 
-        /* 全局样式保持不变 */
-        body {
-            background: linear-gradient(145deg, #0a192f 0%, #172a45 100%);
-            color: #e2e8f0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        /* Logo 样式保持不变 */
-        .logo {
-            padding: 15px 20px;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .logo object {
-            width: 180px;
-            height: 60px;
-            filter: brightness(1.2);
-        }
-
-        /* 优化后的容器 */
-        .container {
-            background: rgba(15, 23, 42, 0.95);
-            padding: 2rem;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            width: 100%;
-            max-width: 400px;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 1.5rem;
+        #loading-text {
+            margin: 0 0 10px 0;
+            font-size: 18px;
             font-weight: 600;
-            color: #93c5fd;
-            margin-bottom: 1.5rem;
+            color: #000000;
         }
 
-        /* 优化后的登录表单样式 */
-        .login-form {
-            width: 100%;
-            max-width: 300px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
+        .progress {
+            width: 200px;
+            height: 20px;
+            background-color: #e5e7eb;
+            border: 2px solid #000000;
+            border-radius: 4px;
+            overflow: hidden;
         }
 
-        .login-form input {
-            background: rgba(255, 255, 255, 0.05);
-            color: #e2e8f0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 15px;
-            width: 100%;
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #000000;
+            transition: width 0.3s ease;
         }
 
-        /* 其余样式保持不变 */
-        .login-form input::placeholder {
-            color: #94a3b8;
-            font-style: italic;
-        }
-
-        .login-form input:focus {
-            outline: none;
-            border-color: #93c5fd;
-            box-shadow: 0 0 12px rgba(147, 197, 253, 0.2);
-        }
-
-        .login-form button {
-            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
-            color: #fff;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .login-form button:hover {
-            background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        #error-message {
-            color: #666666;
-            font-size: 12px;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        /* 响应式保持不变 */
-        @media (max-width: 480px) {
-            .logo object {
-                width: 140px;
-                height: 46px;
-            }
-
-            .container {
-                margin: 1rem;
-                padding: 1.5rem;
-                max-width: 100%;
-            }
-
-            h1 {
-                font-size: 1.25rem;
-            }
-
-            .login-form {
-                width: 100%;
-            }
-
-            .login-form input,
-            .login-form button {
-                font-size: 14px;
-                padding: 10px;
-            }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
+    <div class="loading" id="loading">
+        <p id="loading-text">Now Loading (0%)</p>
+        <div class="progress" id="progress">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="frame-container"></div>
+
     <div class="logo">
         <object type="image/svg+xml" data="logo.svg" width="180" height="60">PeekX Logo</object>
     </div>
-    <div class="container">
-        <h1>登录账户</h1>
-        <form class="login-form" id="login-form">
-            <input type="email" id="email" placeholder="Email (e.g., admin@example.com)" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <div id="error-message"></div>
+    <div class="hero">
+        <h1>欢迎体验 PeekX</h1>
+        <p>一个现代化的实时交互平台，带你探索无限可能。</p>
+        <a href="login.html" class="cta-button">立即登录</a>
+        <button id="mode-toggle" class="cta-button">切换模式 (Static)</button>
     </div>
+
+    <script>
+        function setupLoading() {
+            const loadingContainer = document.getElementById('loading');
+            const loadingText = document.getElementById('loading-text');
+            const progressBar = document.getElementById('progress-bar');
+
+            let progress = 0;
+
+            const loadingInterval = setInterval(() => {
+                progress += 10;
+                if (progress > 100) {
+                    progress = 100;
+                    clearInterval(loadingInterval);
+                    loadingContainer.classList.add('hidden');
+                }
+
+                loadingText.textContent = `Now Loading (${progress}%)`;
+                progressBar.style.width = `${progress}%`;
+            }, 500);
+        }
+
+        setupLoading();
+    </script>
 </body>
 </html>
