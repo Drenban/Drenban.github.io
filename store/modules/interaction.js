@@ -34,12 +34,9 @@ export function setupInteraction(bgCamera, noiseMaterial, bgRenderer, bgScene) {
             bgCamera.position.y = THREE.MathUtils.clamp(-mouseY * 2, -1, 1);
             bgCamera.position.z = 5 + mouseY * 0.5;
             bgCamera.lookAt(0, 0, -10);
-
-            // 同步画框位置，保持与墙面的相对距离
-            const wallZ = -10; // 墙面位置
-            const offsetZ = 0.1; // 画框略微凸出墙面
-            plane.position.set(bgCamera.position.x, bgCamera.position.y, wallZ + offsetZ);
-            frame.position.set(bgCamera.position.x, bgCamera.position.y, wallZ);
+            plane.position.set(bgCamera.position.x, bgCamera.position.y, -9.9);
+            frame.position.set(bgCamera.position.x, bgCamera.position.y, -10);
+            console.log('Camera:', bgCamera.position, 'Frame:', plane.position);
         }
     });
 
