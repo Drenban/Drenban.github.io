@@ -9,7 +9,7 @@ Invoke-WebRequest -UseBasicParsing -Uri "https://cineshader.com/assets/models/st
 -Headers @{
 "authority"="cineshader.com"
   "method"="GET"
-  "path"="/assets/models/stage.buf"
+  "path"="/SimonFeynman/assets/models/stage.buf"
   "scheme"="https"
   "accept"="*/*"
   "accept-encoding"="gzip, deflate, br"
